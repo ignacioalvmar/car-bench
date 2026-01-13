@@ -101,25 +101,15 @@ The exact split assignments are defined in `car_bench/envs/car_voice_assistant/t
       - `r_tool_execution_errors`: Included, same as for the base task type.
       - `r_policy_errors`: Included, same as for the base task type.
       - `r_user_end_conversation`: User has additional instructions to end the conversation: user generates `ASSISTANT_ACKNOWLEDGED_REMOVED_PART` (r=1.0) if the assistant acknowledged the missing capability or information caused by the removed part, or `HALLUCINATION_ERROR` (r=0.0) if the assistant does not acknowledge the missing capability or information, but instead hallucinates the action, ignores the intent about the removed part, or generates a different action without including the user.
-**Note**: The following task_ids are excluded from the results reported in the paper due to task specification errors:
-- Base: None.
-- Hallucination: `hallucination_41`, `hallucination_54`, `hallucination_59`, `hallucination_79`, `hallucination_80`, `hallucination_84`, `hallucination_95`.
-- Disambiguation: `disambiguation_1`, `disambiguation_2`, `disambiguation_3`, `disambiguation_5`, `disambiguation_35`, `disambiguation_47`.
 
-To exclude these tasks from your analysis, use the `--exclude-tasks` flag with `analyze_results_v2.py`:
-```bash
-python analyze_results_v2.py results/*.json --exclude-tasks hallucination_41,hallucination_54,hallucination_59,hallucination_79,hallucination_80,hallucination_84,hallucination_95,disambiguation_1,disambiguation_2,disambiguation_3,disambiguation_5,disambiguation_35,disambiguation_47
-```me as for the base task type.
-      - `r_actions_intermediate`: Included, same as for the base task type.
-      - `r_tool_subset`: Included, same as for the base task type.
-      - `r_tool_execution_errors`: Included, same as for the base task type.
-      - `r_policy_errors`: Included, same as for the base task type.
+- `disambiguation` (50 datapoints): Augments datapoints from the `base` split by adding ambiguities to the user instructions that either have to be resolved with the user or can be resolved internally by the assistant (through stored user preferences, policy rules, context state). The assistant has a clear disambiguation policy: every ambiguity should first be resolved internally, if after internal disambiguation more than one singular valid option is left, then the user has to be included to resolve the ambiguity.
+  - Evaluation of `disambiguation` datapoints:
+      - `r_actions_final`: Included, same as for the base split.
+      - `r_actions_intermediate`: Included, same as for the base split.
+      - `r_tool_subset`: Included, same as for the base split.
+      - `r_tool_execution_errors`: Included, same as for the base split.
+      - `r_policy_errors`: Included, same as for the base split.
       - `r_user_end_conversation`: User has additional instructions to end the conversation: if the ambiguity should be resolved with the user, but the assistant does not include the user but acts proactively even though ambiguity exists, then the user generates `DISAMBIGUATION_ERROR` (r=0.0); if the ambiguity can be resolved internally by the assistant, but the assistant includes the user for disambiguation, then the user also generates `DISAMBIGUATION_ERROR` (r=0.0).
-
-- Note that the following task_ids are exluded from the results reported in the paper due to task specification errors.
-  - Base: None.
-  - Hallucination: 41, 54, 59, 79, 80, 84, 95.
-  - Disambiguation: 1, 2, 3, 5, 35, 47.
 
 ## License
 
