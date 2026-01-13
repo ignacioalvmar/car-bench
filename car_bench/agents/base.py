@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import abc
 from typing import Any, Dict, List, Optional, Tuple
 

@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import time
 from typing import Any, Dict, List, Optional, Tuple
 

@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 from .charging.get_apis.calculate_charging_soc_by_time import CalculateChargingSocByTime
 from .charging.get_apis.calculate_charging_time_by_soc import CalculateChargingTimeBySoc
 from .charging.get_apis.get_charging_status import GetChargingStatus

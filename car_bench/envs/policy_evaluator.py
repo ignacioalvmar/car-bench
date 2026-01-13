@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import abc
 import contextvars
 import enum

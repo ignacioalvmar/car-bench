@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import argparse
 import contextvars
 import json

@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import asyncio
 import json
 import random

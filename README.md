@@ -125,6 +125,10 @@ python analyze_results_v2.py results/*.json --exclude-tasks hallucination_41,hal
 
 See `./LICENSE`.
 
+## Acknowledgments
+
+This codebase is based on [tau-bench](https://github.com/sierra-research/tau-bench). We thank the tau-bench team for their great work.
+
 ## Contact
 
 Please submit issues or pull requests if you find problems with the benchmark.

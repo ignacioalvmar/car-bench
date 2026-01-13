@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 from typing import Any, Dict
 
 from car_bench.envs.tool import Tool

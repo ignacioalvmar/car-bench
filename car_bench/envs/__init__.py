@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 from typing import Optional, Union
 
 from car_bench.envs.base import Env

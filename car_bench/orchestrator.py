@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import json
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
