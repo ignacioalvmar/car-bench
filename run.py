@@ -506,7 +506,7 @@ def main():
         "--task-id-filter",
         type=str,
         nargs="+",
-        help="(Optional) run only specific task IDs (e.g., base_0 base_2 disambiguation_5). Takes precedence over --num-tasks",
+        help="(Optional) run only specific task IDs (e.g., base_0 base_2). Takes precedence over --num-tasks",
     )
     parser.add_argument("--log-dir", type=str, default="results")
     parser.add_argument(
