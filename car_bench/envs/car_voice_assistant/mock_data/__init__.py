@@ -19,7 +19,7 @@ ALL_MODELS = ALL_STATE_MODELS + ALL_CONTEXT_MODELS
 
 print("Initializing shared Car VA DataManager...")
 
-_data_directory_path = os.path.dirname(__file__)
+_data_directory_path = os.getenv("CAR_BENCH_DATA_DIR", os.path.dirname(__file__))
 
 try:
     # Instantiate the DataManager using the determined path
