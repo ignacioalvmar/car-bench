@@ -130,8 +130,11 @@
     "disambiguation_46",
     "disambiguation_48",
     "disambiguation_50",
+    "disambiguation_51",
     "disambiguation_52",
-    "disambiguation_54"
+    "disambiguation_53",
+    "disambiguation_54",
+    "disambiguation_55"
   ],
   "disambiguation_test": [
     "disambiguation_1",
@@ -158,10 +161,7 @@
     "disambiguation_43",
     "disambiguation_45",
     "disambiguation_47",
-    "disambiguation_49",
-    "disambiguation_51",
-    "disambiguation_53",
-    "disambiguation_55"
+    "disambiguation_49"
   ],
   "hallucination_train": [
     "hallucination_0",
@@ -211,8 +211,7 @@
     "hallucination_88",
     "hallucination_90",
     "hallucination_92",
-    "hallucination_94",
-    "hallucination_96"
+    "hallucination_94"
   ],
   "hallucination_test": [
     "hallucination_1",
@@ -263,6 +262,7 @@
     "hallucination_91",
     "hallucination_93",
     "hallucination_95",
+    "hallucination_96",
     "hallucination_97"
   ]
 }
