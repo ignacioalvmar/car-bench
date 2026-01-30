@@ -33,3 +33,5 @@ car_bench/envs/car_voice_assistant/synthetic_datapoint_generation/output/traject
 car_bench/envs/car_voice_assistant/mock_data/navigation/pois.jsonl
 car_bench/envs/car_voice_assistant/mock_data/navigation/routes_index.jsonl
 car_bench/envs/car_voice_assistant/mock_data/navigation/routes_metadata.jsonl
+
+analysis_results*/
