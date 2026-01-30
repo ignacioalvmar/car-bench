@@ -9,6 +9,14 @@ from car_bench.envs.policy_evaluator import (
     load_policy_evaluator,
     policy_errors_during_runtime,
 )
+from car_bench.envs.reward_calculators import (
+    calculate_end_conversation_reward,
+    calculate_output_reward,
+    calculate_policy_reward,
+    calculate_state_based_reward,
+    calculate_tool_execution_reward,
+    calculate_tool_subset_reward,
+)
 from car_bench.envs.tool import Tool
 from car_bench.envs.tool_execution_error_evaluator import (
     tool_execution_errors_during_runtime,
@@ -310,285 +318,78 @@ class Env(object):
         reward = 1.0
         performed_actions = self.actions.copy()
 
-        # ==== State-based Reward (skipped if task type is hallucination) ====
-        if (
-            self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL
-            or self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL_PARAMETER
-            or self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL_RESPONSE
-        ):
-            r_actions_final = None
-            r_actions_intermediate = None
-            r_actions = None  # Legacy for backward compatibility
-            gt_vehicle_state_hash = "Skipped"
-        else:
-            from car_bench.envs.car_voice_assistant.context.dynamic_context_state import (
-                ContextState,
-                context_state,
-            )
+        # Get temperature difference for policy evaluation
+        from car_bench.envs.car_voice_assistant.context.dynamic_context_state import (
+            context_state,
+        )
+        climate_temperature_driver = context_state.get().climate_temperature_driver
+        climate_temperature_passenger = (
+            context_state.get().climate_temperature_passenger
+        )
+        difference_is_more_than_3_degrees = (
+            abs(climate_temperature_driver - climate_temperature_passenger) > 3
+        )
 
-            context_state_hash = self.get_context_state_hash(context_state.get())
-            climate_temperature_driver = context_state.get().climate_temperature_driver
-            climate_temperature_passenger = (
-                context_state.get().climate_temperature_passenger
-            )
-            difference_is_more_than_3_degrees = (
-                abs(climate_temperature_driver - climate_temperature_passenger) > 3
-            )
-
-            # Check if the vehicle state changes are correct by performing the ground truth actions and compare the edited vehicle state. If they are not correct, then we set the reward to 0.
-            # Generate ground truth intermediate state hashes by temporarily setting context_state to a fresh vehicle state to perform ground truth actions, later restore the vehicle state to the state before the token was created.
-            gt_context_state = ContextState()
-            token = context_state.set(gt_context_state)
-            context_state.get().update_state(**self.task.context_init_config)
-
-            # Record initial state hash for ground truth
-            gt_state_hashes = [self.get_context_state_hash(context_state.get())]
-
-            for action in self.task.actions:
-
-                self.step(action, messages)
-                # Record state hash after each ground truth action
-                if (
-                    action.name in self.tools_map
-                    and action.name not in USER_AS_A_TOOL_ACTION_NAMES
-                ):
-                    current_gt_hash = self.get_context_state_hash(context_state.get())
-                    gt_state_hashes.append(current_gt_hash)
-
-            gt_vehicle_state_hash = self.get_context_state_hash(context_state.get())
-
-            # Restore the vehicle state to the state before the token was created.
-            context_state.reset(token)
-
-            # Check final state correctness (compare final state hashes)
-            final_actual_state_hash = (
-                self.state_hashes[-1] if self.state_hashes else context_state_hash
-            )
-            r_actions_final = context_state_hash == gt_vehicle_state_hash
-            if not r_actions_final:
-                reward = 0.0
-
-            # Check intermediate states correctness (all intermediate states must be valid)
-            gt_state_hashes_set = set(gt_state_hashes)
-            actual_state_hashes_set = set(self.state_hashes)
-            r_actions_intermediate = actual_state_hashes_set.issubset(
-                gt_state_hashes_set
-            )
-            if not r_actions_intermediate:
-                reward = 0.0
-
-            # Legacy field for backward compatibility
-            r_actions = r_actions_final and r_actions_intermediate
-        # ========
-
-        # ==== Tool Subset Evaluation Reward (skipped if task type is hallucination) ====
-        gt_action_names = {
-            action.name
-            for action in self.task.actions
-            if action.name != RESPOND_ACTION_NAME
-        }
+        # Get performed action names for policy evaluation
         performed_action_names = {action.name for action in performed_actions}
-        if (
-            self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL
-            or self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL_PARAMETER
-            or self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL_RESPONSE
-        ):
-            r_tool_subset = None
-            tool_subset_missing_tools = None
-        else:
-            # Calculate missing tools from ground truth
-            tool_subset_missing_tools = list(gt_action_names - performed_action_names)
-            r_tool_subset = gt_action_names.issubset(performed_action_names)
-            if not r_tool_subset:
-                r_tool_subset = 0.0
-                reward = 0.0
-            else:
-                r_tool_subset = 1.0
-        # ========
+
+        # ==== State-based Reward ====
+        (
+            r_actions_final,
+            r_actions_intermediate,
+            r_actions,
+            reward_delta,
+        ) = calculate_state_based_reward(
+            task=self.task,
+            state_hashes=self.state_hashes,
+            get_context_state_hash=self.get_context_state_hash,
+            step_fn=self.step,
+            tools_map=self.tools_map,
+            messages=messages,
+        )
+        reward += reward_delta
+
+        # ==== Tool Subset Evaluation Reward ====
+        r_tool_subset, tool_subset_missing_tools, reward_delta = (
+            calculate_tool_subset_reward(
+                task=self.task, performed_actions=performed_actions
+            )
+        )
+        reward += reward_delta
 
         # ==== Tool-Execution-Error-Calculations ====
-        tool_execution_errors = tool_execution_errors_during_runtime.get()
-        if self.score_tool_execution_errors and len(tool_execution_errors) > 0:
-            r_tool_execution = 0.0
-            reward = 0.0
-        else:
-            r_tool_execution = 1.0
-        # ========
+        r_tool_execution, tool_execution_errors, reward_delta = (
+            calculate_tool_execution_reward(
+                score_tool_execution_errors=self.score_tool_execution_errors
+            )
+        )
+        reward += reward_delta
 
         # ==== End-Conversation-Failure-Calculations ====
-        end_conversation_fail = end_conversation_failure.get()
-        if len(end_conversation_fail) > 0:
-            reward = 0.0
-            r_user_end_conversation = 0.0
-            end_conversation_keyword = end_conversation_fail[0][
-                "conversation_control_keyword"
-            ]
-        else:
-            r_user_end_conversation = 1.0
-            end_conversation_keyword = None
-        # ========
+        r_user_end_conversation, end_conversation_keyword, reward_delta = (
+            calculate_end_conversation_reward()
+        )
+        reward += reward_delta
 
         # ==== Output-string-based Reward ====
-        r_outputs = None
-        outputs = {}
-        # ========
+        r_outputs, outputs = calculate_output_reward()
 
-        # ==== Policy-Error-Calculations (skipped if task type is hallucination) ====
-        if (
-            self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL
-            or self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL_PARAMETER
-            or self.task.task_type == TaskType.HALLUCINATION_MISSING_TOOL_RESPONSE
-        ):
-            policy_llm_errors = None
-            policy_errors_aut = None
-            r_policy = None
-        else:
-            # LLM-based Policy Error Calculation
-            if self.evaluate_policy:
-                r_policy = 1.0
-                from car_bench.envs.car_voice_assistant.wiki import WIKI_LLM_POL_LINES
+        # ==== Policy-Error-Calculations ====
+        r_policy, policy_llm_errors, policy_errors_aut, reward_delta = (
+            calculate_policy_reward(
+                task=self.task,
+                evaluate_policy=self.evaluate_policy,
+                score_policy_errors=self.score_policy_errors,
+                policy_evaluator=self.policy_evaluator,
+                messages=messages,
+                performed_action_names=performed_action_names,
+                difference_is_more_than_3_degrees=difference_is_more_than_3_degrees,
+            )
+        )
+        reward += reward_delta
 
-                traj_messages = (
-                    messages[1:] if messages[0]["role"] == "system" else messages
-                )
-                traj_messages_core = []
-                # Filter traj_messages to only include specified keys
-                for msg in traj_messages:
-                    filtered_msg = {}
-                    for key in ["role", "content", "name", "tool_calls"]:
-                        if key in msg:
-                            if (
-                                key == "content"
-                                and "tool_calls" in msg
-                                and msg["tool_calls"]
-                            ):
-                                filtered_msg[key] = ""
-                            else:
-                                filtered_msg[key] = msg[key]
-                    traj_messages_core.append(filtered_msg)
-                pol_llm_evaluation_results = []
-                pol_llm_evaluation_scores = []
-                for line in WIKI_LLM_POL_LINES:
-                    # make llm request with litellm, create system prompt, input
-                    if "REQUIRES_CONFIRMATION" in line:
-                        if (
-                            len(
-                                performed_action_names.intersection(
-                                    {
-                                        "send_email",
-                                        "open_close_trunk_door",
-                                        "set_head_lights_high_beams",
-                                    }
-                                )
-                            )
-                            > 0
-                        ):
-                            line = (
-                                line
-                                + " The tools that require confirmation are: 'send_email', 'open_close_trunk_door', and 'set_head_lights_high_beams'."
-                            )
-                        else:
-                            continue
-                    elif (
-                        "windows are requested by the user to open more than 25% (absolute position) and AC is ON in that moment"
-                        in line
-                    ):
-                        if (
-                            len(
-                                performed_action_names.intersection(
-                                    {"open_close_window"}
-                                )
-                            )
-                            > 0
-                        ):
-                            line = (
-                                line
-                                + " Consider that you can only know the AC status if it was turned on **before** the user request to open the windows. Mark not applicable, if th AC was not requested to turn on before, also  mark not applicable if the windows are closed or requested to close. Also this policy is one-way: applies only if user requests to open the windows, turn on AC request are handled in another policy."
-                            )
-                        else:
-                            continue
-                    elif (
-                        "In certain weather conditions, the vehicle control actions"
-                        in line
-                    ):
-                        if (
-                            len(
-                                performed_action_names.intersection(
-                                    {"open_close_sunroof", "set_fog_lights"}
-                                )
-                            )
-                            == 0
-                        ):
-                            continue
-                    elif "user sets the temperature to a single seat zone" in line:
-                        if (
-                            len(
-                                performed_action_names.intersection(
-                                    {"set_climate_temperature"}
-                                )
-                            )
-                            == 0
-                            or not difference_is_more_than_3_degrees
-                        ):
-                            continue
-                    elif (
-                        "route is presented in detail (fastest route, shortest route, or upon user detail request)"
-                        in line
-                    ):
-                        if (
-                            len(
-                                performed_action_names.intersection(
-                                    {"get_routes_from_start_to_destination"}
-                                )
-                            )
-                            > 0
-                        ):
-                            line = (
-                                line
-                                + " For this policy, first reason which routes were presented in detail, then evaluate if these routes include a toll road - if true this would be included in the list of road types else it's not present, then evaluate the policy for the routes identified to be presented in detail."
-                            )
-                        else:
-                            continue
-                    elif (
-                        "user asks for a multi-stop route and does not specify the route selection"
-                        in line
-                    ):
-                        if (
-                            len(
-                                performed_action_names.intersection(
-                                    {"get_routes_from_start_to_destination"}
-                                )
-                            )
-                            == 0
-                        ):
-                            continue
-                    evaluation_result = self.policy_evaluator.evaluate_llm(
-                        policy=line, trajectory=str(traj_messages_core)
-                    )
-                    pol_llm_evaluation_results.append(json.loads(evaluation_result))
-                    pol_llm_evaluation_scores.append(
-                        json.loads(evaluation_result)["policy_followed"]
-                    )
-                policy_llm_errors = [
-                    eval_result["reasoning"]
-                    for eval_result in pol_llm_evaluation_results
-                    if not eval_result["policy_followed"]
-                ]
-            else:
-                policy_llm_errors = []
-                r_policy = None
-
-            # AUT-based Policy Error Calculation
-            if self.evaluate_policy:
-                self.policy_evaluator.evaluate_aut(trajectory=traj_messages)
-                policy_errors_aut = policy_errors_during_runtime.get()
-            else:
-                policy_errors_aut = []
-            if self.score_policy_errors and (
-                len(policy_errors_aut) > 0 or len(policy_llm_errors) > 0
-            ):
-                r_policy = 0.0
-                reward = 0.0
+        # Ensure reward doesn't go below 0
+        reward = max(0.0, reward)
 
         info = RewardInfo(
             r_actions=r_actions,
