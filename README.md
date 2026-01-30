@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Paper](https://img.shields.io/badge/Paper-Coming%20Soon-orange.svg)](#)
+[![Paper](https://img.shields.io/badge/arXiv-2601.22027-b31b1b.svg)](https://arxiv.org/abs/2601.22027)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
 *A benchmark for evaluating epistemic reliability of multi-turn, tool-using LLM agents under uncertainty*
@@ -222,6 +222,8 @@ Standard multi-turn interactions where agents must correctly interpret intent, p
 - `r_policy_errors`: Policy compliance (automatic + LLM-based)
 - `r_user_end_conversation`: User satisfaction (always 1.0 for base tasks)
 
+*For implementation details, see [reward_calculators.py](car_bench/envs/reward_calculators.py).*
+
 #### 2. Hallucination Tasks (98 datapoints)
 Deliberately unsatisfiable tasks created by removing tools, parameters, or data from base tasks. Tests whether agents acknowledge limitations rather than fabricating responses.
 
@@ -270,6 +272,8 @@ Task IDs follow the format `{task_type}_{index}` (e.g., `base_0`, `hallucination
 
 Pass^k/Pass@k are computed per task across the k runs and then aggregated across tasks.
 
+**Implementation Note:** Individual reward components are implemented as modular functions in [reward_calculators.py](car_bench/envs/reward_calculators.py) for easy customization and extension.
+
 ## Baseline Results
 
 Performance of frontier models across task types. Average is computed across task types (unweighted).
@@ -291,12 +295,18 @@ Performance of frontier models across task types. Average is computed across tas
 
 ## Citation
 
-**Note:** The CAR-bench paper is currently in the publishing process and will be available soon.
-
 If you use CAR-bench in your research, please cite:
 
 ```bibtex
-@article{}
+@misc{kirmayr2026carbenchevaluatingconsistencylimitawareness,
+      title={CAR-bench: Evaluating the Consistency and Limit-Awareness of LLM Agents under Real-World Uncertainty}, 
+      author={Johannes Kirmayr and Lukas Stappen and Elisabeth André},
+      year={2026},
+      eprint={2601.22027},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2601.22027}, 
+}
 ```
 
 ## Contributing
@@ -305,7 +315,7 @@ We welcome contributions! Please:
 - Report issues or bugs via GitHub Issues
 - Submit pull requests for bug fixes or improvements
 - Follow existing code style and conventions
-- Develop new agents challenging CAR-bench
+- Develop new agents challenging [CAR-bench](#car-bench-evaluating-the-consistency-and-limit-awareness-of-llm-agents-under-real-world-uncertainty)
 - Expand the benchmark with new tasks, tools, or policies
 
 ## License
