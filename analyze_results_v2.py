@@ -2367,7 +2367,7 @@ def print_task_level_results(task_analysis: Dict[str, Any]):
             successful = ", ".join(task["successful_models"])
             failed = ", ".join(task["failed_models"])
             print(
-                f"  Task {task['task_id']:3d}: {task['success_rate']*100:4.0f}% success | "
+                f"  Task {task['task_id']:3s}: {task['success_rate']*100:4.0f}% success | "
                 f"✅ {successful} | ❌ {failed}"
             )
 

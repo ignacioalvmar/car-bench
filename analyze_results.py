@@ -1,3 +1,5 @@
+# DEPRECTAED: Please use analyze_results_v2.py for the latest version of this analysis script. This file is kept for analysing legacy results.
+
 #!/usr/bin/env python3
 """
 Comprehensive analysis script for tau-bench results.
