@@ -24,6 +24,24 @@ The benchmark is instantiated in an automotive in-car voice assistant domain, wh
 <p><em>Overview of CAR-bench components: (a) LLM-simulated user generates multi-turn messages following task instructions; (b) LLM agent, guided by domain policies, interacts with (c) tools to observe or modify the environment; (d) mutable states, (e) fixed context variables, and (f) static databases comprise the environment.</em></p>
 </div>
 
+## Leaderboard
+
+*Summarized leaderboard showing Avg Pass^3 scores. See [full baseline results](#baseline-results) for detailed metrics across all task types.*
+
+| Rank | Model | Avg Pass^3 | Organization |
+|------|-------|:----------:|--------------|
+| 1st | GPT-5 (thinking) | 54% | OpenAI |
+| 2nd | GPT-5.2 (thinking) | 53% | OpenAI |
+| 3rd | Claude-Opus-4.5 (thinking) | 52% | Anthropic |
+| 4th | Claude-Sonnet-4 (thinking) | 47% | Anthropic |
+| 5th | Gemini-2.5-flash (thinking) | 41% | Google |
+| 6th | Gemini-2.5-pro (auto-thinking) | 38% | Google |
+| 7th | GPT-4.1 | 37% | OpenAI |
+| 8th | Gemini-2.5-flash | 34% | Google |
+| 9th | Qwen3-32b (thinking) | 31% | Alibaba |
+| 10th | GPT-Oss-120b (thinking) | 28% | OpenAI |
+| 11th | xLAM-2-32b | 16% | Salesforce |
+
 ### Key Contributions
 
 - **Three complementary task types** testing different aspects of agent reliability:
