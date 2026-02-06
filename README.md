@@ -126,8 +126,6 @@ For comprehensive usage documentation including all command-line options, task f
 **Evaluate on 3 tasks from the Base/train split:**
 ```bash
 python run.py \
-  --agent-strategy tool-calling \
-  --env car_voice_assistant \
   --model gpt-4.1-mini \
   --model-provider openai \
   --task-type base \
@@ -135,13 +133,9 @@ python run.py \
   --num-tasks 3 \
   --user-model gemini-2.5-flash \
   --user-model-provider gemini \
-  --user-thinking \
-  --evaluate-policy \
-  --policy-evaluator-model gpt-4.1-mini \
-  --policy-evaluator-model-provider openai \
-  --score-tool-execution-errors \
-  --score-policy-errors \
-  --planning-and-thinking-tool \
+  --user-thinking True \
+  --policy-evaluator-model gemini-2.5-flash \
+  --policy-evaluator-model-provider gemini \
   --max-concurrency 1 \
 ```
 **Note:** Set `--max-concurrency` according to your API rate limits.

@@ -94,7 +94,7 @@ class LLMUserSimulationEnv(BaseUserSimulationEnv):
                 break
             except Exception as e:
                 print(f"Error parsing user output: {e}")
-                time.sleep(30)
+                time.sleep(120)
                 messages[-1][
                     "content"
                 ] += f"\n\nLast generated message was not a valid user output: {e}. Try again."

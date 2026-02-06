@@ -450,25 +450,27 @@ def main():
     parser.add_argument(
         "--user-model",
         type=str,
-        default="gpt-4.1-mini",
+        default="gemini-2.5-flash",
         help="The model to use for the user simulator",
     )
     parser.add_argument(
         "--user-model-provider",
         type=str,
         choices=provider_list,
+        default="gemini",
         help="The model provider for the user simulator",
     )
     parser.add_argument(
         "--policy-evaluator-model",
         type=str,
-        default="gpt-4.1-mini",
+        default="gemini-2.5-flash",
         help="The model to use for the policy evaluator",
     )
     parser.add_argument(
         "--policy-evaluator-model-provider",
         type=str,
         choices=provider_list,
+        default="gemini",
         help="The model provider for the policy evaluator",
     )
     parser.add_argument(
@@ -533,21 +535,24 @@ def main():
         help="Path to a jsonlines file containing few shot displays",
     )
     parser.add_argument(
-        "--evaluate-policy", action="store_true", help="Whether to evaluate the policy"
+        "--evaluate-policy", type=bool, default=True, help="Whether to evaluate the policy"
     )
     parser.add_argument(
         "--score-tool-execution-errors",
-        action="store_true",
+        type=bool,
+        default=True,
         help="Whether to score tool execution errors",
     )
     parser.add_argument(
         "--score-policy-errors",
-        action="store_true",
+        type=bool,
+        default=True,
         help="Whether to score policy errors",
     )
     parser.add_argument(
         "--use-user-as-a-tool-tools",
-        action="store_true",
+        type=bool,
+        default=False,
         help="Whether to use the user as a tool",
     )
     parser.add_argument(
@@ -555,7 +560,8 @@ def main():
     )
     parser.add_argument(
         "--user-thinking",
-        action="store_true",
+        type=bool,
+        default=True,
         help="Whether to use thinking for the user simulator",
     )
     parser.add_argument(
@@ -571,12 +577,14 @@ def main():
     )
     parser.add_argument(
         "--remove-non-standard-fields-from-tools",
-        action="store_true",
+        type=bool,
+        default=False,
         help="Whether to remove non-standard fields from tools",
     )
     parser.add_argument(
         "--planning-and-thinking-tool",
-        action="store_true",
+        type=bool,
+        default=True,
         help="Whether to use the planning and thinking tool",
     )
     args = parser.parse_args()
