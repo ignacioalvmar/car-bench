@@ -1,6 +1,5 @@
 import json
-from pathlib import Path
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 from car_bench.envs.base import Env
 from car_bench.envs.car_voice_assistant.mock_data import load_data
@@ -10,6 +9,45 @@ from car_bench.envs.car_voice_assistant.tools import (
 from car_bench.envs.car_voice_assistant.wiki import WIKI
 from car_bench.envs.policy_evaluator import PolicyEvaluatorStrategy
 from car_bench.envs.user.user import UserStrategy
+from car_bench.types import Action, Task
+
+
+# Default HuggingFace dataset repo ID
+HF_DATASET_REPO_ID = "johanneskirmayr/car-bench-dataset"
+
+
+def _load_tasks(
+    task_type: str,
+    task_split: str,
+    repo_id: str = HF_DATASET_REPO_ID,
+) -> List[Task]:
+    """Load tasks from HuggingFace dataset repo.
+
+    The HF dataset has configs like 'tasks_base', 'tasks_disambiguation',
+    'tasks_hallucination' with train/test splits already separated.
+    Fields 'context_init_config', 'actions', and 'removed_part' are stored
+    as JSON strings and need to be parsed back.
+    """
+    from datasets import load_dataset
+
+    config_name = f"tasks_{task_type}"
+    print(f"Loading tasks from HuggingFace: {repo_id} / {config_name} / {task_split}")
+    ds = load_dataset(repo_id, config_name, split=task_split)
+
+    tasks = []
+    for row in ds:
+        d = dict(row)
+        # Parse JSON string fields back to Python objects
+        d["context_init_config"] = json.loads(d["context_init_config"])
+        d["actions"] = [
+            Action(**a) for a in json.loads(d["actions"])
+        ]
+        if d.get("removed_part") is not None:
+            d["removed_part"] = json.loads(d["removed_part"])
+        tasks.append(Task(**d))
+
+    print(f"Loaded {len(tasks)} tasks from HuggingFace ({config_name}/{task_split})")
+    return tasks
 
 
 class MockCarVoiceAssistantDomainEnv(Env):
@@ -32,39 +70,8 @@ class MockCarVoiceAssistantDomainEnv(Env):
         score_policy_errors: Optional[bool] = False,
         use_user_as_a_tool_tools: bool = False,
     ):
-        # Load tasks based on task_type
-        match task_type:
-            case "base":
-                from car_bench.envs.car_voice_assistant.tasks.tasks_base import (
-                    TASKS as all_tasks,
-                )
-            case "hallucination":
-                from car_bench.envs.car_voice_assistant.tasks.tasks_hallucination import (
-                    TASKS as all_tasks,
-                )
-            case "disambiguation":
-                from car_bench.envs.car_voice_assistant.tasks.tasks_disambiguation import (
-                    TASKS as all_tasks,
-                )
-            case _:
-                raise ValueError(f"Unknown task type: {task_type}")
-
-        # Filter tasks based on task_split
-        tasks_dir = Path(__file__).parent / "tasks"
-        splits_file = tasks_dir / "task_splits.json"
-        
-        with open(splits_file, 'r') as f:
-            splits = json.load(f)
-        
-        split_key = f"{task_type}_{task_split}"
-        if split_key not in splits:
-            raise ValueError(f"Unknown split combination: {split_key}")
-        
-        # Get the task IDs for this split
-        split_task_ids = set(splits[split_key])
-        
-        # Filter tasks to only include those in the split
-        tasks = [task for task in all_tasks if task.task_id in split_task_ids]
+        # Load tasks from HuggingFace
+        tasks = _load_tasks(task_type, task_split)
 
         all_tools_plus_user_as_a_tool = None
         wiki_with_user_as_a_tool = None

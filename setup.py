@@ -9,6 +9,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "annotated_types>=0.7.0",
+        "datasets>=3.0.0",
+        "huggingface_hub>=0.25.0",
         "litellm>=1.80.16",
         "matplotlib>=3.10.5",
         "networkx>=3.4.2",

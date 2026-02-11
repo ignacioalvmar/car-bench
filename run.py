@@ -246,6 +246,10 @@ def run(
     ckpt_path: str,
     custom_agent_factory: Optional[Callable[[List[Dict[str, Any]], Any, argparse.Namespace], Agent]] = None,
 ) -> List[EnvRunResult]:
+    # Pre-load mock data so all tasks have equal runtime
+    from car_bench.envs.car_voice_assistant.mock_data import car_va_data_manager
+    car_va_data_manager.initialize()
+
     print(f"Loading user with strategy: {args.user_strategy}")
     env = get_env(
         args.env,
@@ -588,6 +592,7 @@ def main():
         help="Whether to use the planning and thinking tool",
     )
     args = parser.parse_args()
+
     print(args)
     random.seed(args.seed)
 

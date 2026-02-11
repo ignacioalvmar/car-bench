@@ -108,15 +108,6 @@ export ANTHROPIC_API_KEY=your_anthropic_key
 export GEMINI_API_KEY=your_gemini_key
 ```
 
-5. **Download mock environment data**
-
-Download the navigation data from the [releases page](https://github.com/CAR-bench/car-bench/releases/tag/v1.0.0) and extract to:
-```
-car_bench/envs/car_voice_assistant/data/navigation/
-```
-
-The JSON files should be at the same level as `weather.jsonl` and `locations.jsonl`.
-
 ## Usage
 
 For comprehensive usage documentation including all command-line options, task filtering, and advanced configurations, see description of command-line options in [run.py](run.py).
@@ -207,9 +198,11 @@ For streamlined agent development with modular components and utilities, see **[
 | **Disambiguation** | 31 | 25 | 56 | Ambiguous requests requiring clarification |
 | **Total** | 129 | 125 | 254 | |
 
+All tasks and mock environment data (48 cities, 130K POIs, 1.7M routes, weather, calendars, contacts) are hosted on [HuggingFace](https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset) and downloaded automatically on first run. You can browse and explore the data interactively via the [Dataset Viewer](https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset/viewer) on HuggingFace. Local reference copies of the raw data files are also available in [`docs/reference_data/`](docs/reference_data/).
+
 ### Task Structure
 
-Each Task() (see [tasks](car_bench/envs/car_voice_assistant/tasks)) consists of:
+Each Task() (see [tasks](https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset/viewer)) consists of:
 - **task_id**: Unique identifier (e.g., `base_0`, `hallucination_15`)
 - **persona**: User personality and communication style
 - **calendar_id**: User's calendar identifier
