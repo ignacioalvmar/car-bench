@@ -236,6 +236,53 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
+        /* Audio Player Section */
+        .audio-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .audio-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .audio-label i {
+            font-size: 1.1rem;
+            color: var(--color-primary-light);
+        }
+
+        .audio-description {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+        }
+
+        .audio-player {
+            width: 100%;
+            max-width: 500px;
+            height: 40px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .audio-player::-webkit-media-controls-panel {
+            background-color: var(--color-bg-alt);
+        }
+
         /* Sections */
         section {
             padding: var(--section-padding);
@@ -1037,6 +1084,19 @@
                 <a href="https://huggingface.co/papers/2601.22027" class="btn btn-outline" target="_blank">
                     <i class="fas fa-comments"></i> Community
                 </a>
+            </div>
+
+            <!-- Audio Player -->
+            <div class="audio-section">
+                <div class="audio-label">
+                    <i class="fas fa-headphones"></i>
+                    Listen to Paper Overview
+                </div>
+                <p class="audio-description">AI-generated audio summary by NotebookLLM</p>
+                <audio controls class="audio-player">
+                    <source src="docs/paper_audio_notebookLLM.m4a" type="audio/mp4">
+                    Your browser does not support the audio element.
+                </audio>
             </div>
         </div>
     </section>
