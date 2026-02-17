@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAR-bench Interactive Task Player</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #1a1d27;
+    --bg3: #242736;
+    --border: #2e3348;
+    --text: #e1e4ed;
+    --text-dim: #8b90a5;
+    --accent: #6c8cff;
+    --accent2: #4ecdc4;
+    --user-bg: #1e3a5f;
+    --agent-bg: #2d1f4e;
+    --tool-bg: #1f3329;
+    --tool-result-bg: #1a2e23;
+    --error: #e74c3c;
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --radius: 8px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* --- Top Bar --- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    height: 48px;
+    gap: 12px;
+  }
+  .topbar h1 {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--accent);
+  }
+  .topbar-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .topbar select, .topbar button {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .topbar button:hover { background: var(--accent); color: #fff; }
+  .topbar button.active { background: var(--accent); color: #fff; }
+  .topbar .role-indicator {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .role-user { background: var(--user-bg); color: #7fb3e0; border: 1px solid #2a5a8f; }
+  .role-agent { background: var(--agent-bg); color: #b39ddb; border: 1px solid #5a3d8f; }
+
+  /* --- Main Layout --- */
+  .main {
+    display: flex;
+    height: calc(100vh - 48px);
+  }
+
+  /* --- Left Side Panel (Wiki + Context) --- */
+  .side-panel {
+    width: 340px;
+    min-width: 280px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: var(--bg2);
+  }
+  .side-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+  }
+  .side-tab {
+    flex: 1;
+    padding: 8px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-dim);
+    border-bottom: 2px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .side-tab:hover { color: var(--text); }
+  .side-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .side-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+  }
+  .side-pane { display: none; }
+  .side-pane.active { display: block; }
+
+  /* Wiki */
+  .wiki-text {
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    font-family: var(--mono);
+    color: var(--text-dim);
+  }
+  .wiki-text h2, .wiki-text h3 {
+    color: var(--accent);
+    margin-top: 12px;
+    font-family: var(--font);
+  }
+
+  /* Context State */
+  .state-group {
+    margin-bottom: 16px;
+  }
+  .state-group-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .state-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-size: 12px;
+    font-family: var(--mono);
+  }
+  .state-key { color: var(--text-dim); }
+  .state-val { color: var(--text); font-weight: 500; }
+  .state-val.changed { color: var(--warning); font-weight: 700; }
+
+  /* Task Info */
+  .task-info-card {
+    background: var(--bg3);
+    border-radius: var(--radius);
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+  }
+  .task-info-card .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .task-info-card .value {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .gt-action {
+    background: var(--bg);
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin-top: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    border-left: 3px solid var(--accent2);
+  }
+
+  /* --- Center: Conversation --- */
+  .center-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .conversation {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .msg {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+  .msg-user {
+    align-self: flex-end;
+    background: var(--user-bg);
+    border: 1px solid #2a5a8f;
+  }
+  .msg-assistant {
+    align-self: flex-start;
+    background: var(--agent-bg);
+    border: 1px solid #5a3d8f;
+  }
+  .msg-tool-call {
+    align-self: flex-start;
+    background: var(--tool-bg);
+    border: 1px solid #2a5c3a;
+    font-family: var(--mono);
+    font-size: 12px;
+    max-width: 90%;
+  }
+  .msg-tool-result {
+    align-self: flex-start;
+    background: var(--tool-result-bg);
+    border: 1px solid #1a4a2a;
+    font-family: var(--mono);
+    font-size: 11px;
+    max-width: 90%;
+    color: var(--text-dim);
+  }
+  .msg-system {
+    align-self: center;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+    text-align: center;
+  }
+  .msg .role-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.6;
+  }
+
+  /* Input area */
+  .input-area {
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    background: var(--bg2);
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .input-area textarea {
+    flex: 1;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: var(--font);
+    font-size: 13px;
+    resize: none;
+    min-height: 42px;
+    max-height: 120px;
+    line-height: 1.4;
+  }
+  .input-area textarea:focus { outline: none; border-color: var(--accent); }
+  .input-area button {
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .input-area button:hover { opacity: 0.9; }
+  .input-area button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-end {
+    background: var(--error) !important;
+  }
+
+  /* --- Right Side Panel (Tools) --- */
+  .tools-panel {
+    width: 380px;
+    min-width: 300px;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: var(--bg2);
+  }
+  .tools-header {
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tools-search {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tools-search input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .tools-search input:focus { outline: none; border-color: var(--accent); }
+  .tools-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+  .tool-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .tool-item:hover { border-color: var(--accent); }
+  .tool-item.expanded { border-color: var(--accent); }
+  .tool-item-header {
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tool-item-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent2);
+  }
+  .tool-item-arrow {
+    font-size: 10px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+  }
+  .tool-item.expanded .tool-item-arrow { transform: rotate(90deg); }
+  .tool-item-body {
+    display: none;
+    padding: 0 10px 10px;
+  }
+  .tool-item.expanded .tool-item-body { display: block; }
+  .tool-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .tool-param {
+    margin-bottom: 6px;
+  }
+  .tool-param label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+    font-family: var(--mono);
+  }
+  .tool-param label .param-info {
+    font-weight: 400;
+    color: var(--text-dim);
+    opacity: 0.7;
+  }
+  .tool-param input, .tool-param select, .tool-param textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 5px 8px;
+    font-size: 12px;
+    font-family: var(--mono);
+  }
+  .tool-param input:focus, .tool-param select:focus, .tool-param textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .tool-exec-btn {
+    margin-top: 8px;
+    padding: 6px 16px;
+    background: var(--accent2);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .tool-exec-btn:hover { opacity: 0.85; }
+
+  /* --- Setup screen --- */
+  .setup-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: var(--bg);
+    padding: 32px;
+  }
+  .setup-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 700px;
+    width: 100%;
+  }
+  .setup-card h2 {
+    color: var(--accent);
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  .setup-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .setup-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .setup-field label {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .setup-field select, .setup-field input {
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--text);
+    font-size: 13px;
+  }
+  .task-picker {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .task-pick-item {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .task-pick-item:hover { background: var(--bg3); }
+  .task-pick-item.selected { background: var(--accent); color: #fff; }
+  .task-pick-item .task-pick-id {
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-right: 8px;
+    color: var(--accent2);
+  }
+  .task-pick-item.selected .task-pick-id { color: #fff; }
+  .setup-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+  }
+  .setup-actions button {
+    padding: 10px 28px;
+    border-radius: var(--radius);
+    border: none;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+  /* Utility */
+  .hidden { display: none !important; }
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+  .badge-removed { background: #5c2323; color: #e74c3c; }
+  .badge-disambig { background: #4a3b1e; color: #f39c12; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SETUP SCREEN -->
+<!-- ============================================================ -->
+<div id="setup-screen" class="setup-screen">
+  <div class="setup-card">
+    <h2>CAR-bench Interactive Task Player</h2>
+    <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 13px;">
+      Play through benchmark tasks interactively. Choose a role: act as the <strong style="color:#7fb3e0">User (driver)</strong>
+      who makes requests, or as the <strong style="color:#b39ddb">Agent (in-car assistant)</strong> who uses tools and responds.
+    </p>
+
+    <div class="setup-row">
+      <div class="setup-field">
+        <label>Task Type</label>
+        <select id="setup-task-type" onchange="loadTasks()">
+          <option value="base">Base</option>
+          <option value="hallucination">Hallucination</option>
+          <option value="disambiguation">Disambiguation</option>
+        </select>
+      </div>
+      <div class="setup-field">
+        <label>Split</label>
+        <select id="setup-task-split" onchange="loadTasks()">
+          <option value="train">Train</option>
+          <option value="test">Test</option>
+        </select>
+      </div>
+      <div class="setup-field">
+        <label>Your Role</label>
+        <select id="setup-role">
+          <option value="user">User (Driver)</option>
+          <option value="agent">Agent (Assistant)</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="font-size:12px; color: var(--text-dim); margin-bottom: 6px; font-weight: 600;">Select a Task</div>
+    <div id="task-picker" class="task-picker">
+      <div style="padding: 20px; text-align: center; color: var(--text-dim);">Loading tasks...</div>
+    </div>
+
+    <div class="setup-actions">
+      <button class="btn-primary" id="btn-start" disabled onclick="startSession()">Start Session</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MAIN UI -->
+<!-- ============================================================ -->
+<div id="main-ui" class="hidden">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <h1>CAR-bench Player</h1>
+    <div class="topbar-controls">
+      <span id="task-id-display" style="font-family: var(--mono); font-size: 12px; color: var(--text-dim);"></span>
+      <span id="role-display" class="role-indicator role-user">User</span>
+      <button onclick="switchRole()">Switch Role</button>
+      <button class="btn-end" onclick="endSession()">End Session</button>
+      <button onclick="backToSetup()">New Task</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- Left: Wiki / Context / Task Info -->
+    <div class="side-panel">
+      <div class="side-tabs">
+        <div class="side-tab active" data-pane="pane-task" onclick="switchSideTab(this)">Task</div>
+        <div class="side-tab" data-pane="pane-wiki" onclick="switchSideTab(this)">Wiki</div>
+        <div class="side-tab" data-pane="pane-context" onclick="switchSideTab(this)">State</div>
+      </div>
+      <div class="side-content">
+        <!-- Task Pane -->
+        <div id="pane-task" class="side-pane active">
+          <div class="task-info-card">
+            <div class="label">Instruction</div>
+            <div class="value" id="info-instruction"></div>
+          </div>
+          <div class="task-info-card">
+            <div class="label">Persona</div>
+            <div class="value" id="info-persona"></div>
+          </div>
+          <div id="info-removed-part-card" class="task-info-card hidden">
+            <div class="label">Removed Part <span class="badge badge-removed">Hallucination</span></div>
+            <div class="value" id="info-removed-part" style="font-family: var(--mono); color: var(--error);"></div>
+          </div>
+          <div id="info-disambig-card" class="task-info-card hidden">
+            <div class="label">Disambiguation Element <span class="badge badge-disambig">Disambig</span></div>
+            <div class="value" id="info-disambig"></div>
+          </div>
+          <div class="task-info-card">
+            <div class="label">Ground-Truth Actions</div>
+            <div id="info-gt-actions"></div>
+          </div>
+        </div>
+
+        <!-- Wiki Pane -->
+        <div id="pane-wiki" class="side-pane">
+          <div id="wiki-content" class="wiki-text"></div>
+        </div>
+
+        <!-- Context State Pane -->
+        <div id="pane-context" class="side-pane">
+          <div id="context-state-display"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Conversation -->
+    <div class="center-panel">
+      <div id="conversation" class="conversation"></div>
+      <div class="input-area">
+        <textarea id="msg-input" placeholder="Type a message..." rows="1"
+                  onkeydown="handleInputKey(event)"></textarea>
+        <button id="btn-send" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <!-- Right: Tools Panel -->
+    <div class="tools-panel">
+      <div class="tools-header">
+        <span>Available Tools</span>
+        <span id="tools-count" style="font-weight: 400; font-size: 11px; color: var(--text-dim);"></span>
+      </div>
+      <div class="tools-search">
+        <input type="text" placeholder="Search tools..." id="tools-search-input" oninput="filterTools()">
+      </div>
+      <div id="tools-list" class="tools-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// State
+// =====================================================================
+let currentRole = 'user'; // 'user' or 'agent'
+let sessionActive = false;
+let taskList = [];
+let selectedTaskIndex = null;
+let toolsInfo = [];
+let initialVehicleState = null;
+
+// =====================================================================
+// Setup Screen
+// =====================================================================
+
+async function loadTasks() {
+  const type = document.getElementById('setup-task-type').value;
+  const split = document.getElementById('setup-task-split').value;
+  const picker = document.getElementById('task-picker');
+  picker.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);">Loading...</div>';
+  document.getElementById('btn-start').disabled = true;
+  selectedTaskIndex = null;
+
+  try {
+    const res = await fetch(`/api/tasks?type=${type}&split=${split}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    taskList = data.tasks;
+    picker.innerHTML = '';
+    data.tasks.forEach((t, i) => {
+      const div = document.createElement('div');
+      div.className = 'task-pick-item';
+      div.dataset.index = i;
+      let badges = '';
+      if (t.removed_part) badges += ' <span class="badge badge-removed">removed: ' + t.removed_part.join(', ') + '</span>';
+      if (t.disambiguation_element_internal) badges += ' <span class="badge badge-disambig">disambig-internal</span>';
+      if (t.disambiguation_element_user) badges += ' <span class="badge badge-disambig">disambig-user</span>';
+      div.innerHTML = `<span class="task-pick-id">${t.task_id}</span>${badges}<br><span style="color:var(--text-dim)">${truncate(t.instruction, 120)}</span>`;
+      div.onclick = () => selectTask(i);
+      picker.appendChild(div);
+    });
+  } catch (e) {
+    picker.innerHTML = `<div style="padding:20px;text-align:center;color:var(--error);">Error: ${e.message}</div>`;
+  }
+}
+
+function selectTask(idx) {
+  selectedTaskIndex = idx;
+  document.querySelectorAll('.task-pick-item').forEach(el => el.classList.remove('selected'));
+  document.querySelector(`.task-pick-item[data-index="${idx}"]`).classList.add('selected');
+  document.getElementById('btn-start').disabled = false;
+}
+
+async function startSession() {
+  if (selectedTaskIndex === null) return;
+  const type = document.getElementById('setup-task-type').value;
+  const split = document.getElementById('setup-task-split').value;
+  currentRole = document.getElementById('setup-role').value;
+
+  document.getElementById('btn-start').disabled = true;
+  document.getElementById('btn-start').textContent = 'Loading...';
+
+  try {
+    const res = await fetch('/api/start', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({task_type: type, task_split: split, task_index: selectedTaskIndex})
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    sessionActive = true;
+    toolsInfo = data.tools;
+    initialVehicleState = JSON.parse(JSON.stringify(data.vehicle_state));
+
+    // Populate UI
+    document.getElementById('setup-screen').classList.add('hidden');
+    document.getElementById('main-ui').classList.remove('hidden');
+
+    document.getElementById('task-id-display').textContent = data.task.task_id + ' (' + data.task.task_type + ')';
+    updateRoleDisplay();
+
+    // Task info
+    document.getElementById('info-instruction').textContent = data.task.instruction;
+    document.getElementById('info-persona').textContent = data.task.persona;
+
+    if (data.task.removed_part && data.task.removed_part.length > 0) {
+      document.getElementById('info-removed-part-card').classList.remove('hidden');
+      document.getElementById('info-removed-part').textContent = data.task.removed_part.join(', ');
+    } else {
+      document.getElementById('info-removed-part-card').classList.add('hidden');
+    }
+
+    const disambig = data.task.disambiguation_element_internal || data.task.disambiguation_element_user;
+    if (disambig) {
+      document.getElementById('info-disambig-card').classList.remove('hidden');
+      document.getElementById('info-disambig').textContent = disambig;
+    } else {
+      document.getElementById('info-disambig-card').classList.add('hidden');
+    }
+
+    // Ground truth actions
+    const gtDiv = document.getElementById('info-gt-actions');
+    gtDiv.innerHTML = '';
+    (data.task.ground_truth_actions || []).forEach(a => {
+      const d = document.createElement('div');
+      d.className = 'gt-action';
+      d.textContent = a.name + '(' + JSON.stringify(a.kwargs) + ')';
+      gtDiv.appendChild(d);
+    });
+
+    // Wiki
+    document.getElementById('wiki-content').textContent = data.wiki;
+
+    // Context state
+    renderContextState(data.vehicle_state, data.fixed_context);
+
+    // Tools
+    renderTools(data.tools);
+
+    // Clear conversation
+    document.getElementById('conversation').innerHTML = '';
+
+    // Add system message
+    addSystemMessage(`Session started. Task: ${data.task.task_id}. You are playing as: ${currentRole === 'user' ? 'User (Driver)' : 'Agent (Assistant)'}`);
+
+    if (currentRole === 'user') {
+      addSystemMessage('You are the driver. Type your request to the in-car assistant.');
+      document.getElementById('msg-input').placeholder = 'Type your request as the driver...';
+    } else {
+      addSystemMessage('You are the in-car assistant. Use the tools panel on the right to execute tools, then type your response to the user.');
+      document.getElementById('msg-input').placeholder = 'Type your response as the assistant...';
+    }
+
+  } catch (e) {
+    alert('Error starting session: ' + e.message);
+  } finally {
+    document.getElementById('btn-start').disabled = false;
+    document.getElementById('btn-start').textContent = 'Start Session';
+  }
+}
+
+// =====================================================================
+// Conversation
+// =====================================================================
+
+function addMessage(role, content) {
+  const conv = document.getElementById('conversation');
+  const div = document.createElement('div');
+  const roleClass = role === 'user' ? 'msg-user' : role === 'assistant' ? 'msg-assistant' : 'msg-system';
+  div.className = `msg ${roleClass}`;
+
+  const roleTag = document.createElement('div');
+  roleTag.className = 'role-tag';
+  roleTag.textContent = role === 'user' ? 'Driver' : role === 'assistant' ? 'Assistant' : 'System';
+  div.appendChild(roleTag);
+
+  const text = document.createElement('div');
+  text.textContent = content;
+  div.appendChild(text);
+
+  conv.appendChild(div);
+  conv.scrollTop = conv.scrollHeight;
+}
+
+function addToolCallMessage(toolName, toolArgs, result) {
+  const conv = document.getElementById('conversation');
+
+  // Tool call
+  const callDiv = document.createElement('div');
+  callDiv.className = 'msg msg-tool-call';
+  const callRole = document.createElement('div');
+  callRole.className = 'role-tag';
+  callRole.textContent = 'Tool Call';
+  callDiv.appendChild(callRole);
+  const callText = document.createElement('div');
+  callText.textContent = toolName + '(' + JSON.stringify(toolArgs, null, 1) + ')';
+  callDiv.appendChild(callText);
+  conv.appendChild(callDiv);
+
+  // Tool result
+  const resDiv = document.createElement('div');
+  resDiv.className = 'msg msg-tool-result';
+  const resRole = document.createElement('div');
+  resRole.className = 'role-tag';
+  resRole.textContent = 'Tool Result';
+  resDiv.appendChild(resRole);
+  const resText = document.createElement('div');
+  try {
+    resText.textContent = JSON.stringify(JSON.parse(result), null, 2);
+  } catch {
+    resText.textContent = result;
+  }
+  resDiv.appendChild(resText);
+  conv.appendChild(resDiv);
+
+  conv.scrollTop = conv.scrollHeight;
+}
+
+function addSystemMessage(text) {
+  const conv = document.getElementById('conversation');
+  const div = document.createElement('div');
+  div.className = 'msg msg-system';
+  div.textContent = text;
+  conv.appendChild(div);
+  conv.scrollTop = conv.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('msg-input');
+  const content = input.value.trim();
+  if (!content) return;
+
+  const role = currentRole === 'user' ? 'user' : 'assistant';
+  addMessage(role, content);
+  input.value = '';
+  autoResizeInput();
+
+  try {
+    const res = await fetch('/api/send-message', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({role: role, content: content})
+    });
+    const data = await res.json();
+    if (data.done) {
+      addSystemMessage('Conversation ended (STOP signal detected).');
+      sessionActive = false;
+    }
+  } catch (e) {
+    addSystemMessage('Error sending message: ' + e.message);
+  }
+}
+
+function handleInputKey(event) {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
+  autoResizeInput();
+}
+
+function autoResizeInput() {
+  const ta = document.getElementById('msg-input');
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+}
+
+// =====================================================================
+// Role Switching
+// =====================================================================
+
+function switchRole() {
+  currentRole = currentRole === 'user' ? 'agent' : 'user';
+  updateRoleDisplay();
+  if (currentRole === 'user') {
+    document.getElementById('msg-input').placeholder = 'Type your request as the driver...';
+  } else {
+    document.getElementById('msg-input').placeholder = 'Type your response as the assistant...';
+  }
+  addSystemMessage('Switched role to: ' + (currentRole === 'user' ? 'User (Driver)' : 'Agent (Assistant)'));
+}
+
+function updateRoleDisplay() {
+  const el = document.getElementById('role-display');
+  if (currentRole === 'user') {
+    el.textContent = 'User';
+    el.className = 'role-indicator role-user';
+  } else {
+    el.textContent = 'Agent';
+    el.className = 'role-indicator role-agent';
+  }
+}
+
+// =====================================================================
+// Tools Panel
+// =====================================================================
+
+function renderTools(tools) {
+  const list = document.getElementById('tools-list');
+  list.innerHTML = '';
+  document.getElementById('tools-count').textContent = tools.length + ' tools';
+
+  tools.forEach((tool, idx) => {
+    const fn = tool.function;
+    const item = document.createElement('div');
+    item.className = 'tool-item';
+    item.dataset.name = fn.name.toLowerCase();
+    item.dataset.idx = idx;
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'tool-item-header';
+    header.innerHTML = `<span class="tool-item-name">${fn.name}</span><span class="tool-item-arrow">&#9654;</span>`;
+    header.onclick = () => item.classList.toggle('expanded');
+    item.appendChild(header);
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'tool-item-body';
+
+    const desc = document.createElement('div');
+    desc.className = 'tool-desc';
+    desc.textContent = fn.description || '';
+    body.appendChild(desc);
+
+    // Parameters
+    const params = fn.parameters?.properties || {};
+    const required = fn.parameters?.required || [];
+
+    Object.entries(params).forEach(([pname, pinfo]) => {
+      const pdiv = document.createElement('div');
+      pdiv.className = 'tool-param';
+
+      const label = document.createElement('label');
+      const reqStar = required.includes(pname) ? ' *' : '';
+      const typeInfo = pinfo.type || '';
+      label.innerHTML = `${pname}${reqStar} <span class="param-info">${typeInfo}</span>`;
+      pdiv.appendChild(label);
+
+      if (pinfo.enum && pinfo.enum.length > 0) {
+        const sel = document.createElement('select');
+        sel.id = `tool-${idx}-${pname}`;
+        pinfo.enum.forEach(v => {
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = v;
+          sel.appendChild(opt);
+        });
+        pdiv.appendChild(sel);
+      } else {
+        const inp = document.createElement('input');
+        inp.id = `tool-${idx}-${pname}`;
+        inp.type = pinfo.type === 'number' || pinfo.type === 'integer' ? 'number' : 'text';
+        if (pinfo.minimum !== undefined) inp.min = pinfo.minimum;
+        if (pinfo.maximum !== undefined) inp.max = pinfo.maximum;
+        if (pinfo.multipleOf !== undefined) inp.step = pinfo.multipleOf;
+        inp.placeholder = pinfo.description || pname;
+        pdiv.appendChild(inp);
+      }
+
+      if (pinfo.description) {
+        const hint = document.createElement('div');
+        hint.style.cssText = 'font-size:10px; color:var(--text-dim); margin-top:2px; opacity:0.7;';
+        hint.textContent = pinfo.description;
+        pdiv.appendChild(hint);
+      }
+
+      body.appendChild(pdiv);
+    });
+
+    // Execute button
+    const btn = document.createElement('button');
+    btn.className = 'tool-exec-btn';
+    btn.textContent = 'Execute ' + fn.name;
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      executeTool(idx);
+    };
+    body.appendChild(btn);
+
+    item.appendChild(body);
+    list.appendChild(item);
+  });
+}
+
+function filterTools() {
+  const q = document.getElementById('tools-search-input').value.toLowerCase();
+  document.querySelectorAll('.tool-item').forEach(item => {
+    item.style.display = item.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+
+async function executeTool(toolIdx) {
+  const tool = toolsInfo[toolIdx];
+  const fn = tool.function;
+  const params = fn.parameters?.properties || {};
+  const args = {};
+
+  for (const [pname, pinfo] of Object.entries(params)) {
+    const el = document.getElementById(`tool-${toolIdx}-${pname}`);
+    if (!el) continue;
+    let val = el.value;
+    if (val === '' && (fn.parameters?.required || []).includes(pname)) {
+      alert(`Parameter "${pname}" is required.`);
+      return;
+    }
+    if (val === '') continue;
+
+    // Type coercion
+    if (pinfo.type === 'number' || pinfo.type === 'integer') {
+      val = Number(val);
+      if (isNaN(val)) {
+        alert(`Parameter "${pname}" must be a number.`);
+        return;
+      }
+      if (pinfo.type === 'integer') val = Math.round(val);
+    } else if (pinfo.type === 'boolean') {
+      val = val === 'true' || val === '1';
+    } else if (pinfo.type === 'array') {
+      try { val = JSON.parse(val); } catch {
+        alert(`Parameter "${pname}" must be valid JSON array.`);
+        return;
+      }
+    }
+    args[pname] = val;
+  }
+
+  try {
+    const res = await fetch('/api/execute-tool', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({tool_name: fn.name, tool_args: args})
+    });
+    const data = await res.json();
+    if (data.error) {
+      addSystemMessage('Tool error: ' + data.error);
+      return;
+    }
+
+    addToolCallMessage(fn.name, args, data.result);
+
+    // Update context state
+    if (data.vehicle_state) {
+      renderContextState(data.vehicle_state, null);
+    }
+  } catch (e) {
+    addSystemMessage('Error executing tool: ' + e.message);
+  }
+}
+
+// =====================================================================
+// Context State
+// =====================================================================
+
+function renderContextState(vehicleState, fixedCtx) {
+  const container = document.getElementById('context-state-display');
+  container.innerHTML = '';
+
+  if (vehicleState) {
+    // Group state by category
+    const groups = {
+      'Climate': ['climate_temperature_driver', 'climate_temperature_passenger', 'air_conditioning', 'air_circulation', 'fan_speed', 'fan_airflow_direction', 'window_front_defrost', 'window_rear_defrost'],
+      'Windows & Sunroof': ['sunroof_position', 'sunshade_position', 'window_driver_position', 'window_passenger_position', 'window_driver_rear_position', 'window_passenger_rear_position', 'trunk_door_position'],
+      'Lights': ['reading_light_driver', 'reading_light_passenger', 'reading_light_driver_rear', 'reading_light_passenger_rear', 'fog_lights', 'head_lights_low_beams', 'head_lights_high_beams', 'ambient_light'],
+      'Heating': ['steering_wheel_heating', 'seat_heating_driver', 'seat_heating_passenger'],
+      'Navigation': ['navigation_active', 'waypoints_id', 'routes_to_final_destination_id'],
+      'Communication': ['email_addresses_sent_mail_to', 'phone_numbers_called'],
+    };
+
+    for (const [groupName, keys] of Object.entries(groups)) {
+      const group = document.createElement('div');
+      group.className = 'state-group';
+      const title = document.createElement('div');
+      title.className = 'state-group-title';
+      title.textContent = groupName;
+      group.appendChild(title);
+
+      keys.forEach(key => {
+        if (vehicleState[key] === undefined) return;
+        const row = document.createElement('div');
+        row.className = 'state-row';
+
+        const keyEl = document.createElement('span');
+        keyEl.className = 'state-key';
+        keyEl.textContent = key.replace(/_/g, ' ');
+        row.appendChild(keyEl);
+
+        const valEl = document.createElement('span');
+        valEl.className = 'state-val';
+        const val = vehicleState[key];
+        valEl.textContent = Array.isArray(val) ? (val.length > 0 ? JSON.stringify(val) : '[]') : String(val);
+
+        // Highlight changed values
+        if (initialVehicleState && JSON.stringify(initialVehicleState[key]) !== JSON.stringify(val)) {
+          valEl.classList.add('changed');
+        }
+
+        row.appendChild(valEl);
+        group.appendChild(row);
+      });
+
+      container.appendChild(group);
+    }
+  }
+
+  if (fixedCtx) {
+    const group = document.createElement('div');
+    group.className = 'state-group';
+    const title = document.createElement('div');
+    title.className = 'state-group-title';
+    title.textContent = 'Fixed Context';
+    group.appendChild(title);
+
+    const fixedKeys = ['car_color', 'battery_capacity_kwh', 'state_of_charge', 'energy_consumption',
+                       'max_charging_power_ac', 'max_charging_power_dc'];
+    fixedKeys.forEach(key => {
+      if (fixedCtx[key] === undefined) return;
+      const row = document.createElement('div');
+      row.className = 'state-row';
+      const keyEl = document.createElement('span');
+      keyEl.className = 'state-key';
+      keyEl.textContent = key.replace(/_/g, ' ');
+      row.appendChild(keyEl);
+      const valEl = document.createElement('span');
+      valEl.className = 'state-val';
+      valEl.textContent = String(fixedCtx[key]);
+      row.appendChild(valEl);
+      group.appendChild(row);
+    });
+
+    // Location
+    if (fixedCtx.current_location) {
+      const row = document.createElement('div');
+      row.className = 'state-row';
+      const keyEl = document.createElement('span');
+      keyEl.className = 'state-key';
+      keyEl.textContent = 'location';
+      row.appendChild(keyEl);
+      const valEl = document.createElement('span');
+      valEl.className = 'state-val';
+      valEl.textContent = fixedCtx.current_location.name + ' (' + fixedCtx.current_location.id + ')';
+      row.appendChild(valEl);
+      group.appendChild(row);
+    }
+
+    // DateTime
+    if (fixedCtx.current_datetime) {
+      const dt = fixedCtx.current_datetime;
+      const row = document.createElement('div');
+      row.className = 'state-row';
+      const keyEl = document.createElement('span');
+      keyEl.className = 'state-key';
+      keyEl.textContent = 'datetime';
+      row.appendChild(keyEl);
+      const valEl = document.createElement('span');
+      valEl.className = 'state-val';
+      valEl.textContent = `${dt.year}-${String(dt.month).padStart(2,'0')}-${String(dt.day).padStart(2,'0')} ${String(dt.hour).padStart(2,'0')}:${String(dt.minute).padStart(2,'0')}`;
+      row.appendChild(valEl);
+      group.appendChild(row);
+    }
+
+    // Seats
+    if (fixedCtx.seats_occupied) {
+      const row = document.createElement('div');
+      row.className = 'state-row';
+      const keyEl = document.createElement('span');
+      keyEl.className = 'state-key';
+      keyEl.textContent = 'seats occupied';
+      row.appendChild(keyEl);
+      const valEl = document.createElement('span');
+      valEl.className = 'state-val';
+      const occupied = Object.entries(fixedCtx.seats_occupied).filter(([,v]) => v).map(([k]) => k);
+      valEl.textContent = occupied.join(', ') || 'none';
+      row.appendChild(valEl);
+      group.appendChild(row);
+    }
+
+    container.appendChild(group);
+  }
+}
+
+// =====================================================================
+// Side Panel Tabs
+// =====================================================================
+
+function switchSideTab(tabEl) {
+  document.querySelectorAll('.side-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.side-pane').forEach(p => p.classList.remove('active'));
+  tabEl.classList.add('active');
+  document.getElementById(tabEl.dataset.pane).classList.add('active');
+}
+
+// =====================================================================
+// Session Controls
+// =====================================================================
+
+async function endSession() {
+  if (!confirm('End this session?')) return;
+  try {
+    const res = await fetch('/api/end-session', {method: 'POST'});
+    const data = await res.json();
+    addSystemMessage('Session ended.');
+    sessionActive = false;
+  } catch (e) {
+    addSystemMessage('Error ending session: ' + e.message);
+  }
+}
+
+function backToSetup() {
+  document.getElementById('main-ui').classList.add('hidden');
+  document.getElementById('setup-screen').classList.remove('hidden');
+  sessionActive = false;
+}
+
+// =====================================================================
+// Utility
+// =====================================================================
+
+function truncate(str, n) {
+  return str.length > n ? str.substring(0, n) + '...' : str;
+}
+
+// =====================================================================
+// Init
+// =====================================================================
+
+loadTasks();
+</script>
+</body>
+</html>
