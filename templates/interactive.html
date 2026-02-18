@@ -525,6 +525,142 @@
   }
   .badge-removed { background: #5c2323; color: #e74c3c; }
   .badge-disambig { background: #4a3b1e; color: #f39c12; }
+
+  /* Evaluation card */
+  .eval-card {
+    background: var(--bg3);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 12px;
+    max-width: 90%;
+    align-self: center;
+  }
+  .eval-card.reward-high { border-color: var(--success); }
+  .eval-card.reward-mid { border-color: var(--warning); }
+  .eval-card.reward-low { border-color: var(--error); }
+  .eval-reward {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .eval-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 12px;
+    font-family: var(--mono);
+    border-bottom: 1px solid var(--border);
+  }
+  .eval-row:last-child { border-bottom: none; }
+  .eval-label { color: var(--text-dim); }
+  .eval-value { font-weight: 600; }
+  .eval-list {
+    font-size: 11px;
+    color: var(--error);
+    margin-top: 4px;
+    padding-left: 16px;
+  }
+  .eval-list li { margin-bottom: 2px; }
+
+  /* Context bar (always visible at top of side panel) */
+  .context-bar {
+    padding: 8px 12px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11px;
+  }
+  .ctx-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-family: var(--mono);
+    white-space: nowrap;
+  }
+  .ctx-chip .ctx-icon { opacity: 0.6; }
+  .ctx-chip .ctx-val { color: var(--accent2); font-weight: 600; }
+
+  /* GT actions toggle */
+  .gt-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    user-select: none;
+  }
+  .gt-toggle input { margin: 0; }
+  .gt-content.collapsed { display: none; }
+
+  /* Tool domain groups */
+  .tool-domain {
+    margin-bottom: 4px;
+  }
+  .tool-domain-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 2px;
+  }
+  .tool-domain-header:hover { border-color: var(--accent); }
+  .tool-domain-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+  }
+  .tool-domain-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tool-domain-count {
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--bg3);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .tool-domain-arrow {
+    font-size: 9px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+  }
+  .tool-domain.collapsed .tool-domain-arrow { transform: rotate(-90deg); }
+  .tool-domain.collapsed .tool-domain-items { display: none; }
+  .tool-domain-items { padding: 2px 0 4px; }
+
+  /* Waiting indicator */
+  .waiting-indicator {
+    align-self: center;
+    color: var(--accent);
+    font-size: 12px;
+    padding: 8px 16px;
+    background: var(--bg3);
+    border-radius: var(--radius);
+    border: 1px dashed var(--accent);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 </style>
 </head>
 <body>
@@ -558,10 +694,21 @@
       </div>
       <div class="setup-field">
         <label>Your Role</label>
-        <select id="setup-role">
+        <select id="setup-role" onchange="toggleLlmConfig()">
           <option value="user">User (Driver)</option>
           <option value="agent">Agent (Assistant)</option>
         </select>
+      </div>
+    </div>
+
+    <div class="setup-row" style="background: var(--bg3); padding: 12px; border-radius: var(--radius); border: 1px solid var(--border);">
+      <div class="setup-field">
+        <label><input type="checkbox" id="setup-policy-eval" checked style="margin-right: 6px;">Enable Policy Evaluation</label>
+        <div style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">Runs LLM-based policy compliance check at session end (requires Gemini API key)</div>
+      </div>
+      <div style="flex: 2; font-size: 11px; color: var(--text-dim); align-self: center;">
+        <div id="role-info-user"><strong style="color:#7fb3e0">You = Driver</strong>: Claude Sonnet acts as the agent (needs ANTHROPIC_API_KEY). Gemini simulates the user LLM for evaluation.</div>
+        <div id="role-info-agent" class="hidden"><strong style="color:#b39ddb">You = Agent</strong>: Gemini 2.5 Flash simulates the driver (needs GEMINI_API_KEY). You use tools and respond.</div>
       </div>
     </div>
 
@@ -586,7 +733,6 @@
     <div class="topbar-controls">
       <span id="task-id-display" style="font-family: var(--mono); font-size: 12px; color: var(--text-dim);"></span>
       <span id="role-display" class="role-indicator role-user">User</span>
-      <button onclick="switchRole()">Switch Role</button>
       <button class="btn-end" onclick="endSession()">End Session</button>
       <button onclick="backToSetup()">New Task</button>
     </div>
@@ -595,21 +741,34 @@
   <div class="main">
     <!-- Left: Wiki / Context / Task Info -->
     <div class="side-panel">
+      <!-- Context bar: always visible location + time -->
+      <div id="context-bar" class="context-bar">
+        <span class="ctx-chip"><span class="ctx-icon">&#128205;</span> <span class="ctx-val" id="ctx-location">--</span></span>
+        <span class="ctx-chip"><span class="ctx-icon">&#128336;</span> <span class="ctx-val" id="ctx-datetime">--</span></span>
+      </div>
       <div class="side-tabs">
         <div class="side-tab active" data-pane="pane-task" onclick="switchSideTab(this)">Task</div>
         <div class="side-tab" data-pane="pane-wiki" onclick="switchSideTab(this)">Wiki</div>
-        <div class="side-tab" data-pane="pane-context" onclick="switchSideTab(this)">State</div>
+        <div class="side-tab" id="tab-state" data-pane="pane-context" onclick="switchSideTab(this)">State</div>
       </div>
       <div class="side-content">
         <!-- Task Pane -->
         <div id="pane-task" class="side-pane active">
-          <div class="task-info-card">
-            <div class="label">Instruction</div>
-            <div class="value" id="info-instruction"></div>
+          <div id="task-hidden-notice" class="hidden" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:10px; margin-bottom:12px; font-size:11px; color:var(--text-dim); line-height:1.5;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-weight:600; color:var(--warning); margin-bottom:6px;">
+              <input type="checkbox" id="task-reveal-cb" onchange="toggleTaskReveal()"> Reveal instruction &amp; persona
+            </label>
+            Instruction and persona are hidden when playing as Agent &mdash; these describe the user's intent and conversation style, which the agent shouldn't know in advance.
           </div>
-          <div class="task-info-card">
-            <div class="label">Persona</div>
-            <div class="value" id="info-persona"></div>
+          <div id="task-revealable">
+            <div class="task-info-card">
+              <div class="label">Instruction</div>
+              <div class="value" id="info-instruction"></div>
+            </div>
+            <div class="task-info-card">
+              <div class="label">Persona</div>
+              <div class="value" id="info-persona"></div>
+            </div>
           </div>
           <div id="info-removed-part-card" class="task-info-card hidden">
             <div class="label">Removed Part <span class="badge badge-removed">Hallucination</span></div>
@@ -620,18 +779,33 @@
             <div class="value" id="info-disambig"></div>
           </div>
           <div class="task-info-card">
-            <div class="label">Ground-Truth Actions</div>
-            <div id="info-gt-actions"></div>
+            <div class="label" style="display:flex; justify-content:space-between; align-items:center;">
+              Ground-Truth Actions
+              <label class="gt-toggle" id="gt-toggle"><input type="checkbox" id="gt-toggle-cb" onchange="toggleGtActions()"> Show</label>
+            </div>
+            <div id="info-gt-actions" class="gt-content"></div>
           </div>
         </div>
 
         <!-- Wiki Pane -->
         <div id="pane-wiki" class="side-pane">
+          <div id="wiki-hidden-notice" class="hidden" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:10px; margin-bottom:12px; font-size:11px; color:var(--text-dim); line-height:1.5;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-weight:600; color:var(--warning); margin-bottom:6px;">
+              <input type="checkbox" id="wiki-reveal-cb" onchange="toggleWikiReveal()"> Reveal wiki
+            </label>
+            The wiki (system prompt) is hidden when playing as User &mdash; it describes the agent's capabilities and tool documentation, which the user wouldn't normally see.
+          </div>
           <div id="wiki-content" class="wiki-text"></div>
         </div>
 
         <!-- Context State Pane -->
         <div id="pane-context" class="side-pane">
+          <div id="state-hidden-notice" class="hidden" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:10px; margin-bottom:12px; font-size:11px; color:var(--text-dim); line-height:1.5;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-weight:600; color:var(--warning); margin-bottom:6px;">
+              <input type="checkbox" id="state-reveal-cb" onchange="toggleStateReveal()"> Reveal vehicle state
+            </label>
+            Vehicle state is hidden when playing as Agent. Use information-retrieval tools (e.g. <code style="color:var(--accent2)">get_vehicle_status</code>, <code style="color:var(--accent2)">get_current_location</code>) to discover the current state during your session.
+          </div>
           <div id="context-state-display"></div>
         </div>
       </div>
@@ -665,16 +839,25 @@
 // =====================================================================
 // State
 // =====================================================================
-let currentRole = 'user'; // 'user' or 'agent'
+let currentRole = 'user';
 let sessionActive = false;
 let taskList = [];
 let selectedTaskIndex = null;
 let toolsInfo = [];
 let initialVehicleState = null;
+let polling = false;
+let pollGeneration = 0;
+let waitingForInput = false;
 
 // =====================================================================
 // Setup Screen
 // =====================================================================
+
+function toggleLlmConfig() {
+  const role = document.getElementById('setup-role').value;
+  document.getElementById('role-info-user').classList.toggle('hidden', role !== 'user');
+  document.getElementById('role-info-agent').classList.toggle('hidden', role !== 'agent');
+}
 
 async function loadTasks() {
   const type = document.getElementById('setup-task-type').value;
@@ -720,6 +903,7 @@ async function startSession() {
   const type = document.getElementById('setup-task-type').value;
   const split = document.getElementById('setup-task-split').value;
   currentRole = document.getElementById('setup-role').value;
+  const evaluatePolicy = document.getElementById('setup-policy-eval').checked;
 
   document.getElementById('btn-start').disabled = true;
   document.getElementById('btn-start').textContent = 'Loading...';
@@ -728,7 +912,13 @@ async function startSession() {
     const res = await fetch('/api/start', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({task_type: type, task_split: split, task_index: selectedTaskIndex})
+      body: JSON.stringify({
+        task_type: type,
+        task_split: split,
+        task_index: selectedTaskIndex,
+        role: currentRole,
+        evaluate_policy: evaluatePolicy,
+      })
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
@@ -737,7 +927,7 @@ async function startSession() {
     toolsInfo = data.tools;
     initialVehicleState = JSON.parse(JSON.stringify(data.vehicle_state));
 
-    // Populate UI
+    // Show main UI
     document.getElementById('setup-screen').classList.add('hidden');
     document.getElementById('main-ui').classList.remove('hidden');
 
@@ -772,29 +962,60 @@ async function startSession() {
       d.textContent = a.name + '(' + JSON.stringify(a.kwargs) + ')';
       gtDiv.appendChild(d);
     });
+    // GT toggle: visible by default for user, hidden by default for agent
+    const gtCb = document.getElementById('gt-toggle-cb');
+    gtCb.checked = (currentRole === 'user');
+    toggleGtActions();
 
-    // Wiki
+    // Wiki + State + Tools
     document.getElementById('wiki-content').textContent = data.wiki;
-
-    // Context state
     renderContextState(data.vehicle_state, data.fixed_context);
-
-    // Tools
     renderTools(data.tools);
 
     // Clear conversation
     document.getElementById('conversation').innerHTML = '';
 
-    // Add system message
-    addSystemMessage(`Session started. Task: ${data.task.task_id}. You are playing as: ${currentRole === 'user' ? 'User (Driver)' : 'Agent (Assistant)'}`);
+    addSystemMessage(`Session started. Task: ${data.task.task_id}. You are: ${currentRole === 'user' ? 'User (Driver)' : 'Agent (Assistant)'}`);
+
+    // Disable input until orchestrator signals waiting_for_input
+    disableInput();
 
     if (currentRole === 'user') {
-      addSystemMessage('You are the driver. Type your request to the in-car assistant.');
-      document.getElementById('msg-input').placeholder = 'Type your request as the driver...';
+      document.getElementById('msg-input').placeholder = 'Type your message as the driver...';
+      // Hide tools panel — user role doesn't execute tools
+      document.querySelector('.tools-panel').classList.add('hidden');
+      // State freely visible for user role
+      document.getElementById('state-hidden-notice').classList.add('hidden');
+      document.getElementById('context-state-display').classList.remove('hidden');
+      // Instruction & persona visible for user role
+      document.getElementById('task-hidden-notice').classList.add('hidden');
+      document.getElementById('task-revealable').classList.remove('hidden');
+      // Wiki hidden for user role (agent system prompt)
+      document.getElementById('wiki-hidden-notice').classList.remove('hidden');
+      document.getElementById('wiki-content').classList.add('hidden');
+      document.getElementById('wiki-reveal-cb').checked = false;
+      // Default side tab: Task
+      switchSideTab(document.querySelector('[data-pane="pane-task"]'));
     } else {
-      addSystemMessage('You are the in-car assistant. Use the tools panel on the right to execute tools, then type your response to the user.');
       document.getElementById('msg-input').placeholder = 'Type your response as the assistant...';
+      document.querySelector('.tools-panel').classList.remove('hidden');
+      // State hidden by default for agent — must use get tools
+      document.getElementById('state-hidden-notice').classList.remove('hidden');
+      document.getElementById('context-state-display').classList.add('hidden');
+      document.getElementById('state-reveal-cb').checked = false;
+      // Instruction & persona hidden for agent role (user's private info)
+      document.getElementById('task-hidden-notice').classList.remove('hidden');
+      document.getElementById('task-revealable').classList.add('hidden');
+      document.getElementById('task-reveal-cb').checked = false;
+      // Wiki visible for agent role
+      document.getElementById('wiki-hidden-notice').classList.add('hidden');
+      document.getElementById('wiki-content').classList.remove('hidden');
+      // Default side tab: Wiki
+      switchSideTab(document.querySelector('[data-pane="pane-wiki"]'));
     }
+
+    // Start polling for events
+    startEventPolling();
 
   } catch (e) {
     alert('Error starting session: ' + e.message);
@@ -805,7 +1026,276 @@ async function startSession() {
 }
 
 // =====================================================================
-// Conversation
+// Event Polling
+// =====================================================================
+
+function startEventPolling() {
+  polling = true;
+  pollGeneration++;
+  pollEvents(pollGeneration);
+}
+
+function stopEventPolling() {
+  polling = false;
+}
+
+async function pollEvents(generation) {
+  while (polling && sessionActive && generation === pollGeneration) {
+    try {
+      const res = await fetch('/api/events?timeout=15');
+      if (generation !== pollGeneration) break;
+      const data = await res.json();
+      if (data.events && data.events.length > 0) {
+        for (const ev of data.events) {
+          handleEvent(ev);
+        }
+      } else {
+        // No events — back off briefly to avoid hammering the server
+        await new Promise(r => setTimeout(r, 500));
+      }
+    } catch (e) {
+      console.error('Poll error:', e);
+      if (generation !== pollGeneration) break;
+      await new Promise(r => setTimeout(r, 2000));
+    }
+  }
+}
+
+function handleEvent(ev) {
+  const conv = document.getElementById('conversation');
+
+  switch (ev.type) {
+    case 'user_message':
+      // Don't show duplicate if human-as-user (they typed it themselves)
+      if (currentRole === 'user' && waitingForInput) {
+        // Already shown when they typed it
+        waitingForInput = false;
+      } else {
+        addMessage('user', ev.content);
+      }
+      removeWaitingIndicator();
+      break;
+
+    case 'agent_message':
+      if (currentRole === 'agent') {
+        // Human typed this - already shown
+      } else {
+        addMessage('assistant', ev.content);
+      }
+      removeWaitingIndicator();
+      break;
+
+    case 'tool_call':
+      addToolCallMessage(ev.name, ev.args, null);
+      break;
+
+    case 'tool_result':
+      addToolResultMessage(ev.name, ev.result);
+      break;
+
+    case 'waiting_for_input':
+      waitingForInput = true;
+      if (ev.role === 'user' && currentRole === 'user') {
+        showWaitingIndicator('Your turn - type a message as the driver');
+        enableInput();
+      } else if (ev.role === 'agent' && currentRole === 'agent') {
+        showWaitingIndicator('Your turn - use tools or type a response');
+        enableInput();
+      }
+      break;
+
+    case 'state_update':
+      if (ev.vehicle_state) {
+        renderContextState(ev.vehicle_state, null);
+      }
+      break;
+
+    case 'warning':
+      addSystemMessage('Warning: ' + ev.content);
+      break;
+
+    case 'done':
+      sessionActive = false;
+      stopEventPolling();
+      removeWaitingIndicator();
+      disableInput();
+      showEvaluation(ev);
+      break;
+
+    case 'error':
+      addSystemMessage('Error: ' + ev.content);
+      sessionActive = false;
+      stopEventPolling();
+      disableInput();
+      break;
+  }
+}
+
+function showWaitingIndicator(text) {
+  removeWaitingIndicator();
+  const conv = document.getElementById('conversation');
+  const div = document.createElement('div');
+  div.className = 'waiting-indicator';
+  div.id = 'waiting-ind';
+  div.textContent = text;
+  conv.appendChild(div);
+  conv.scrollTop = conv.scrollHeight;
+}
+
+function removeWaitingIndicator() {
+  const el = document.getElementById('waiting-ind');
+  if (el) el.remove();
+}
+
+function disableInput() {
+  document.getElementById('msg-input').disabled = true;
+  document.getElementById('btn-send').disabled = true;
+  document.querySelectorAll('.tool-exec-btn').forEach(b => b.disabled = true);
+}
+
+function enableInput() {
+  document.getElementById('msg-input').disabled = false;
+  document.getElementById('btn-send').disabled = false;
+  document.querySelectorAll('.tool-exec-btn').forEach(b => b.disabled = false);
+  document.getElementById('msg-input').focus();
+}
+
+// =====================================================================
+// Evaluation Display
+// =====================================================================
+
+function showEvaluation(ev) {
+  const conv = document.getElementById('conversation');
+  addSystemMessage('Session complete. Running evaluation...');
+
+  const reward = ev.reward || 0;
+  const info = ev.info || {};
+
+  const card = document.createElement('div');
+  const cls = reward >= 0.9 ? 'reward-high' : reward >= 0.5 ? 'reward-mid' : 'reward-low';
+  card.className = `eval-card ${cls}`;
+
+  const color = reward >= 0.9 ? 'var(--success)' : reward >= 0.5 ? 'var(--warning)' : 'var(--error)';
+  let html = `<div class="eval-reward" style="color:${color}">${(reward * 100).toFixed(1)}%</div>`;
+  html += '<div style="font-size:12px; text-align:center; margin-bottom:12px; color:var(--text-dim);">Overall Reward</div>';
+
+  const metrics = [
+    ['Final State', info.reward_info?.info?.r_actions_final],
+    ['Intermediate States', info.reward_info?.info?.r_actions_intermediate],
+    ['Tool Subset', info.reward_info?.info?.r_tool_subset],
+    ['Tool Execution', info.reward_info?.info?.r_tool_execution],
+    ['Policy Compliance', info.reward_info?.info?.r_policy],
+    ['Conversation End', info.reward_info?.info?.r_user_end_conversation],
+  ];
+
+  for (const [label, val] of metrics) {
+    if (val !== undefined && val !== null) {
+      const valColor = val >= 0 ? 'var(--text)' : 'var(--error)';
+      html += `<div class="eval-row"><span class="eval-label">${label}</span><span class="eval-value" style="color:${valColor}">${val.toFixed(3)}</span></div>`;
+    }
+  }
+
+  // Missing tools
+  const missingTools = info.reward_info?.info?.tool_subset_missing_tools;
+  if (missingTools && missingTools.length > 0) {
+    html += '<div style="margin-top:8px; font-size:11px; color:var(--warning); font-weight:600;">Missing Tools:</div><ul class="eval-list" style="color:var(--warning)">';
+    missingTools.forEach(t => html += `<li>${t}</li>`);
+    html += '</ul>';
+  }
+
+  // Tool execution errors
+  const toolErrors = info.reward_info?.info?.tool_execution_errors;
+  if (toolErrors && toolErrors.length > 0) {
+    html += '<div style="margin-top:8px; font-size:11px; color:var(--error); font-weight:600;">Tool Execution Errors:</div><ul class="eval-list">';
+    toolErrors.forEach(e => html += `<li>${e}</li>`);
+    html += '</ul>';
+  }
+
+  // Policy errors
+  const policyErrors = info.reward_info?.info?.policy_llm_errors;
+  if (policyErrors && policyErrors.length > 0) {
+    html += '<div style="margin-top:8px; font-size:11px; color:var(--error); font-weight:600;">Policy Violations:</div><ul class="eval-list">';
+    policyErrors.forEach(e => html += `<li>${e}</li>`);
+    html += '</ul>';
+  }
+
+  const endKeyword = info.reward_info?.info?.end_conversation_keyword;
+  if (endKeyword) {
+    html += `<div class="eval-row" style="margin-top:8px"><span class="eval-label">End Keyword</span><span class="eval-value">${endKeyword}</span></div>`;
+  }
+
+  card.innerHTML = html;
+  conv.appendChild(card);
+  conv.scrollTop = conv.scrollHeight;
+}
+
+// =====================================================================
+// Sending Input
+// =====================================================================
+
+async function sendMessage() {
+  const input = document.getElementById('msg-input');
+  const content = input.value.trim();
+  if (!content || !sessionActive) return;
+
+  // Show the message in the conversation
+  const role = currentRole === 'user' ? 'user' : 'assistant';
+  addMessage(role, content);
+  input.value = '';
+  autoResizeInput();
+  removeWaitingIndicator();
+  disableInput();
+
+  // Send to orchestrator
+  const payload = currentRole === 'user'
+    ? { type: 'message', content: content }
+    : { type: 'respond', content: content };
+
+  try {
+    await fetch('/api/input', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    addSystemMessage('Error sending input: ' + e.message);
+  }
+}
+
+async function executeToolViaOrchestrator(toolName, toolArgs) {
+  // Send tool call to orchestrator (human-as-agent mode)
+  removeWaitingIndicator();
+  disableInput();
+  try {
+    await fetch('/api/input', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        type: 'tool_calls',
+        tool_calls: [{ name: toolName, args: toolArgs }],
+      }),
+    });
+  } catch (e) {
+    addSystemMessage('Error executing tool: ' + e.message);
+  }
+}
+
+function handleInputKey(event) {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
+  autoResizeInput();
+}
+
+function autoResizeInput() {
+  const ta = document.getElementById('msg-input');
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+}
+
+// =====================================================================
+// Conversation Display
 // =====================================================================
 
 function addMessage(role, content) {
@@ -829,8 +1319,6 @@ function addMessage(role, content) {
 
 function addToolCallMessage(toolName, toolArgs, result) {
   const conv = document.getElementById('conversation');
-
-  // Tool call
   const callDiv = document.createElement('div');
   callDiv.className = 'msg msg-tool-call';
   const callRole = document.createElement('div');
@@ -841,13 +1329,16 @@ function addToolCallMessage(toolName, toolArgs, result) {
   callText.textContent = toolName + '(' + JSON.stringify(toolArgs, null, 1) + ')';
   callDiv.appendChild(callText);
   conv.appendChild(callDiv);
+  conv.scrollTop = conv.scrollHeight;
+}
 
-  // Tool result
+function addToolResultMessage(toolName, result) {
+  const conv = document.getElementById('conversation');
   const resDiv = document.createElement('div');
   resDiv.className = 'msg msg-tool-result';
   const resRole = document.createElement('div');
   resRole.className = 'role-tag';
-  resRole.textContent = 'Tool Result';
+  resRole.textContent = 'Tool Result: ' + toolName;
   resDiv.appendChild(resRole);
   const resText = document.createElement('div');
   try {
@@ -857,7 +1348,6 @@ function addToolCallMessage(toolName, toolArgs, result) {
   }
   resDiv.appendChild(resText);
   conv.appendChild(resDiv);
-
   conv.scrollTop = conv.scrollHeight;
 }
 
@@ -870,60 +1360,9 @@ function addSystemMessage(text) {
   conv.scrollTop = conv.scrollHeight;
 }
 
-async function sendMessage() {
-  const input = document.getElementById('msg-input');
-  const content = input.value.trim();
-  if (!content) return;
-
-  const role = currentRole === 'user' ? 'user' : 'assistant';
-  addMessage(role, content);
-  input.value = '';
-  autoResizeInput();
-
-  try {
-    const res = await fetch('/api/send-message', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({role: role, content: content})
-    });
-    const data = await res.json();
-    if (data.done) {
-      addSystemMessage('Conversation ended (STOP signal detected).');
-      sessionActive = false;
-    }
-  } catch (e) {
-    addSystemMessage('Error sending message: ' + e.message);
-  }
-}
-
-function handleInputKey(event) {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault();
-    sendMessage();
-  }
-  autoResizeInput();
-}
-
-function autoResizeInput() {
-  const ta = document.getElementById('msg-input');
-  ta.style.height = 'auto';
-  ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
-}
-
 // =====================================================================
-// Role Switching
+// Role Display
 // =====================================================================
-
-function switchRole() {
-  currentRole = currentRole === 'user' ? 'agent' : 'user';
-  updateRoleDisplay();
-  if (currentRole === 'user') {
-    document.getElementById('msg-input').placeholder = 'Type your request as the driver...';
-  } else {
-    document.getElementById('msg-input').placeholder = 'Type your response as the assistant...';
-  }
-  addSystemMessage('Switched role to: ' + (currentRole === 'user' ? 'User (Driver)' : 'Agent (Assistant)'));
-}
 
 function updateRoleDisplay() {
   const el = document.getElementById('role-display');
@@ -940,42 +1379,73 @@ function updateRoleDisplay() {
 // Tools Panel
 // =====================================================================
 
-function renderTools(tools) {
-  const list = document.getElementById('tools-list');
-  list.innerHTML = '';
-  document.getElementById('tools-count').textContent = tools.length + ' tools';
+// Domain mapping based on tool description prefix
+const DOMAIN_ORDER = [
+  'Vehicle Control', 'Vehicle Climate', 'Vehicle Information',
+  'Navigation', 'Points of Interest', 'Charging',
+  'Communication', 'Weather', 'Utility'
+];
 
-  tools.forEach((tool, idx) => {
-    const fn = tool.function;
-    const item = document.createElement('div');
-    item.className = 'tool-item';
-    item.dataset.name = fn.name.toLowerCase();
-    item.dataset.idx = idx;
+function getToolDomain(fn) {
+  const desc = fn.description || '';
+  const prefix = desc.split(':')[0].replace(/^REQUIRES_CONFIRMATION,\s*/, '').trim();
+  if (prefix.startsWith('Vehicle Climate')) return 'Vehicle Climate';
+  if (prefix.startsWith('Vehicle Control')) return 'Vehicle Control';
+  if (prefix.startsWith('Vehicle Information')) return 'Vehicle Information';
+  if (prefix.startsWith('Navigation') || prefix.startsWith('Location') || prefix.startsWith('Routes')) return 'Navigation';
+  if (prefix.startsWith('Points of Interest')) return 'Points of Interest';
+  if (prefix.startsWith('Charging')) return 'Charging';
+  if (prefix.startsWith('Weather')) return 'Weather';
+  if (prefix.startsWith('Contact') || prefix.startsWith('Calendar') || prefix.startsWith('Phone') || prefix.startsWith('Email')) return 'Communication';
+  if (prefix.startsWith('Helper')) return 'Navigation';  // convert_route helper
+  return 'Utility';
+}
 
-    // Header
-    const header = document.createElement('div');
-    header.className = 'tool-item-header';
-    header.innerHTML = `<span class="tool-item-name">${fn.name}</span><span class="tool-item-arrow">&#9654;</span>`;
-    header.onclick = () => item.classList.toggle('expanded');
-    item.appendChild(header);
+function renderToolItem(tool, idx) {
+  const fn = tool.function;
+  const item = document.createElement('div');
+  item.className = 'tool-item';
+  item.dataset.name = fn.name.toLowerCase();
+  item.dataset.idx = idx;
 
-    // Body
-    const body = document.createElement('div');
-    body.className = 'tool-item-body';
+  const header = document.createElement('div');
+  header.className = 'tool-item-header';
+  header.innerHTML = `<span class="tool-item-name">${fn.name}</span><span class="tool-item-arrow">&#9654;</span>`;
+  header.onclick = () => item.classList.toggle('expanded');
+  item.appendChild(header);
 
-    const desc = document.createElement('div');
-    desc.className = 'tool-desc';
-    desc.textContent = fn.description || '';
-    body.appendChild(desc);
+  const body = document.createElement('div');
+  body.className = 'tool-item-body';
 
-    // Parameters
-    const params = fn.parameters?.properties || {};
-    const required = fn.parameters?.required || [];
+  // Short description (strip domain prefix)
+  const desc = document.createElement('div');
+  desc.className = 'tool-desc';
+  const fullDesc = fn.description || '';
+  const colonIdx = fullDesc.indexOf(':');
+  desc.textContent = colonIdx > -1 ? fullDesc.substring(colonIdx + 1).trim() : fullDesc;
+  body.appendChild(desc);
 
+  const params = fn.parameters?.properties || {};
+  const required = fn.parameters?.required || [];
+  const hasNestedObjects = Object.values(params).some(p => p.type === 'object' && p.properties);
+
+  if (hasNestedObjects) {
+    const schemaDoc = document.createElement('div');
+    schemaDoc.style.cssText = 'margin-bottom: 8px;';
+    renderSchemaDoc(schemaDoc, params, required, 0);
+    body.appendChild(schemaDoc);
+
+    const ta = document.createElement('textarea');
+    ta.id = `tool-${idx}-__json__`;
+    ta.rows = 6;
+    ta.style.cssText = 'width:100%; background:var(--bg); border:1px solid var(--border); border-radius:4px; color:var(--text); padding:8px; font-size:11px; font-family:var(--mono); resize:vertical;';
+    ta.placeholder = 'Enter parameters as JSON...';
+    ta.value = JSON.stringify(buildJsonSkeleton(params), null, 2);
+    body.appendChild(ta);
+  } else {
     Object.entries(params).forEach(([pname, pinfo]) => {
       const pdiv = document.createElement('div');
       pdiv.className = 'tool-param';
-
       const label = document.createElement('label');
       const reqStar = required.includes(pname) ? ' *' : '';
       const typeInfo = pinfo.type || '';
@@ -985,12 +1455,7 @@ function renderTools(tools) {
       if (pinfo.enum && pinfo.enum.length > 0) {
         const sel = document.createElement('select');
         sel.id = `tool-${idx}-${pname}`;
-        pinfo.enum.forEach(v => {
-          const opt = document.createElement('option');
-          opt.value = v;
-          opt.textContent = v;
-          sel.appendChild(opt);
-        });
+        pinfo.enum.forEach(v => { const opt = document.createElement('option'); opt.value = v; opt.textContent = v; sel.appendChild(opt); });
         pdiv.appendChild(sel);
       } else {
         const inp = document.createElement('input');
@@ -1002,94 +1467,166 @@ function renderTools(tools) {
         inp.placeholder = pinfo.description || pname;
         pdiv.appendChild(inp);
       }
-
       if (pinfo.description) {
         const hint = document.createElement('div');
         hint.style.cssText = 'font-size:10px; color:var(--text-dim); margin-top:2px; opacity:0.7;';
         hint.textContent = pinfo.description;
         pdiv.appendChild(hint);
       }
-
       body.appendChild(pdiv);
     });
+  }
 
-    // Execute button
-    const btn = document.createElement('button');
-    btn.className = 'tool-exec-btn';
-    btn.textContent = 'Execute ' + fn.name;
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      executeTool(idx);
-    };
-    body.appendChild(btn);
+  const btn = document.createElement('button');
+  btn.className = 'tool-exec-btn';
+  btn.textContent = 'Execute ' + fn.name;
+  btn.onclick = (e) => { e.stopPropagation(); executeTool(idx); };
+  body.appendChild(btn);
 
-    item.appendChild(body);
-    list.appendChild(item);
+  item.appendChild(body);
+  return item;
+}
+
+function renderTools(tools) {
+  const list = document.getElementById('tools-list');
+  list.innerHTML = '';
+  document.getElementById('tools-count').textContent = tools.length + ' tools';
+
+  // Group tools by domain
+  const groups = {};
+  tools.forEach((tool, idx) => {
+    const domain = getToolDomain(tool.function);
+    if (!groups[domain]) groups[domain] = [];
+    groups[domain].push({ tool, idx });
+  });
+
+  // Render in domain order
+  const orderedDomains = DOMAIN_ORDER.filter(d => groups[d]);
+  // Append any domains not in DOMAIN_ORDER
+  Object.keys(groups).forEach(d => { if (!orderedDomains.includes(d)) orderedDomains.push(d); });
+
+  orderedDomains.forEach(domain => {
+    const domainEl = document.createElement('div');
+    domainEl.className = 'tool-domain';
+    domainEl.dataset.domain = domain.toLowerCase();
+
+    const header = document.createElement('div');
+    header.className = 'tool-domain-header';
+    header.innerHTML = `<span class="tool-domain-label">${domain}</span>
+      <span class="tool-domain-meta">
+        <span class="tool-domain-count">${groups[domain].length}</span>
+        <span class="tool-domain-arrow">&#9660;</span>
+      </span>`;
+    header.onclick = () => domainEl.classList.toggle('collapsed');
+    domainEl.appendChild(header);
+
+    const items = document.createElement('div');
+    items.className = 'tool-domain-items';
+    groups[domain].forEach(({ tool, idx }) => {
+      items.appendChild(renderToolItem(tool, idx));
+    });
+    domainEl.appendChild(items);
+
+    list.appendChild(domainEl);
   });
 }
 
+function renderSchemaDoc(container, properties, required, depth) {
+  const indent = depth * 16;
+  Object.entries(properties).forEach(([name, schema]) => {
+    const row = document.createElement('div');
+    row.style.cssText = `padding: 2px 0 2px ${indent}px; font-size: 11px; font-family: var(--mono);`;
+    const reqStar = (required || []).includes(name) ? '<span style="color:var(--error)">*</span>' : '';
+    const typeStr = schema.type || 'any';
+    const descStr = schema.description ? ` - <span style="color:var(--text-dim); font-family:var(--font); font-style:italic;">${escapeHtml(schema.description)}</span>` : '';
+    row.innerHTML = `<span style="color:var(--accent2)">${name}</span>${reqStar} <span style="color:var(--text-dim); opacity:0.7;">${typeStr}</span>${descStr}`;
+    container.appendChild(row);
+    if (schema.type === 'object' && schema.properties) {
+      renderSchemaDoc(container, schema.properties, schema.required, depth + 1);
+    }
+  });
+}
+
+function buildJsonSkeleton(properties) {
+  const obj = {};
+  Object.entries(properties).forEach(([name, schema]) => {
+    if (schema.type === 'object' && schema.properties) obj[name] = buildJsonSkeleton(schema.properties);
+    else if (schema.type === 'boolean') obj[name] = false;
+    else if (schema.type === 'number' || schema.type === 'integer') obj[name] = 0;
+    else if (schema.type === 'array') obj[name] = [];
+    else if (schema.enum) obj[name] = schema.enum[0];
+    else obj[name] = '';
+  });
+  return obj;
+}
+
+function escapeHtml(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+
 function filterTools() {
   const q = document.getElementById('tools-search-input').value.toLowerCase();
-  document.querySelectorAll('.tool-item').forEach(item => {
-    item.style.display = item.dataset.name.includes(q) ? '' : 'none';
+  // Filter tools and show/hide domain groups accordingly
+  document.querySelectorAll('.tool-domain').forEach(domain => {
+    let visibleCount = 0;
+    domain.querySelectorAll('.tool-item').forEach(item => {
+      const match = item.dataset.name.includes(q);
+      item.style.display = match ? '' : 'none';
+      if (match) visibleCount++;
+    });
+    domain.style.display = visibleCount > 0 ? '' : 'none';
+    // Auto-expand matching groups when searching, collapse when cleared
+    if (q && visibleCount > 0) domain.classList.remove('collapsed');
   });
+}
+
+function toggleGtActions() {
+  const cb = document.getElementById('gt-toggle-cb');
+  const content = document.getElementById('info-gt-actions');
+  content.classList.toggle('collapsed', !cb.checked);
+}
+
+function toggleStateReveal() {
+  const cb = document.getElementById('state-reveal-cb');
+  document.getElementById('context-state-display').classList.toggle('hidden', !cb.checked);
+}
+
+function toggleTaskReveal() {
+  const cb = document.getElementById('task-reveal-cb');
+  document.getElementById('task-revealable').classList.toggle('hidden', !cb.checked);
+}
+
+function toggleWikiReveal() {
+  const cb = document.getElementById('wiki-reveal-cb');
+  document.getElementById('wiki-content').classList.toggle('hidden', !cb.checked);
 }
 
 async function executeTool(toolIdx) {
   const tool = toolsInfo[toolIdx];
   const fn = tool.function;
   const params = fn.parameters?.properties || {};
-  const args = {};
+  let args = {};
 
-  for (const [pname, pinfo] of Object.entries(params)) {
-    const el = document.getElementById(`tool-${toolIdx}-${pname}`);
-    if (!el) continue;
-    let val = el.value;
-    if (val === '' && (fn.parameters?.required || []).includes(pname)) {
-      alert(`Parameter "${pname}" is required.`);
-      return;
+  const jsonEl = document.getElementById(`tool-${toolIdx}-__json__`);
+  if (jsonEl) {
+    try { args = JSON.parse(jsonEl.value); } catch (e) { alert('Invalid JSON: ' + e.message); return; }
+  } else {
+    for (const [pname, pinfo] of Object.entries(params)) {
+      const el = document.getElementById(`tool-${toolIdx}-${pname}`);
+      if (!el) continue;
+      let val = el.value;
+      if (val === '' && (fn.parameters?.required || []).includes(pname)) { alert(`Parameter "${pname}" is required.`); return; }
+      if (val === '') continue;
+      if (pinfo.type === 'number' || pinfo.type === 'integer') { val = Number(val); if (isNaN(val)) { alert(`"${pname}" must be a number.`); return; } if (pinfo.type === 'integer') val = Math.round(val); }
+      else if (pinfo.type === 'boolean') { val = val === 'true' || val === '1'; }
+      else if (pinfo.type === 'array') { try { val = JSON.parse(val); } catch { alert(`"${pname}" must be valid JSON array.`); return; } }
+      args[pname] = val;
     }
-    if (val === '') continue;
-
-    // Type coercion
-    if (pinfo.type === 'number' || pinfo.type === 'integer') {
-      val = Number(val);
-      if (isNaN(val)) {
-        alert(`Parameter "${pname}" must be a number.`);
-        return;
-      }
-      if (pinfo.type === 'integer') val = Math.round(val);
-    } else if (pinfo.type === 'boolean') {
-      val = val === 'true' || val === '1';
-    } else if (pinfo.type === 'array') {
-      try { val = JSON.parse(val); } catch {
-        alert(`Parameter "${pname}" must be valid JSON array.`);
-        return;
-      }
-    }
-    args[pname] = val;
   }
 
-  try {
-    const res = await fetch('/api/execute-tool', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({tool_name: fn.name, tool_args: args})
-    });
-    const data = await res.json();
-    if (data.error) {
-      addSystemMessage('Tool error: ' + data.error);
-      return;
-    }
-
-    addToolCallMessage(fn.name, args, data.result);
-
-    // Update context state
-    if (data.vehicle_state) {
-      renderContextState(data.vehicle_state, null);
-    }
-  } catch (e) {
-    addSystemMessage('Error executing tool: ' + e.message);
+  // Route through orchestrator when playing as agent
+  if (currentRole === 'agent') {
+    await executeToolViaOrchestrator(fn.name, args);
+  } else {
+    addSystemMessage('Tool execution is only available when playing as Agent.');
   }
 }
 
@@ -1097,12 +1634,30 @@ async function executeTool(toolIdx) {
 // Context State
 // =====================================================================
 
+function updateContextBar(fixedCtx) {
+  if (!fixedCtx) return;
+  const locEl = document.getElementById('ctx-location');
+  const dtEl = document.getElementById('ctx-datetime');
+  if (fixedCtx.current_location) {
+    const loc = fixedCtx.current_location;
+    const name = loc.name || '--';
+    const id = loc.id || '';
+    locEl.textContent = id ? `${name} (${id})` : name;
+  }
+  if (fixedCtx.current_datetime) {
+    const dt = fixedCtx.current_datetime;
+    dtEl.textContent = `${dt.year}-${String(dt.month).padStart(2,'0')}-${String(dt.day).padStart(2,'0')} ${String(dt.hour).padStart(2,'0')}:${String(dt.minute).padStart(2,'0')}`;
+  }
+}
+
 function renderContextState(vehicleState, fixedCtx) {
+  // Update the always-visible context bar
+  if (fixedCtx) updateContextBar(fixedCtx);
+
   const container = document.getElementById('context-state-display');
   container.innerHTML = '';
 
   if (vehicleState) {
-    // Group state by category
     const groups = {
       'Climate': ['climate_temperature_driver', 'climate_temperature_passenger', 'air_conditioning', 'air_circulation', 'fan_speed', 'fan_airflow_direction', 'window_front_defrost', 'window_rear_defrost'],
       'Windows & Sunroof': ['sunroof_position', 'sunshade_position', 'window_driver_position', 'window_passenger_position', 'window_driver_rear_position', 'window_passenger_rear_position', 'trunk_door_position'],
@@ -1124,26 +1679,20 @@ function renderContextState(vehicleState, fixedCtx) {
         if (vehicleState[key] === undefined) return;
         const row = document.createElement('div');
         row.className = 'state-row';
-
         const keyEl = document.createElement('span');
         keyEl.className = 'state-key';
         keyEl.textContent = key.replace(/_/g, ' ');
         row.appendChild(keyEl);
-
         const valEl = document.createElement('span');
         valEl.className = 'state-val';
         const val = vehicleState[key];
         valEl.textContent = Array.isArray(val) ? (val.length > 0 ? JSON.stringify(val) : '[]') : String(val);
-
-        // Highlight changed values
         if (initialVehicleState && JSON.stringify(initialVehicleState[key]) !== JSON.stringify(val)) {
           valEl.classList.add('changed');
         }
-
         row.appendChild(valEl);
         group.appendChild(row);
       });
-
       container.appendChild(group);
     }
   }
@@ -1156,9 +1705,7 @@ function renderContextState(vehicleState, fixedCtx) {
     title.textContent = 'Fixed Context';
     group.appendChild(title);
 
-    const fixedKeys = ['car_color', 'battery_capacity_kwh', 'state_of_charge', 'energy_consumption',
-                       'max_charging_power_ac', 'max_charging_power_dc'];
-    fixedKeys.forEach(key => {
+    ['car_color', 'battery_capacity_kwh', 'state_of_charge', 'energy_consumption', 'max_charging_power_ac', 'max_charging_power_dc'].forEach(key => {
       if (fixedCtx[key] === undefined) return;
       const row = document.createElement('div');
       row.className = 'state-row';
@@ -1173,59 +1720,34 @@ function renderContextState(vehicleState, fixedCtx) {
       group.appendChild(row);
     });
 
-    // Location
     if (fixedCtx.current_location) {
-      const row = document.createElement('div');
-      row.className = 'state-row';
-      const keyEl = document.createElement('span');
-      keyEl.className = 'state-key';
-      keyEl.textContent = 'location';
-      row.appendChild(keyEl);
-      const valEl = document.createElement('span');
-      valEl.className = 'state-val';
-      valEl.textContent = fixedCtx.current_location.name + ' (' + fixedCtx.current_location.id + ')';
-      row.appendChild(valEl);
+      const row = document.createElement('div'); row.className = 'state-row';
+      const keyEl = document.createElement('span'); keyEl.className = 'state-key'; keyEl.textContent = 'location'; row.appendChild(keyEl);
+      const valEl = document.createElement('span'); valEl.className = 'state-val';
+      valEl.textContent = fixedCtx.current_location.name + ' (' + fixedCtx.current_location.id + ')'; row.appendChild(valEl);
       group.appendChild(row);
     }
-
-    // DateTime
     if (fixedCtx.current_datetime) {
       const dt = fixedCtx.current_datetime;
-      const row = document.createElement('div');
-      row.className = 'state-row';
-      const keyEl = document.createElement('span');
-      keyEl.className = 'state-key';
-      keyEl.textContent = 'datetime';
-      row.appendChild(keyEl);
-      const valEl = document.createElement('span');
-      valEl.className = 'state-val';
+      const row = document.createElement('div'); row.className = 'state-row';
+      const keyEl = document.createElement('span'); keyEl.className = 'state-key'; keyEl.textContent = 'datetime'; row.appendChild(keyEl);
+      const valEl = document.createElement('span'); valEl.className = 'state-val';
       valEl.textContent = `${dt.year}-${String(dt.month).padStart(2,'0')}-${String(dt.day).padStart(2,'0')} ${String(dt.hour).padStart(2,'0')}:${String(dt.minute).padStart(2,'0')}`;
-      row.appendChild(valEl);
-      group.appendChild(row);
+      row.appendChild(valEl); group.appendChild(row);
     }
-
-    // Seats
     if (fixedCtx.seats_occupied) {
-      const row = document.createElement('div');
-      row.className = 'state-row';
-      const keyEl = document.createElement('span');
-      keyEl.className = 'state-key';
-      keyEl.textContent = 'seats occupied';
-      row.appendChild(keyEl);
-      const valEl = document.createElement('span');
-      valEl.className = 'state-val';
+      const row = document.createElement('div'); row.className = 'state-row';
+      const keyEl = document.createElement('span'); keyEl.className = 'state-key'; keyEl.textContent = 'seats occupied'; row.appendChild(keyEl);
+      const valEl = document.createElement('span'); valEl.className = 'state-val';
       const occupied = Object.entries(fixedCtx.seats_occupied).filter(([,v]) => v).map(([k]) => k);
-      valEl.textContent = occupied.join(', ') || 'none';
-      row.appendChild(valEl);
-      group.appendChild(row);
+      valEl.textContent = occupied.join(', ') || 'none'; row.appendChild(valEl); group.appendChild(row);
     }
-
     container.appendChild(group);
   }
 }
 
 // =====================================================================
-// Side Panel Tabs
+// Side Panel + Session Controls
 // =====================================================================
 
 function switchSideTab(tabEl) {
@@ -1235,35 +1757,32 @@ function switchSideTab(tabEl) {
   document.getElementById(tabEl.dataset.pane).classList.add('active');
 }
 
-// =====================================================================
-// Session Controls
-// =====================================================================
-
 async function endSession() {
   if (!confirm('End this session?')) return;
   try {
-    const res = await fetch('/api/end-session', {method: 'POST'});
-    const data = await res.json();
-    addSystemMessage('Session ended.');
-    sessionActive = false;
+    await fetch('/api/end-session', {method: 'POST'});
+    addSystemMessage('Session end signal sent. Waiting for evaluation...');
   } catch (e) {
-    addSystemMessage('Error ending session: ' + e.message);
+    addSystemMessage('Error: ' + e.message);
   }
 }
 
 function backToSetup() {
+  stopEventPolling();
+  sessionActive = false;
   document.getElementById('main-ui').classList.add('hidden');
   document.getElementById('setup-screen').classList.remove('hidden');
-  sessionActive = false;
+  // Reset panel visibility for next session
+  document.querySelector('.tools-panel').classList.remove('hidden');
+  document.getElementById('state-hidden-notice').classList.add('hidden');
+  document.getElementById('context-state-display').classList.remove('hidden');
+  document.getElementById('task-hidden-notice').classList.add('hidden');
+  document.getElementById('task-revealable').classList.remove('hidden');
+  document.getElementById('wiki-hidden-notice').classList.add('hidden');
+  document.getElementById('wiki-content').classList.remove('hidden');
 }
 
-// =====================================================================
-// Utility
-// =====================================================================
-
-function truncate(str, n) {
-  return str.length > n ? str.substring(0, n) + '...' : str;
-}
+function truncate(str, n) { return str.length > n ? str.substring(0, n) + '...' : str; }
 
 // =====================================================================
 // Init
