@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://car-bench.github.io/car-bench/sitemap.xml
