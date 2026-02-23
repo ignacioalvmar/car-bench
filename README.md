@@ -8,7 +8,7 @@
 
 *A benchmark for evaluating epistemic reliability of multi-turn, tool-using LLM agents under uncertainty*
 
-[Website](https://car-bench.github.io/car-bench/) • [Paper](#citation) • [Installation](#installation) • [Usage](#usage) • [Results](#baseline-results)
+[Website](https://car-bench.github.io/car-bench/) • [Paper](#citation) • [Installation](#installation) • [Usage](#usage) • [Results](#baseline-results) • [Interactive App](#interactive-app)
 
 </div>
 
@@ -304,6 +304,45 @@ Performance of frontier models across task types. Average is computed across tas
 - **Consistency gap**: Even best models show significant drops from Pass@3 (latent capability) to Pass^3 (consistency), highlighting reliability challenges
 - **Hallucination tasks**: Models struggle with limit-awareness, with best Pass^3 at .67
 - **Disambiguation**: Most challenging task type with best Pass^3 at .42, indicating difficulty in uncertainty resolution
+
+## Interactive App
+
+CAR-bench includes a web-based interactive UI that lets you play through benchmark tasks in real-time, taking the role of either the **user (driver)** or the **agent (in-car assistant)**. This is useful for:
+
+- **Understanding tasks**: Explore what each task expects before running automated evaluations
+- **Debugging agents**: Step through tasks manually to identify where LLM agents fail
+- **Human baselines**: Measure human performance on the benchmark
+- **Development**: Test tool behavior and policy compliance interactively
+
+### Starting the App
+
+```bash
+pip install flask python-dotenv
+python interactive_app.py [--port 8080] [--debug]
+```
+
+Then open `http://localhost:8080` in your browser.
+
+### How It Works
+
+1. **Choose a role**:
+   - **User (Driver)**: You type user messages; an LLM (configurable, default: Claude Sonnet) acts as the in-car assistant, calling tools and responding
+   - **Agent (Assistant)**: An LLM (configurable, default: Gemini 2.5 Flash) simulates the driver; you execute tools and type responses
+
+2. **Select a task**: Pick a task type (base / hallucination / disambiguation), split (train / test), and specific task from the list
+
+3. **Configure models**: Choose which LLM model and provider to use for the non-human role (supports Anthropic, Gemini, OpenAI, Bedrock)
+
+4. **Play through the session**: The real orchestrator loop runs in the background, so all tool execution, state changes, and policy evaluation work identically to automated runs
+
+5. **Review evaluation**: When the session ends, a detailed evaluation card shows the overall reward, per-metric scores, and expandable details including action comparison (performed vs ground truth), policy violations, tool execution errors, and raw evaluation data
+
+### UI Features
+
+- **Side panel**: Browse the agent wiki/system prompt, vehicle context state, task info, and available tools
+- **Live state updates**: Vehicle state reflects tool calls in real-time
+- **Ground truth toggle**: View or hide expected actions while playing
+- **Policy evaluation**: Optionally run LLM-based policy compliance checks at session end (requires Gemini API key)
 
 ## Citation
 
