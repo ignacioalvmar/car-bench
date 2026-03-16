@@ -449,7 +449,7 @@ def analyze_reward_component_correlations(
             component_data.append(task_components)
 
     if not component_data:
-        return {"correlation_matrix": {}, "failure_patterns": {}, "component_names": []}
+        return {"correlation_matrix": {}, "failure_patterns": {}, "interesting_patterns": [], "component_names": [], "total_tasks": 0}
 
     # Get consistent component names
     component_names = sorted(set().union(*(task.keys() for task in component_data)))

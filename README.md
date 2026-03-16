@@ -318,7 +318,7 @@ CAR-bench includes a web-based interactive UI that lets you play through benchma
 
 ```bash
 pip install flask python-dotenv
-python interactive_app.py [--port 8080] [--debug]
+python interactive_app.py --port 8080 --debug
 ```
 
 Then open `http://localhost:8080` in your browser.
