@@ -834,6 +834,23 @@ footer.site-footer a:hover { color: white; text-decoration: underline; }
     margin-top: 0.3rem;
 }
 
+.org-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    margin-bottom: 0.25rem;
+    width: fit-content;
+    color: var(--color-primary);
+    background: rgba(37, 99, 235, 0.08);
+}
+.org-tag.advisor  { color: #7c3aed; background: rgba(124, 58, 237, 0.08); }
+.org-tag.industry { color: #059669; background: rgba(5, 150, 105, 0.08); }
+.org-tag.researcher { color: #d97706; background: rgba(217, 119, 6, 0.08); }
+
 .org-links {
     display: flex;
     gap: 0.6rem;

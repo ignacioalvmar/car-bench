@@ -18,7 +18,7 @@ function toggleNav() {
     });
 })();
 
-// Countdown to next deadline (Jun 14, 2026 — mid-phase hidden test set evaluation)
+// Countdown to next deadline (Jul 19, 2026 — final evaluation on hidden test set)
 function startCountdown(targetISO, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -85,7 +85,7 @@ function initLeaderboardTabs() {
 
 // Auto-init when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Countdown: next deadline is Jun 14, 2026 AoE (mid-phase evaluation)
-    startCountdown('2026-06-14T23:59:59-12:00', 'countdown');
+    // Countdown: next deadline is Jul 19, 2026 AoE (final evaluation on hidden test set)
+    startCountdown('2026-07-19T23:59:59-12:00', 'countdown');
     initLeaderboardTabs();
 });
