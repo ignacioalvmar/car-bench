@@ -33,9 +33,10 @@
             <li><a href="rules.html">Rules</a></li>
             <li><a href="timeline.html">Timeline</a></li>
             <li><a href="organizers.html">Organizers</a></li>
+            <li><a href="benchmark.html">Benchmark</a></li>
         </ul>
         <div class="nav-actions">
-            <a href="#" class="discord-icon" title="Join our Discord" aria-label="Discord">
+            <a href="https://discord.gg/MBUxhuCvn" target="_blank" class="discord-icon" title="Join our Discord" aria-label="Discord">
                 <svg width="20" height="15" viewBox="0 0 71 55" fill="none"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.8 40.8 0 00-1.8 3.7 54 54 0 00-16.2 0A26.5 26.5 0 0025.4.3a.2.2 0 00-.2-.1A58.4 58.4 0 0010.5 4.9a.2.2 0 00-.1.1C1.5 18.7-.9 32.2.3 45.5v.1a58.7 58.7 0 0017.7 9a.2.2 0 00.3-.1 42 42 0 003.6-5.9.2.2 0 00-.1-.3 38.6 38.6 0 01-5.5-2.7.2.2 0 01 0-.4c.4-.3.7-.6 1.1-.8a.2.2 0 01.2 0c11.6 5.3 24.1 5.3 35.5 0a.2.2 0 01.2 0l1.1.9a.2.2 0 010 .3c-1.8 1-3.6 1.9-5.5 2.7a.2.2 0 00-.1.3 47.2 47.2 0 003.6 5.9.2.2 0 00.3.1A58.5 58.5 0 0070.4 45.6v-.1c1.4-15-2.3-28-9.8-39.6a.2.2 0 00-.1-.1zM23.7 37.3c-3.4 0-6.2-3.1-6.2-7s2.7-7 6.2-7 6.3 3.2 6.2 7-2.8 7-6.2 7zm23 0c-3.4 0-6.2-3.1-6.2-7s2.7-7 6.2-7 6.3 3.2 6.2 7-2.8 7-6.2 7z" fill="currentColor"/></svg>
             </a>
             <a href="#" class="btn btn-cta btn-sm">Register</a>
@@ -46,18 +47,6 @@
 <!-- Hero -->
 <section class="hero">
     <div class="container" style="text-align:center;">
-
-        <!-- Countdown -->
-        <div class="countdown" id="countdown">
-            <div class="countdown-label">Next Deadline</div>
-            <div class="countdown-event">Mid-phase Evaluation</div>
-            <div class="countdown-timer">
-                <div class="countdown-unit"><span class="num" data-u="d">--</span><span class="lbl">Days</span></div>
-                <div class="countdown-unit"><span class="num" data-u="h">--</span><span class="lbl">Hrs</span></div>
-                <div class="countdown-unit"><span class="num" data-u="m">--</span><span class="lbl">Min</span></div>
-                <div class="countdown-unit"><span class="num" data-u="s">--</span><span class="lbl">Sec</span></div>
-            </div>
-        </div>
 
         <div class="hero-badges">
             <span class="venue-badge">IJCAI-ECAI 2026</span>
@@ -71,27 +60,71 @@
 
         <div class="hero-buttons">
             <a href="tracks.html" class="btn btn-primary btn-lg">View Tracks</a>
-            <a href="#" class="btn btn-outline btn-lg" style="border-color:var(--color-discord);color:var(--color-discord);">
+            <a href="https://discord.gg/MBUxhuCvn" target="_blank" class="btn btn-outline btn-lg" style="border-color:var(--color-discord);color:var(--color-discord);">
                 <svg width="18" height="14" viewBox="0 0 71 55" fill="none" style="margin-right:4px"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.8 40.8 0 00-1.8 3.7 54 54 0 00-16.2 0A26.5 26.5 0 0025.4.3a.2.2 0 00-.2-.1A58.4 58.4 0 0010.5 4.9a.2.2 0 00-.1.1C1.5 18.7-.9 32.2.3 45.5v.1a58.7 58.7 0 0017.7 9a.2.2 0 00.3-.1 42 42 0 003.6-5.9.2.2 0 00-.1-.3 38.6 38.6 0 01-5.5-2.7.2.2 0 01 0-.4c.4-.3.7-.6 1.1-.8a.2.2 0 01.2 0c11.6 5.3 24.1 5.3 35.5 0a.2.2 0 01.2 0l1.1.9a.2.2 0 010 .3c-1.8 1-3.6 1.9-5.5 2.7a.2.2 0 00-.1.3 47.2 47.2 0 003.6 5.9.2.2 0 00.3.1A58.5 58.5 0 0070.4 45.6v-.1c1.4-15-2.3-28-9.8-39.6a.2.2 0 00-.1-.1zM23.7 37.3c-3.4 0-6.2-3.1-6.2-7s2.7-7 6.2-7 6.3 3.2 6.2 7-2.8 7-6.2 7zm23 0c-3.4 0-6.2-3.1-6.2-7s2.7-7 6.2-7 6.3 3.2 6.2 7-2.8 7-6.2 7z" fill="currentColor"/></svg>
                 Join Discord
             </a>
             <a href="data.html" class="btn btn-outline btn-lg">Get Started</a>
         </div>
+
+        <!-- Countdown -->
+        <div class="countdown" id="countdown">
+            <button class="countdown-close" onclick="this.parentElement.style.display='none'" aria-label="Dismiss countdown">&times;</button>
+            <div class="countdown-label">Next Deadline</div>
+            <div class="countdown-event">Mid-phase Evaluation</div>
+            <div class="countdown-timer">
+                <div class="countdown-unit"><span class="num" data-u="d">--</span><span class="lbl">Days</span></div>
+                <div class="countdown-unit"><span class="num" data-u="h">--</span><span class="lbl">Hrs</span></div>
+                <div class="countdown-unit"><span class="num" data-u="m">--</span><span class="lbl">Min</span></div>
+                <div class="countdown-unit"><span class="num" data-u="s">--</span><span class="lbl">Sec</span></div>
+            </div>
+        </div>
+
+        <!-- Sponsor / partner logo strip -->
+        <div class="hero-logos">
+            <span class="hero-logos-label">Organized &amp; sponsored by</span>
+            <div class="hero-logos-row">
+                <a href="https://www.bmw.com" target="_blank" class="hero-logo" title="BMW Group">
+                    <svg viewBox="0 0 120 26" height="20"><text x="0" y="19" font-family="Inter,system-ui,sans-serif" font-weight="600" font-size="16" fill="#4a5568">BMW Group</text></svg>
+                </a>
+                <a href="https://www.anthropic.com" target="_blank" class="hero-logo" title="Anthropic">
+                    <svg viewBox="0 0 120 28" height="22"><text x="0" y="21" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="19" fill="#191919" letter-spacing="-0.5">Anthropic</text></svg>
+                </a>
+                <a href="https://cerebras.net" target="_blank" class="hero-logo" title="Cerebras">
+                    <svg viewBox="0 0 110 28" height="22"><text x="0" y="21" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="19" fill="#e53e3e" letter-spacing="-0.5">Cerebras</text></svg>
+                </a>
+                <a href="https://openstream.ai" target="_blank" class="hero-logo" title="OpenStream.ai">
+                    <svg viewBox="0 0 155 28" height="22"><text x="0" y="21" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="19" fill="#2b6cb0" letter-spacing="-0.3">OpenStream.ai</text></svg>
+                </a>
+                <a href="https://www.uni-augsburg.de" target="_blank" class="hero-logo" title="Augsburg University">
+                    <svg viewBox="0 0 185 26" height="20"><text x="0" y="19" font-family="Inter,system-ui,sans-serif" font-weight="600" font-size="16" fill="#4a5568">Augsburg University</text></svg>
+                </a>
+                <a href="https://www.ntu.edu.sg" target="_blank" class="hero-logo" title="NTU Singapore">
+                    <svg viewBox="0 0 145 26" height="20"><text x="0" y="19" font-family="Inter,system-ui,sans-serif" font-weight="600" font-size="16" fill="#4a5568">NTU Singapore</text></svg>
+                </a>
+                <a href="https://www.tu-darmstadt.de" target="_blank" class="hero-logo" title="TU Darmstadt">
+                    <svg viewBox="0 0 135 26" height="20"><text x="0" y="19" font-family="Inter,system-ui,sans-serif" font-weight="600" font-size="16" fill="#4a5568">TU Darmstadt</text></svg>
+                </a>
+                <a href="https://www.stanford.edu" target="_blank" class="hero-logo" title="Stanford University">
+                    <svg viewBox="0 0 170 26" height="20"><text x="0" y="19" font-family="Inter,system-ui,sans-serif" font-weight="600" font-size="16" fill="#4a5568">Stanford University</text></svg>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 
-<!-- Announcements -->
+<!-- Timeline -->
 <section style="padding:2.5rem 0;">
     <div class="container">
         <div class="announcements">
-            <h3>Announcements</h3>
+            <h3>Timeline <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.75rem;color:var(--color-text-light);">&mdash; all deadlines AoE</span></h3>
             <div class="announce-item">
                 <span class="announce-date">Apr 2026</span>
                 <span>Call for Participation opens &mdash; data, docs, and baseline agent released. <a href="data.html">Get started now &rarr;</a></span>
             </div>
             <div class="announce-item">
-                <span class="announce-date">May 2026</span>
-                <span>Dev-set leaderboard goes live &mdash; continuous submissions accepted.</span>
+                <span class="announce-date">May&ndash;Jul 2026</span>
+                <span>Open development with live dev-set leaderboard &mdash; continuous submissions accepted.</span>
             </div>
             <div class="announce-item">
                 <span class="announce-date">Jun 14</span>
@@ -102,8 +135,16 @@
                 <span>Final evaluation on hidden test set (2nd official submission round).</span>
             </div>
             <div class="announce-item">
-                <span class="announce-date">Aug 2026</span>
-                <span>Presentations at IJCAI-ECAI 2026, Bremen, Germany.</span>
+                <span class="announce-date">Jul 14</span>
+                <span>Technical report submission deadline (4 pages, IJCAI format).</span>
+            </div>
+            <div class="announce-item">
+                <span class="announce-date">Jul 21</span>
+                <span>Winners announced.</span>
+            </div>
+            <div class="announce-item">
+                <span class="announce-date">Aug 15&ndash;21</span>
+                <span>Presentations at IJCAI-ECAI 2026, Bremen, Germany. <a href="timeline.html">Full timeline &rarr;</a></span>
             </div>
         </div>
     </div>
@@ -122,6 +163,8 @@
             <p><strong>Why it matters:</strong> Baseline experiments reveal a "Completion > Compliance" pattern: even frontier models systematically prioritize task completion over admitting incapability &mdash; fabricating tool outputs rather than acknowledging limits. CAR-bench quantifies the gap between occasional capability and deployment-ready reliability with the <strong>Pass^k consistency metric</strong>. A task scores 1 only if solved in all k trials.</p>
 
             <p style="text-align:center;margin-top:1.5rem;">
+                <a href="benchmark.html" class="btn btn-outline btn-sm">Benchmark Details &rarr;</a>
+                &nbsp;
                 <a href="https://arxiv.org/abs/2601.22027" class="btn btn-outline btn-sm" target="_blank">Read the Paper &rarr;</a>
                 &nbsp;
                 <a href="https://huggingface.co/papers/2601.22027" class="btn btn-outline btn-sm" target="_blank">Hugging Face &rarr;</a>
@@ -244,30 +287,38 @@
     </div>
 </section>
 
-<!-- Sponsors -->
+<!-- Prizes -->
 <section>
     <div class="container">
-        <p class="eyebrow">Sponsors &amp; Partners</p>
-        <h2 class="section-title">Supported By</h2>
+        <p class="eyebrow">Prizes</p>
+        <h2 class="section-title">Prizes &amp; Awards</h2>
+        <p class="section-subtitle">All winners receive a prize, certificate, possibility for oral presentation at IJCAI-ECAI 2026, and co-authorship on a demo paper at IJCAI 2027. Exact prize amounts to be announced.</p>
 
-        <div class="sponsor-tier">
-            <p class="sponsor-tier-label">Platinum</p>
-            <div class="sponsor-logos">
-                <a href="https://www.anthropic.com" class="sponsor-logo platinum" target="_blank">Anthropic</a>
-                <a href="https://cerebras.net" class="sponsor-logo platinum" target="_blank">Cerebras</a>
-                <a href="https://openstream.ai" class="sponsor-logo platinum" target="_blank">OpenStream.ai</a>
+        <div class="tracks-grid">
+            <div class="track-card open">
+                <div class="track-icon">&#127942;</div>
+                <h3>Open Track</h3>
+                <ul style="font-size:0.93rem;color:var(--color-text-light);line-height:1.7;margin:0.3rem 0 0 1.1rem;">
+                    <li><strong>Rank Awards (1st&ndash;3rd)</strong> &mdash; By Pass^3 on hidden test set</li>
+                    <li><strong>Best Innovation Award</strong> &mdash; For novel approaches (smaller models, creative architectures, efficiency)</li>
+                </ul>
+            </div>
+            <div class="track-card cerebras">
+                <div class="track-icon">&#9889;</div>
+                <h3>Cerebras Fast-Reasoning</h3>
+                <ul style="font-size:0.93rem;color:var(--color-text-light);line-height:1.7;margin:0.3rem 0 0 1.1rem;">
+                    <li><strong>Cerebras Innovation Award</strong> &mdash; Best use of compute headroom for deeper reasoning</li>
+                </ul>
             </div>
         </div>
 
-        <div class="sponsor-tier">
-            <p class="sponsor-tier-label">Partners</p>
-            <div class="sponsor-logos">
-                <a href="https://www.bmw.com" class="sponsor-logo academic" target="_blank">BMW Group</a>
-                <a href="https://www.uni-augsburg.de" class="sponsor-logo academic" target="_blank">Augsburg University</a>
-                <a href="https://www.ntu.edu.sg" class="sponsor-logo academic" target="_blank">NTU Singapore</a>
-                <a href="https://www.tu-darmstadt.de" class="sponsor-logo academic" target="_blank">TU Darmstadt</a>
-                <a href="https://www.stanford.edu" class="sponsor-logo academic" target="_blank">Stanford University</a>
+        <div style="max-width:var(--max-width-narrow);margin:1.5rem auto 0;">
+            <div class="callout">
+                <strong>Inference credits for all participants:</strong> Anthropic, Cerebras, and OpenStream sponsor API inference credits to support agent development during the competition. Cerebras Track teams receive dedicated credits on Cerebras infrastructure.
             </div>
+            <p style="text-align:center;margin-top:1rem;font-size:0.9rem;color:var(--color-text-light);">
+                Each team must submit a 4-page technical report (IJCAI format) for award eligibility. Selected reports published as non-archival proceedings. <a href="rules.html#prizes">Full details &rarr;</a>
+            </p>
         </div>
     </div>
 </section>
@@ -320,14 +371,16 @@
                     <li><a href="https://arxiv.org/abs/2601.22027" target="_blank">Paper (arXiv)</a></li>
                     <li><a href="https://github.com/CAR-bench/car-bench" target="_blank">GitHub</a></li>
                     <li><a href="https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset" target="_blank">Dataset (HF)</a></li>
+                    <li><a href="benchmark.html">Benchmark Details</a></li>
                     <li><a href="faq.html">FAQ</a></li>
                     <li><a href="organizers.html">Organizers</a></li>
+            <li><a href="benchmark.html">Benchmark</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Community</h4>
                 <ul>
-                    <li><a href="#">Discord</a></li>
+                    <li><a href="https://discord.gg/MBUxhuCvn" target="_blank">Discord</a></li>
                     <li><a href="https://x.com/kirmayrjohannes" target="_blank">Twitter / X</a></li>
                     <li><a href="https://huggingface.co/papers/2601.22027" target="_blank">Hugging Face</a></li>
                 </ul>

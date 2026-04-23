@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracks &mdash; CAR-bench Challenge @ IJCAI-ECAI 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="topbar">
+    <div class="container">
+        <a href="index.html" class="brand">
+            <span class="brand-mark">CB</span>
+            <span>CAR-bench <span class="brand-sub">Challenge</span></span>
+        </a>
+        <button class="mobile-toggle" onclick="toggleNav()" aria-label="Toggle menu">&#9776;</button>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tracks.html">Tracks</a></li>
+            <li><a href="data.html">Data &amp; Starter Kit</a></li>
+            <li><a href="leaderboard.html">Leaderboard</a></li>
+            <li><a href="rules.html">Rules</a></li>
+            <li><a href="timeline.html">Timeline</a></li>
+            <li><a href="organizers.html">Organizers</a></li>
+            <li><a href="benchmark.html">Benchmark</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="https://discord.gg/MBUxhuCvn" target="_blank" class="discord-icon" title="Join our Discord" aria-label="Discord">
+                <svg width="20" height="15" viewBox="0 0 71 55" fill="none"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.8 40.8 0 00-1.8 3.7 54 54 0 00-16.2 0A26.5 26.5 0 0025.4.3a.2.2 0 00-.2-.1A58.4 58.4 0 0010.5 4.9a.2.2 0 00-.1.1C1.5 18.7-.9 32.2.3 45.5v.1a58.7 58.7 0 0017.7 9a.2.2 0 00.3-.1 42 42 0 003.6-5.9.2.2 0 00-.1-.3 38.6 38.6 0 01-5.5-2.7.2.2 0 01 0-.4c.4-.3.7-.6 1.1-.8a.2.2 0 01.2 0c11.6 5.3 24.1 5.3 35.5 0a.2.2 0 01.2 0l1.1.9a.2.2 0 010 .3c-1.8 1-3.6 1.9-5.5 2.7a.2.2 0 00-.1.3 47.2 47.2 0 003.6 5.9.2.2 0 00.3.1A58.5 58.5 0 0070.4 45.6v-.1c1.4-15-2.3-28-9.8-39.6a.2.2 0 00-.1-.1zM23.7 37.3c-3.4 0-6.2-3.1-6.2-7s2.7-7 6.2-7 6.3 3.2 6.2 7-2.8 7-6.2 7zm23 0c-3.4 0-6.2-3.1-6.2-7s2.7-7 6.2-7 6.3 3.2 6.2 7-2.8 7-6.2 7z" fill="currentColor"/></svg>
+            </a>
+            <a href="#" class="btn btn-cta btn-sm">Register</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Page header -->
+<div class="page-header">
+    <div class="container">
+        <h1>Competition Tracks</h1>
+        <p>Two tracks, two ways to push the frontier of LLM agent reliability. Enter one or both.</p>
+    </div>
+</div>
+
+<!-- Comparison table -->
+<section>
+    <div class="container">
+        <p class="eyebrow">At a Glance</p>
+        <h2 class="section-title">Which Track Should You Enter?</h2>
+        <p class="section-subtitle">The comparison below answers the most common question participants have.</p>
+
+        <div class="table-wrapper" style="max-width:960px;margin:0 auto;">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Track 1: Open Track</th>
+                        <th>Track 2: Cerebras Fast-Reasoning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Goal</th>
+                        <td>Maximize Pass^3 on the hidden test set using any approach</td>
+                        <td>Best use of Cerebras compute headroom for deeper reasoning under a fixed time budget</td>
+                    </tr>
+                    <tr>
+                        <th>Allowed Models</th>
+                        <td>Any LLM, any provider (proprietary or open-source)</td>
+                        <td>Models running on Cerebras inference infrastructure</td>
+                    </tr>
+                    <tr>
+                        <th>Evaluation Metric</th>
+                        <td>Pass^3 (task solved in all 3 trials)</td>
+                        <td>Combination of innovative compute use + Pass^3 performance</td>
+                    </tr>
+                    <tr>
+                        <th>Prize Structure</th>
+                        <td>Rank Awards (1st&ndash;3rd) + Best Innovation Award</td>
+                        <td>Cerebras Innovation Award</td>
+                    </tr>
+                    <tr>
+                        <th>Suitable For</th>
+                        <td>Teams exploring architecture, prompting, fine-tuning, multi-agent approaches</td>
+                        <td>Teams interested in leveraging fast inference for reasoning-heavy strategies</td>
+                    </tr>
+                    <tr>
+                        <th>Compute</th>
+                        <td>Bring your own API keys (credits from sponsors may be available)</td>
+                        <td>Cerebras-sponsored inference credits (bound to quota)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Track 1: Open -->
+<section class="section-alt" id="open">
+    <div class="container">
+        <div class="rule-section" style="max-width:820px;margin:0 auto;">
+            <h2 style="border-bottom-color:var(--color-primary-light);">Track 1: Open Track</h2>
+
+            <h3>Motivation</h3>
+            <p>The Open Track is the primary competition track. It is designed for maximum flexibility: use any model, any provider, and any architecture to build the most reliable agent possible. The goal is to close the gap between frontier model capability and deployment-ready consistency on CAR-bench.</p>
+            <p>Current state-of-the-art achieves only 58% consistent success (Pass^3). There is significant room for improvement through better scaffolding, prompting, planning, and agent design&mdash;independent of the underlying model.</p>
+
+            <h3>What You&rsquo;ll Build</h3>
+            <p>A dockerized agent that communicates via the A2A (Agent-to-Agent) protocol with the CAR-bench evaluation environment. Your agent receives user requests, interacts with tools, and produces responses that are evaluated for correctness, policy compliance, limit-awareness, and disambiguation behavior.</p>
+
+            <h3>Allowed Approaches</h3>
+            <ul>
+                <li><strong>Prompting:</strong> System prompts, few-shot, chain-of-thought, self-reflection</li>
+                <li><strong>Scaffolding:</strong> Planning-execution separation, tool-use strategies, retry logic</li>
+                <li><strong>Multi-agent:</strong> Subagents, agent skills, orchestration patterns</li>
+                <li><strong>Fine-tuning:</strong> SFT, RLHF, DPO on the training data</li>
+                <li><strong>Context engineering:</strong> RAG over environment data, dynamic context management</li>
+                <li><strong>Any combination</strong> of the above</li>
+            </ul>
+
+            <h3>Evaluation</h3>
+            <p>Teams are ranked by <strong>Pass^3</strong> on the hidden test set (125 tasks). A task scores 1 only if solved correctly in all 3 independent trials. Per-category breakdown (Base / Hallucination / Disambiguation) is shown alongside the aggregate score.</p>
+
+            <h3>Prizes</h3>
+            <ul>
+                <li><strong>Rank Awards:</strong> 1st, 2nd, 3rd place by Pass^3 on hidden test set</li>
+                <li><strong>Best Innovation Award:</strong> For novel approaches &mdash; smaller models, creative architectures, efficiency-focused solutions</li>
+                <li>Certificates for award winners; top teams present at the IJCAI competition session</li>
+            </ul>
+
+            <p class="mt-2" style="text-align:center;">
+                <a href="data.html" class="btn btn-primary">Get started with this track &rarr;</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Track 2: Cerebras -->
+<section id="cerebras">
+    <div class="container">
+        <div class="rule-section" style="max-width:820px;margin:0 auto;">
+            <h2 style="border-bottom-color:var(--color-accent);">Track 2: Cerebras Fast-Reasoning Track</h2>
+
+            <h3>Motivation</h3>
+            <p>Cerebras builds the world&rsquo;s fastest AI inference infrastructure, holding independently verified speed records on frontier-scale models. This track explores what becomes possible when inference latency is no longer a bottleneck: can agents use deeper reasoning, self-reflection, or search strategies that would be infeasible under conventional time constraints?</p>
+            <p>While the Open Track rewards raw performance, this track rewards <strong>innovative use of compute headroom</strong>. The question is not just "how well does your agent perform?" but "what does your agent do with the extra inference budget that wouldn&rsquo;t be possible otherwise?"</p>
+
+            <h3>What You&rsquo;ll Build</h3>
+            <p>Same A2A-compatible agent format as Track 1, but your agent runs on Cerebras inference infrastructure within a fixed time budget. The additional speed budget is the key differentiator&mdash;use it for multi-pass reasoning, Monte Carlo tree search, generate-and-verify, or any strategy that benefits from more inference calls.</p>
+
+            <h3>Allowed Approaches</h3>
+            <ul>
+                <li>All approaches from Track 1 are permitted</li>
+                <li><strong>Additionally encouraged:</strong> Multi-pass reasoning, self-reflection loops, best-of-N sampling, search-based planning, verification chains, ensemble approaches</li>
+                <li>Agents must run on Cerebras-provided infrastructure</li>
+            </ul>
+
+            <h3>Evaluation</h3>
+            <p>Ranked by a combination of <strong>innovative use of compute headroom</strong> and <strong>Pass^3 performance</strong>. Judges evaluate whether the approach meaningfully leverages fast inference in ways that differ from standard single-pass agent design.</p>
+
+            <h3>Prizes</h3>
+            <ul>
+                <li><strong>Cerebras Innovation Award:</strong> For the best demonstration of compute-aware agent design</li>
+                <li>Cerebras-sponsored inference credits for development (bound to quota)</li>
+                <li>Certificates and presentation slot at the IJCAI competition session</li>
+            </ul>
+
+            <p class="mt-2" style="text-align:center;">
+                <a href="data.html" class="btn btn-accent">Get started with this track &rarr;</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="section-alt" style="text-align:center;">
+    <div class="container">
+        <h2 class="section-title">Ready to Start?</h2>
+        <p class="section-subtitle">Set up the baseline agent, run it on the dev set, and submit your first score in under 20 minutes.</p>
+        <div class="hero-buttons">
+            <a href="data.html" class="btn btn-primary btn-lg">Data &amp; Starter Kit</a>
+            <a href="rules.html" class="btn btn-outline btn-lg">Read the Rules</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <p class="footer-about"><strong>CAR-bench Challenge</strong> @ IJCAI-ECAI 2026, Bremen, Germany. Building reliable LLM agents under real-world uncertainty.</p>
+                <p class="footer-contact">Contact: <a href="mailto:carbench-challenge@car-bench.org">carbench-challenge@car-bench.org</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>Competition</h4>
+                <ul>
+                    <li><a href="tracks.html">Tracks</a></li>
+                    <li><a href="data.html">Data &amp; Starter Kit</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li><a href="rules.html">Rules</a></li>
+                    <li><a href="timeline.html">Timeline</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="https://arxiv.org/abs/2601.22027" target="_blank">Paper (arXiv)</a></li>
+                    <li><a href="https://github.com/CAR-bench/car-bench" target="_blank">GitHub</a></li>
+                    <li><a href="https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset" target="_blank">Dataset (HF)</a></li>
+                    <li><a href="benchmark.html">Benchmark Details</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="organizers.html">Organizers</a></li>
+            <li><a href="benchmark.html">Benchmark</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="https://discord.gg/MBUxhuCvn" target="_blank">Discord</a></li>
+                    <li><a href="https://x.com/kirmayrjohannes" target="_blank">Twitter / X</a></li>
+                    <li><a href="https://huggingface.co/papers/2601.22027" target="_blank">Hugging Face</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 CAR-bench. Released under the <a href="https://github.com/CAR-bench/car-bench/blob/main/LICENSE">MIT License</a>.</span>
+            <div class="footer-bottom-links">
+                <a href="faq.html">FAQ</a>
+                <a href="organizers.html#contact">Contact</a>
+                <a href="paper.html">Original Paper Page</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
