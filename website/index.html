@@ -71,7 +71,7 @@
         <div class="countdown" id="countdown">
             <button class="countdown-close" onclick="this.parentElement.style.display='none'" aria-label="Dismiss countdown">&times;</button>
             <div class="countdown-label">Next Deadline</div>
-            <div class="countdown-event">Final Evaluation</div>
+            <div class="countdown-event">Registration Closes</div>
             <div class="countdown-timer">
                 <div class="countdown-unit"><span class="num" data-u="d">--</span><span class="lbl">Days</span></div>
                 <div class="countdown-unit"><span class="num" data-u="h">--</span><span class="lbl">Hrs</span></div>
@@ -125,6 +125,10 @@
             <div class="announce-item">
                 <span class="announce-date">May&ndash;Jul 2026</span>
                 <span>Open development with live dev-set leaderboard &mdash; continuous submissions accepted.</span>
+            </div>
+            <div class="announce-item">
+                <span class="announce-date">Jul 1</span>
+                <span>Registration closes.</span>
             </div>
             <div class="announce-item">
                 <span class="announce-date">Jul 19</span>
@@ -283,39 +287,46 @@
     </div>
 </section>
 
-<!-- Prizes -->
+<!-- Prizes & Awards -->
 <section>
     <div class="container">
-        <p class="eyebrow">Prizes</p>
-        <h2 class="section-title">Prizes &amp; Awards</h2>
-        <p class="section-subtitle">All winners receive a prize, certificate, possibility for oral presentation at IJCAI-ECAI 2026, and co-authorship on a demo paper at IJCAI 2027. Exact prize amounts to be announced.</p>
+        <p class="eyebrow" style="color:#e53e3e;">Prizes &amp; Awards</p>
 
+        <div class="callout" style="max-width:var(--max-width-narrow);margin:0 auto 1.5rem;">
+            <strong>Inference credits for all participants:</strong> Anthropic, Cerebras, and OpenStream sponsor API inference credits for agent development. Cerebras Track teams receive dedicated credits on Cerebras infrastructure.
+        </div>
+
+        <h3 style="text-align:center;font-size:1.05rem;margin-bottom:0.8rem;color:var(--color-text-light);font-weight:500;">Awards</h3>
         <div class="tracks-grid">
             <div class="track-card open">
                 <div class="track-icon">&#127942;</div>
                 <h3>Open Track</h3>
                 <ul style="font-size:0.93rem;color:var(--color-text-light);line-height:1.7;margin:0.3rem 0 0 1.1rem;">
                     <li><strong>Rank Awards (1st&ndash;3rd)</strong> &mdash; By Pass^3 on hidden test set</li>
-                    <li><strong>Best Innovation Award</strong> &mdash; For novel approaches (smaller models, creative architectures, efficiency)</li>
+                    <li><strong>Best Innovation Award</strong> &mdash; Novel approaches, smaller models, efficiency</li>
                 </ul>
             </div>
             <div class="track-card cerebras">
                 <div class="track-icon">&#9889;</div>
-                <h3>Cerebras Fast-Reasoning</h3>
+                <h3>Cerebras Track</h3>
                 <ul style="font-size:0.93rem;color:var(--color-text-light);line-height:1.7;margin:0.3rem 0 0 1.1rem;">
                     <li><strong>Cerebras Innovation Award</strong> &mdash; Best use of compute headroom for deeper reasoning</li>
                 </ul>
             </div>
         </div>
 
-        <div style="max-width:var(--max-width-narrow);margin:1.5rem auto 0;">
-            <div class="callout">
-                <strong>Inference credits for all participants:</strong> Anthropic, Cerebras, and OpenStream sponsor API inference credits to support agent development during the competition. Cerebras Track teams receive dedicated credits on Cerebras infrastructure.
-            </div>
-            <p style="text-align:center;margin-top:1rem;font-size:0.9rem;color:var(--color-text-light);">
-                Each team must submit a 4-page technical report (IJCAI format) for award eligibility. Selected reports published as non-archival proceedings. <a href="rules.html#prizes">Full details &rarr;</a>
-            </p>
+        <h3 style="text-align:center;font-size:1.05rem;margin:1.5rem 0 0.8rem;color:var(--color-text-light);font-weight:500;">Prizes for all award winners</h3>
+        <div style="max-width:var(--max-width-narrow);margin:0 auto;padding:1rem 1.3rem;border:1px solid var(--color-border);border-radius:10px;">
+            <ul style="font-size:0.93rem;color:var(--color-text);line-height:1.8;margin:0 0 0 1.1rem;">
+                <li>Sponsored prize (details to be announced)</li>
+                <li>Certificate</li>
+                <li>(Optional) Oral presentation at IJCAI-ECAI 2026 competition slot</li>
+                <li>(Optional) Co-authorship on IJCAI 2027 demo paper, reporting experience of the 2026 competition</li>
+            </ul>
         </div>
+        <p style="text-align:center;margin-top:0.8rem;font-size:0.85rem;color:var(--color-text-light);">
+            Each team must submit a 4-page technical report (IJCAI format) for award eligibility. <a href="rules.html">Full details &rarr;</a>
+        </p>
     </div>
 </section>
 

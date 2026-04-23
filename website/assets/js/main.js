@@ -85,7 +85,7 @@ function initLeaderboardTabs() {
 
 // Auto-init when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Countdown: next deadline is Jul 19, 2026 AoE (final evaluation on hidden test set)
-    startCountdown('2026-07-19T23:59:59-12:00', 'countdown');
+    // Countdown: next deadline is Jul 1, 2026 AoE (registration closes)
+    startCountdown('2026-07-01T23:59:59-12:00', 'countdown');
     initLeaderboardTabs();
 });
