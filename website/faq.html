@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ &mdash; CAR-bench Challenge @ IJCAI-ECAI 2026</title>
+    <title>FAQ - CAR-bench Challenge @ IJCAI-ECAI 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             <li><a href="data.html">Data &amp; Starter Kit</a></li>
             <li><a href="leaderboard.html">Leaderboard</a></li>
             <li><a href="rules.html">Rules</a></li>
-            <li><a href="timeline.html">Timeline</a></li>
+
             <li><a href="organizers.html">Organizers</a></li>
             <li><a href="benchmark.html">Benchmark</a></li>
         </ul>
@@ -42,7 +42,7 @@
 <div class="page-header">
     <div class="container">
         <h1>Frequently Asked Questions</h1>
-        <p>Can&rsquo;t find your answer? Reach us at <a href="mailto:carbench-challenge@car-bench.org" style="color:var(--color-cta);">carbench-challenge@car-bench.org</a> or on <a href="https://discord.gg/MBUxhuCvn" target="_blank" style="color:var(--color-cta);">Discord</a>.</p>
+        <p>Can&rsquo;t find your answer? Reach us at <a href="mailto:johannes1.kirmayr@uni-a.de" style="color:var(--color-cta);">johannes1.kirmayr@uni-a.de</a> or on <a href="https://discord.gg/MBUxhuCvn" target="_blank" style="color:var(--color-cta);">Discord</a>.</p>
     </div>
 </div>
 
@@ -61,21 +61,21 @@
             <details class="faq-item">
                 <summary class="faq-q">Can I be on multiple teams?</summary>
                 <div class="faq-a">
-                    <p>No. Each individual may be a member of only one team. This prevents information leakage between competing entries.</p>
+                    <p>Yes. However, if two teams sharing a member submit substantially overlapping agents, the worse-performing submission will be excluded from award eligibility.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">Is any LLM allowed, or are there restrictions on proprietary vs open-source?</summary>
                 <div class="faq-a">
-                    <p>In the <strong>Open Track</strong>, any LLM is allowed &mdash; proprietary, open-source, any size. In the <strong>Cerebras Track</strong>, you must use models running on Cerebras inference infrastructure.</p>
+                    <p>In the <strong>Open Track</strong>, any LLM is allowed - proprietary, open-source, any size. In the <strong>Cerebras Track</strong>, you use models on Cerebras infrastructure via the free tier during development; dedicated server space is reserved for the final evaluation.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">Can I submit to both tracks with the same agent?</summary>
                 <div class="faq-a">
-                    <p>Yes, you can enter both tracks. However, the Cerebras Track requires your agent to run on Cerebras infrastructure, so you may need to adapt your agent. The same team can submit different agents to each track.</p>
+                    <p>Yes, you can enter both tracks. However, the Cerebras Track requires your agent to use Cerebras infrastructure (free tier for development, reserved server space for final evaluation), so you may need to adapt your agent. The same team can submit different agents to each track.</p>
                 </div>
             </details>
 
@@ -89,14 +89,14 @@
             <details class="faq-item">
                 <summary class="faq-q">Are API credits provided?</summary>
                 <div class="faq-a">
-                    <p>For official evaluation runs, LLM API keys are provided through GitHub Secrets &mdash; no cost to you. For development, you use your own API keys. Additional credits from Anthropic, Cerebras, and OpenStream sponsorships are being finalized. Cerebras Track participants receive sponsored inference credits.</p>
+                    <p>For official evaluation runs, LLM API keys are provided through GitHub Secrets - no cost to you. For development, you use your own API keys. Details on additional sponsored inference credits to be announced. Cerebras Track participants use the Cerebras free tier during development.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">How is the hidden test set protected?</summary>
                 <div class="faq-a">
-                    <p>The hidden test set is a completely novel set of 125 tasks that are never shared with participants. Evaluation runs in a controlled environment. Agents cannot observe or extract test set tasks. Any attempt to probe the test set is a rule violation resulting in disqualification.</p>
+                    <p>The hidden test set is a completely novel set that is never shared with participants. Evaluation runs in a controlled environment. Agents cannot observe or extract test set tasks. Any attempt to probe the test set is a rule violation resulting in disqualification.</p>
                 </div>
             </details>
 
@@ -124,7 +124,7 @@
             <details class="faq-item">
                 <summary class="faq-q">What counts as &ldquo;hard-coding&rdquo; vs &ldquo;clever prompting&rdquo;?</summary>
                 <div class="faq-a">
-                    <p><strong>Hard-coding</strong> means encoding specific task answers or building lookup tables that map task descriptions to pre-determined solutions. This is prohibited. <strong>Clever prompting</strong> means crafting system prompts, few-shot examples, or reasoning strategies that help the agent generalize &mdash; this is encouraged. The litmus test: would your approach work on novel tasks it hasn&rsquo;t seen? If yes, it&rsquo;s prompting. If it only works on tasks whose answers you&rsquo;ve memorized, it&rsquo;s hard-coding.</p>
+                    <p><strong>Hard-coding</strong> means encoding specific task answers or building lookup tables that map task descriptions to pre-determined solutions. This is prohibited. <strong>Clever prompting</strong> means crafting system prompts, few-shot examples, or reasoning strategies that help the agent generalize - this is encouraged. The litmus test: would your approach work on novel tasks it hasn&rsquo;t seen? If yes, it&rsquo;s prompting. If it only works on tasks whose answers you&rsquo;ve memorized, it&rsquo;s hard-coding.</p>
                 </div>
             </details>
 
@@ -167,7 +167,7 @@
         <p class="section-subtitle">Join the Discord for real-time help, or email us directly.</p>
         <div class="hero-buttons">
             <a href="https://discord.gg/MBUxhuCvn" target="_blank" class="btn btn-primary btn-lg" style="background:var(--color-discord);">Join Discord</a>
-            <a href="mailto:carbench-challenge@car-bench.org" class="btn btn-outline btn-lg">Email Us</a>
+            <a href="mailto:johannes1.kirmayr@uni-a.de" class="btn btn-outline btn-lg">Email Us</a>
         </div>
     </div>
 </section>
@@ -178,7 +178,7 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <p class="footer-about"><strong>CAR-bench Challenge</strong> @ IJCAI-ECAI 2026, Bremen, Germany. Building reliable LLM agents under real-world uncertainty.</p>
-                <p class="footer-contact">Join <a href="https://discord.gg/MBUxhuCvn" target="_blank">Discord</a> for questions. For personal inquiries: <a href="mailto:carbench-challenge@car-bench.org">carbench-challenge@car-bench.org</a></p>
+                <p class="footer-contact">Join <a href="https://discord.gg/MBUxhuCvn" target="_blank">Discord</a> for questions. For personal inquiries: <a href="mailto:johannes1.kirmayr@uni-a.de">johannes1.kirmayr@uni-a.de</a></p>
             </div>
             <div class="footer-col">
                 <h4>Competition</h4>
@@ -187,13 +187,13 @@
                     <li><a href="data.html">Data &amp; Starter Kit</a></li>
                     <li><a href="leaderboard.html">Leaderboard</a></li>
                     <li><a href="rules.html">Rules</a></li>
-                    <li><a href="timeline.html">Timeline</a></li>
+        
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Resources</h4>
                 <ul>
-                    <li><a href="https://arxiv.org/abs/2601.22027" target="_blank">Paper (arXiv)</a></li>
+                    <li><a href="https://huggingface.co/papers/2601.22027" target="_blank">Paper</a></li>
                     <li><a href="https://github.com/CAR-bench/car-bench" target="_blank">GitHub</a></li>
                     <li><a href="https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset" target="_blank">Dataset (HF)</a></li>
                     <li><a href="benchmark.html">Benchmark Details</a></li>

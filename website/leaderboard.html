@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaderboard &mdash; CAR-bench Challenge @ IJCAI-ECAI 2026</title>
+    <title>Leaderboard - CAR-bench Challenge @ IJCAI-ECAI 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             <li><a href="data.html">Data &amp; Starter Kit</a></li>
             <li><a href="leaderboard.html">Leaderboard</a></li>
             <li><a href="rules.html">Rules</a></li>
-            <li><a href="timeline.html">Timeline</a></li>
+
             <li><a href="organizers.html">Organizers</a></li>
             <li><a href="benchmark.html">Benchmark</a></li>
         </ul>
@@ -59,7 +59,7 @@
         <!-- Open Track Panel -->
         <div class="lb-panel active" id="panel-open">
             <div class="lb-note">
-                <strong>Dev Set Leaderboard</strong> &mdash; Updates continuously as teams submit. Scores below include organizer baselines (non-competing, shown in grey) as reference. Competition submissions will appear once the dev leaderboard goes live in May 2026.
+                <strong>Dev Set Leaderboard</strong> - Updates continuously as teams submit. Scores below include organizer baselines (non-competing, shown in grey) as reference. Competition submissions will appear once the dev leaderboard goes live in May 2026.
             </div>
 
             <div class="table-wrapper">
@@ -69,11 +69,11 @@
                             <th>Rank</th>
                             <th>Team / Model</th>
                             <th>Affiliation</th>
-                            <th class="num">Pass^3</th>
-                            <th class="num">Pass^1</th>
-                            <th class="num">Base</th>
-                            <th class="num">Hall.</th>
-                            <th class="num">Disamb.</th>
+                            <th class="num">Avg Pass^3</th>
+                            <th class="num">Avg Pass@1</th>
+                            <th class="num">Base Pass^3</th>
+                            <th class="num">Hall. Pass^3</th>
+                            <th class="num">Disamb. Pass^3</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,7 +90,7 @@
                         </tr>
                         <tr class="baseline-row">
                             <td>Baseline</td>
-                            <td><strong>GPT-5</strong> (thinking)</td>
+                            <td><strong>GPT-5</strong></td>
                             <td>OpenAI</td>
                             <td class="num">.54</td>
                             <td class="num">.65</td>
@@ -100,7 +100,7 @@
                         </tr>
                         <tr class="baseline-row">
                             <td>Baseline</td>
-                            <td><strong>GPT-5.2</strong> (thinking)</td>
+                            <td><strong>GPT-5.2</strong></td>
                             <td>OpenAI</td>
                             <td class="num">.53</td>
                             <td class="num">.68</td>
@@ -110,7 +110,7 @@
                         </tr>
                         <tr class="baseline-row">
                             <td>Baseline</td>
-                            <td><strong>Claude Opus 4.5</strong> (thinking)</td>
+                            <td><strong>Claude Opus 4.5</strong></td>
                             <td>Anthropic</td>
                             <td class="num">.52</td>
                             <td class="num">.65</td>
@@ -120,7 +120,7 @@
                         </tr>
                         <tr class="baseline-row">
                             <td>Baseline</td>
-                            <td><strong>Claude Sonnet 4</strong> (thinking)</td>
+                            <td><strong>Claude Sonnet 4</strong></td>
                             <td>Anthropic</td>
                             <td class="num">.47</td>
                             <td class="num">.59</td>
@@ -130,7 +130,7 @@
                         </tr>
                         <tr class="baseline-row">
                             <td>Baseline</td>
-                            <td><strong>Gemini 2.5 Flash</strong> (thinking)</td>
+                            <td><strong>Gemini 2.5 Flash</strong></td>
                             <td>Google</td>
                             <td class="num">.41</td>
                             <td class="num">.54</td>
@@ -140,7 +140,7 @@
                         </tr>
                         <tr class="baseline-row">
                             <td>Baseline</td>
-                            <td><strong>Gemini 2.5 Pro</strong> (auto-thinking)</td>
+                            <td><strong>Gemini 2.5 Pro</strong></td>
                             <td>Google</td>
                             <td class="num">.38</td>
                             <td class="num">.51</td>
@@ -160,7 +160,7 @@
                         </tr>
                         <tr class="baseline-row">
                             <td>Baseline</td>
-                            <td><strong>Qwen3-32B</strong> (thinking)</td>
+                            <td><strong>Qwen3-32B</strong></td>
                             <td>Alibaba</td>
                             <td class="num">.31</td>
                             <td class="num">.47</td>
@@ -190,7 +190,7 @@
         <!-- Cerebras Track Panel -->
         <div class="lb-panel" id="panel-cerebras">
             <div class="lb-note">
-                <strong>Cerebras Fast-Reasoning Track</strong> &mdash; This leaderboard will be populated once the Cerebras Track opens for submissions. Teams will be ranked by a combination of innovative compute use and Pass^3 performance.
+                <strong>Cerebras Fast-Reasoning Track</strong> - This leaderboard will be populated once the Cerebras Track opens for submissions. Teams will be ranked by a combination of innovative compute use and Pass^3 performance.
             </div>
             <div style="text-align:center;padding:3rem 0;color:var(--color-text-light);">
                 <p style="font-size:1.2rem;font-weight:600;margin-bottom:0.5rem;">Coming Soon</p>
@@ -201,11 +201,11 @@
         <!-- Hidden Test Panel -->
         <div class="lb-panel" id="panel-test">
             <div class="lb-note">
-                <strong>Hidden Test Set Results</strong> &mdash; Updated after the official evaluation round (Jul 19). These are the scores that determine final rankings and awards.
+                <strong>Hidden Test Set Results</strong> - Updated after each evaluation round (1st: Jul 10, final: Jul 19). Final rankings and awards are determined from the Jul 19 round.
             </div>
             <div style="text-align:center;padding:3rem 0;color:var(--color-text-light);">
                 <p style="font-size:1.2rem;font-weight:600;margin-bottom:0.5rem;">Not Yet Available</p>
-                <p>Hidden test set results will be published after the final evaluation on July 19, 2026.</p>
+                <p>Hidden test set results will be published after the 1st evaluation (Jul 10) and updated after the final evaluation (Jul 19).</p>
             </div>
         </div>
 
@@ -235,7 +235,7 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <p class="footer-about"><strong>CAR-bench Challenge</strong> @ IJCAI-ECAI 2026, Bremen, Germany. Building reliable LLM agents under real-world uncertainty.</p>
-                <p class="footer-contact">Join <a href="https://discord.gg/MBUxhuCvn" target="_blank">Discord</a> for questions. For personal inquiries: <a href="mailto:carbench-challenge@car-bench.org">carbench-challenge@car-bench.org</a></p>
+                <p class="footer-contact">Join <a href="https://discord.gg/MBUxhuCvn" target="_blank">Discord</a> for questions. For personal inquiries: <a href="mailto:johannes1.kirmayr@uni-a.de">johannes1.kirmayr@uni-a.de</a></p>
             </div>
             <div class="footer-col">
                 <h4>Competition</h4>
@@ -244,13 +244,13 @@
                     <li><a href="data.html">Data &amp; Starter Kit</a></li>
                     <li><a href="leaderboard.html">Leaderboard</a></li>
                     <li><a href="rules.html">Rules</a></li>
-                    <li><a href="timeline.html">Timeline</a></li>
+        
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Resources</h4>
                 <ul>
-                    <li><a href="https://arxiv.org/abs/2601.22027" target="_blank">Paper (arXiv)</a></li>
+                    <li><a href="https://huggingface.co/papers/2601.22027" target="_blank">Paper</a></li>
                     <li><a href="https://github.com/CAR-bench/car-bench" target="_blank">GitHub</a></li>
                     <li><a href="https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset" target="_blank">Dataset (HF)</a></li>
                     <li><a href="benchmark.html">Benchmark Details</a></li>

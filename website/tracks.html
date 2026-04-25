@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracks &mdash; CAR-bench Challenge @ IJCAI-ECAI 2026</title>
+    <title>Tracks - CAR-bench Challenge @ IJCAI-ECAI 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             <li><a href="data.html">Data &amp; Starter Kit</a></li>
             <li><a href="leaderboard.html">Leaderboard</a></li>
             <li><a href="rules.html">Rules</a></li>
-            <li><a href="timeline.html">Timeline</a></li>
+
             <li><a href="organizers.html">Organizers</a></li>
             <li><a href="benchmark.html">Benchmark</a></li>
         </ul>
@@ -91,7 +91,7 @@
                     <tr>
                         <th>Compute</th>
                         <td>Bring your own API keys (credits from sponsors may be available)</td>
-                        <td>Cerebras-sponsored inference credits (bound to quota)</td>
+                        <td>Cerebras free tier during development; reserved server space for final evaluation</td>
                     </tr>
                 </tbody>
             </table>
@@ -106,11 +106,11 @@
             <h2 style="border-bottom-color:var(--color-primary-light);">Track 1: Open Track</h2>
 
             <h3>Motivation</h3>
-            <p>The Open Track is the primary competition track. It is designed for maximum flexibility: use any model, any provider, and any architecture to build the most reliable agent possible. The goal is to close the gap between frontier model capability and deployment-ready consistency on CAR-bench.</p>
-            <p>Current state-of-the-art achieves only 58% consistent success (Pass^3). There is significant room for improvement through better scaffolding, prompting, planning, and agent design&mdash;independent of the underlying model.</p>
+            <p>The Open Track is designed for maximum flexibility: use any model, any provider, and any architecture to build the most reliable agent possible. The goal is to close the gap between frontier model capability and deployment-ready consistency on CAR-bench.</p>
+            <p>Current state-of-the-art achieves only 58% consistent success (Pass^3). There is significant room for improvement through better scaffolding, prompting, planning, and agent design.</p>
 
             <h3>What You&rsquo;ll Build</h3>
-            <p>A dockerized agent that communicates via the A2A (Agent-to-Agent) protocol with the CAR-bench evaluation environment. Your agent receives user requests, interacts with tools, and produces responses that are evaluated for correctness, policy compliance, limit-awareness, and disambiguation behavior.</p>
+            <p>A dockerized Agent-under-Test that communicates via the A2A (Agent-to-Agent) protocol with the CAR-bench evaluation environment. Your agent receives user requests, interacts with tools, and produces responses that are evaluated for correctness, policy compliance, limit-awareness, and disambiguation behavior.</p>
 
             <h3>Allowed Approaches</h3>
             <ul>
@@ -119,16 +119,16 @@
                 <li><strong>Multi-agent:</strong> Subagents, agent skills, orchestration patterns</li>
                 <li><strong>Fine-tuning:</strong> SFT, RLHF, DPO on the training data</li>
                 <li><strong>Context engineering:</strong> RAG over environment data, dynamic context management</li>
-                <li><strong>Any combination</strong> of the above</li>
+                <li><strong>Any idea and combination</strong> of the above without exploiting the benchmark evaluation process</li>
             </ul>
 
             <h3>Evaluation</h3>
-            <p>Teams are ranked by <strong>Pass^3</strong> on the hidden test set (125 tasks). A task scores 1 only if solved correctly in all 3 independent trials. Per-category breakdown (Base / Hallucination / Disambiguation) is shown alongside the aggregate score.</p>
+            <p>Teams are ranked by <strong>Pass^3</strong> on a hidden test set. A task scores 1 only if solved correctly in all 3 independent trials. Per-category breakdown (Base / Hallucination / Disambiguation) is shown alongside the aggregate score.</p>
 
             <h3>Prizes</h3>
             <ul>
                 <li><strong>Rank Awards:</strong> 1st, 2nd, 3rd place by Pass^3 on hidden test set</li>
-                <li><strong>Best Innovation Award:</strong> For novel approaches &mdash; smaller models, creative architectures, efficiency-focused solutions</li>
+                <li><strong>Best Innovation Award:</strong> For novel approaches - efficient use of open models, creative architectures, ... Evaluated based on the required technical report.</li>
                 <li>Certificates for award winners</li>
                 <li>(Optional) Oral presentation at IJCAI-ECAI 2026 competition slot</li>
                 <li>(Optional) Co-authorship on IJCAI 2027 demo paper</li>
@@ -152,22 +152,21 @@
             <p>While the Open Track rewards raw performance, this track rewards <strong>innovative use of compute headroom</strong>. The question is not just "how well does your agent perform?" but "what does your agent do with the extra inference budget that wouldn&rsquo;t be possible otherwise?"</p>
 
             <h3>What You&rsquo;ll Build</h3>
-            <p>Same A2A-compatible agent format as Track 1, but your agent runs on Cerebras inference infrastructure within a fixed time budget. The additional speed budget is the key differentiator&mdash;use it for multi-pass reasoning, Monte Carlo tree search, generate-and-verify, or any strategy that benefits from more inference calls.</p>
+            <p>Same A2A-compatible agent format as Track 1, but your agent runs on Cerebras inference infrastructure. During development, participants use the Cerebras free tier. For the final submission, dedicated server space is reserved and runs are scheduled to allow fair and comparative evaluation.</p>
 
             <h3>Allowed Approaches</h3>
             <ul>
                 <li>All approaches from Track 1 are permitted</li>
                 <li><strong>Additionally encouraged:</strong> Multi-pass reasoning, self-reflection loops, best-of-N sampling, search-based planning, verification chains, ensemble approaches</li>
-                <li>Agents must run on Cerebras-provided infrastructure</li>
+                <li>Agents must use Cerebras infrastructure (free tier for development; reserved server space for final evaluation)</li>
             </ul>
 
             <h3>Evaluation</h3>
-            <p>Ranked by a combination of <strong>innovative use of compute headroom</strong> and <strong>Pass^3 performance</strong>. Judges evaluate whether the approach meaningfully leverages fast inference in ways that differ from standard single-pass agent design.</p>
+            <p>Ranked by a combination of <strong>innovative use of compute headroom</strong> and <strong>Pass^3 performance</strong>. Judges evaluate whether the approach meaningfully leverages fast inference in ways that differ from standard single-pass agent design. Evaluated based on the required technical report.</p>
 
             <h3>Prizes</h3>
             <ul>
                 <li><strong>Cerebras Innovation Award:</strong> For the best demonstration of compute-aware agent design</li>
-                <li>Cerebras-sponsored inference credits for development (bound to quota)</li>
                 <li>Certificates for award winners</li>
                 <li>(Optional) Oral presentation at IJCAI-ECAI 2026 competition slot</li>
                 <li>(Optional) Co-authorship on IJCAI 2027 demo paper</li>
@@ -198,7 +197,7 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <p class="footer-about"><strong>CAR-bench Challenge</strong> @ IJCAI-ECAI 2026, Bremen, Germany. Building reliable LLM agents under real-world uncertainty.</p>
-                <p class="footer-contact">Contact: <a href="mailto:carbench-challenge@car-bench.org">carbench-challenge@car-bench.org</a></p>
+                <p class="footer-contact">Contact: <a href="mailto:johannes1.kirmayr@uni-a.de">johannes1.kirmayr@uni-a.de</a></p>
             </div>
             <div class="footer-col">
                 <h4>Competition</h4>
@@ -207,13 +206,13 @@
                     <li><a href="data.html">Data &amp; Starter Kit</a></li>
                     <li><a href="leaderboard.html">Leaderboard</a></li>
                     <li><a href="rules.html">Rules</a></li>
-                    <li><a href="timeline.html">Timeline</a></li>
+        
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Resources</h4>
                 <ul>
-                    <li><a href="https://arxiv.org/abs/2601.22027" target="_blank">Paper (arXiv)</a></li>
+                    <li><a href="https://huggingface.co/papers/2601.22027" target="_blank">Paper</a></li>
                     <li><a href="https://github.com/CAR-bench/car-bench" target="_blank">GitHub</a></li>
                     <li><a href="https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset" target="_blank">Dataset (HF)</a></li>
                     <li><a href="benchmark.html">Benchmark Details</a></li>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rules &mdash; CAR-bench Challenge @ IJCAI-ECAI 2026</title>
+    <title>Rules - CAR-bench Challenge @ IJCAI-ECAI 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             <li><a href="data.html">Data &amp; Starter Kit</a></li>
             <li><a href="leaderboard.html">Leaderboard</a></li>
             <li><a href="rules.html">Rules</a></li>
-            <li><a href="timeline.html">Timeline</a></li>
+
             <li><a href="organizers.html">Organizers</a></li>
             <li><a href="benchmark.html">Benchmark</a></li>
         </ul>
@@ -58,8 +58,6 @@
                 <li><a href="#allowed">Allowed Approaches</a></li>
                 <li><a href="#prohibited">Prohibited Behaviors</a></li>
                 <li><a href="#submission">Submission Mechanics</a></li>
-                <li><a href="#evaluation">Evaluation</a></li>
-                <li><a href="#disputes">Dispute Resolution</a></li>
                 <li><a href="#code-release">Code Release</a></li>
                 <li><a href="#reports">Technical Reports</a></li>
                 <li><a href="#data-use">Data Use</a></li>
@@ -73,9 +71,7 @@
                 <li>The competition is open to individuals and teams worldwide.</li>
                 <li>There is no minimum or maximum team size, though we recommend 1&ndash;5 members.</li>
                 <li>Participants may be affiliated with academic institutions, industry organizations, or be independent researchers.</li>
-                <li>Organizers and their direct collaborators may participate for benchmarking purposes but are <strong>not eligible for prizes</strong>.</li>
-                <li>Participants must disclose any conflicts of interest with organizing institutions (BMW Group, Augsburg University, Anthropic, Cerebras, OpenStream.ai, NTU Singapore, TU Darmstadt, Stanford University).</li>
-                <li>Each individual may be a member of only <strong>one team</strong>.</li>
+                <li>An individual may be a member of <strong>multiple teams</strong>. However, if two submissions from teams sharing a member are substantially overlapping, the worse-performing submission will be excluded from award eligibility.</li>
             </ul>
         </div>
 
@@ -85,8 +81,8 @@
             <ul>
                 <li>Teams must register before their first submission to the official leaderboard.</li>
                 <li>Registration requires: team name, member names and affiliations, contact email, and track selection (Open, Cerebras, or both).</li>
-                <li>Registration is open from April 2026 through July 1, 2026. Late registrations may be accepted at organizer discretion.</li>
-                <li>Teams may update their membership up to 7 days before the final evaluation deadline.</li>
+                <li>Registration is open from May 4, 2026.</li>
+                <li>Teams may update their team members up to 7 days before the final evaluation deadline.</li>
             </ul>
         </div>
 
@@ -103,7 +99,7 @@
                 <li>Retrieval-augmented generation (RAG) over environment data</li>
                 <li>External knowledge bases or pre-computed lookup tables (provided they do not encode test set answers)</li>
             </ul>
-            <p><strong>Cerebras Track:</strong> Agents must run on Cerebras-provided inference infrastructure. You may use any model available on the Cerebras platform.</p>
+            <p><strong>Cerebras Track:</strong> You may use any model available on the Cerebras platform. During development, participants use the Cerebras free tier. For the final submission, dedicated server space is reserved and runs are scheduled to allow fair and comparative evaluation.</p>
         </div>
 
         <!-- 4. Prohibited behaviors -->
@@ -112,12 +108,9 @@
             <p>The following are strictly prohibited and will result in disqualification:</p>
             <ul>
                 <li><strong>Hard-coding answers:</strong> Encoding specific test-set answers or lookup tables that map task descriptions to solutions.</li>
-                <li><strong>Exploiting evaluation infrastructure:</strong> Reverse-engineering, probing, or exploiting vulnerabilities in the evaluation system, Docker environment, or GitHub Actions pipeline.</li>
+                <li><strong>Exploiting evaluation infrastructure:</strong> Reverse-engineering, probing, or exploiting vulnerabilities in the evaluation system. This includes self-evaluating against the task-level metrics (e.g., checking subscores and re-prompting the LLM to correct failures before the official evaluation scores the run). Agents must produce genuine responses, not iteratively repair them against the scoring criteria.</li>
                 <li><strong>Probing the hidden test set:</strong> Any attempt to extract, infer, or reconstruct hidden test set tasks through the evaluation API or any other channel.</li>
-                <li><strong>Sharing accounts:</strong> Sharing registration credentials or API keys across teams.</li>
-                <li><strong>Multiple teams:</strong> The same individual submitting from or contributing to multiple teams.</li>
-                <li><strong>Plagiarism:</strong> Submitting work that is substantially copied from another team without attribution.</li>
-                <li><strong>External communication during evaluation:</strong> Agents may not make network calls outside the evaluation environment during official runs (except to allowed LLM API endpoints).</li>
+                <li><strong>Overlapping submissions:</strong> Teams sharing a member may not submit substantially overlapping agents. If detected, the worse-performing submission will be excluded from award eligibility.</li>
             </ul>
         </div>
 
@@ -127,63 +120,38 @@
             <ul>
                 <li>Submissions are dockerized A2A-compatible agents (template provided in the starter kit).</li>
                 <li><strong>Dev set:</strong> Unlimited submissions. Results appear on the live dev leaderboard.</li>
-                <li><strong>Hidden test set:</strong> One official evaluation round (Jul 19). Each team gets <strong>one submission</strong>.</li>
-                <li>A submission is valid if it: (a) builds successfully from the Docker template, (b) responds to A2A protocol messages, and (c) completes evaluation within the time limit.</li>
-                <li>If a submission fails to build or run, the team receives a failure notification and may resubmit (dev set: immediately; test set: within a 24-hour grace window).</li>
-                <li>LLM API keys are provided through GitHub Secrets &mdash; no local computation is required for official evaluation.</li>
+                <li><strong>Hidden test set:</strong> Two official evaluation rounds. 1st round (Jul 10): each team gets one submission and receives scores. Final (Jul 19): each team gets one submission. Final rankings are determined from the Jul 19 round.</li>
+                <li><strong>Technical report:</strong> A 4-page technical report (IJCAI format, excluding references) is required for award eligibility. Deadline: July 26, 2026 (AoE).</li>
             </ul>
+            <div class="callout warning">
+                <strong>More details soon.</strong> Full submission instructions will be published.
+            </div>
         </div>
 
-        <!-- 6. Evaluation -->
-        <div class="rule-section" id="evaluation">
-            <h2>6. Evaluation</h2>
-            <ul>
-                <li><strong>Metric:</strong> Pass^3 &mdash; a task scores 1 only if solved correctly in all 3 independent trials.</li>
-                <li><strong>Ranking:</strong> Teams are ranked by aggregate Pass^3 on the hidden test set (125 tasks).</li>
-                <li>Per-category scores (Base / Hallucination / Disambiguation) are reported alongside the aggregate.</li>
-                <li><strong>Tiebreaking:</strong> In case of tied Pass^3, ties are broken by: (1) Pass^1 score, (2) submission time (earlier wins).</li>
-                <li><strong>Variance:</strong> Each task is run 3 times with independent random seeds. The evaluation environment is deterministic given a seed; variance comes only from the LLM's non-determinism.</li>
-                <li><strong>Reruns:</strong> Organizers reserve the right to rerun evaluations in case of infrastructure failures. Teams will be notified.</li>
-            </ul>
-        </div>
-
-        <!-- 7. Dispute resolution -->
-        <div class="rule-section" id="disputes">
-            <h2>7. Dispute Resolution</h2>
-            <ul>
-                <li>Disputes must be submitted in writing to <a href="mailto:carbench-challenge@car-bench.org">carbench-challenge@car-bench.org</a> within 72 hours of the contested event.</li>
-                <li>Organizers will respond within 5 business days.</li>
-                <li>Organizers will adjudicate disputes concerning: evaluation correctness, rule violations, and eligibility questions.</li>
-                <li>Organizers will <strong>not</strong> adjudicate: subjective design disagreements, team-internal disputes, or matters outside the competition scope.</li>
-                <li>The organizers&rsquo; decision is final.</li>
-            </ul>
-        </div>
-
-        <!-- 8. Code release -->
+        <!-- 6. Code release -->
         <div class="rule-section" id="code-release">
-            <h2>8. Code Release</h2>
+            <h2>6. Code Release</h2>
             <ul>
-                <li><strong>Winners must release their code under a permissive open-source license</strong> (MIT, Apache 2.0, or equivalent) upon conclusion of the competition.</li>
+                <li><strong>Participants are expected to release their code under a permissive open-source license</strong> (MIT, Apache 2.0, or equivalent) upon conclusion of the competition.</li>
                 <li>Code must be sufficient for independent reproduction of reported results.</li>
-                <li>Non-winning teams are encouraged (but not required) to release their code.</li>
             </ul>
         </div>
 
-        <!-- 9. Technical reports -->
+        <!-- 7. Technical reports -->
         <div class="rule-section" id="reports">
-            <h2>9. Technical Reports</h2>
+            <h2>7. Technical Reports</h2>
             <ul>
                 <li>A 4-page technical report (IJCAI format, excluding references) is <strong>required for award eligibility</strong>.</li>
-                <li><strong>Deadline:</strong> July 14, 2026 (AoE).</li>
+                <li><strong>Deadline:</strong> July 26, 2026 (AoE).</li>
                 <li>Reports should describe the approach, design decisions, ablation results, and lessons learned.</li>
-                <li>Selected reports will be published as non-archival proceedings on the competition website.</li>
+                <li>Reports will be published as non-archival proceedings on the competition website. ArXiv submission is encouraged but not required.</li>
                 <li>Submission portal link will be added here when available.</li>
             </ul>
         </div>
 
-        <!-- 10. Data use -->
+        <!-- 8. Data use -->
         <div class="rule-section" id="data-use">
-            <h2>10. Data Use</h2>
+            <h2>8. Data Use</h2>
             <ul>
                 <li>The CAR-bench dataset is released under the <a href="https://github.com/CAR-bench/car-bench/blob/main/LICENSE" target="_blank">MIT License</a>.</li>
                 <li>Participants may use the training and dev data for other research, provided they cite the original paper.</li>
@@ -201,7 +169,7 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <p class="footer-about"><strong>CAR-bench Challenge</strong> @ IJCAI-ECAI 2026, Bremen, Germany. Building reliable LLM agents under real-world uncertainty.</p>
-                <p class="footer-contact">Join <a href="https://discord.gg/MBUxhuCvn" target="_blank">Discord</a> for questions. For personal inquiries: <a href="mailto:carbench-challenge@car-bench.org">carbench-challenge@car-bench.org</a></p>
+                <p class="footer-contact">Join <a href="https://discord.gg/MBUxhuCvn" target="_blank">Discord</a> for questions. For personal inquiries: <a href="mailto:johannes1.kirmayr@uni-a.de">johannes1.kirmayr@uni-a.de</a></p>
             </div>
             <div class="footer-col">
                 <h4>Competition</h4>
@@ -210,13 +178,13 @@
                     <li><a href="data.html">Data &amp; Starter Kit</a></li>
                     <li><a href="leaderboard.html">Leaderboard</a></li>
                     <li><a href="rules.html">Rules</a></li>
-                    <li><a href="timeline.html">Timeline</a></li>
+        
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Resources</h4>
                 <ul>
-                    <li><a href="https://arxiv.org/abs/2601.22027" target="_blank">Paper (arXiv)</a></li>
+                    <li><a href="https://huggingface.co/papers/2601.22027" target="_blank">Paper</a></li>
                     <li><a href="https://github.com/CAR-bench/car-bench" target="_blank">GitHub</a></li>
                     <li><a href="https://huggingface.co/datasets/johanneskirmayr/car-bench-dataset" target="_blank">Dataset (HF)</a></li>
                     <li><a href="benchmark.html">Benchmark Details</a></li>

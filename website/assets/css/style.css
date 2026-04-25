@@ -314,13 +314,16 @@ nav.topbar {
     flex-wrap: wrap;
 }
 .hero-logo {
-    opacity: 0.7;
+    opacity: 0.85;
     transition: opacity 0.15s;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #718096;
 }
-.hero-logo:hover { opacity: 1; }
+.hero-logo:hover { opacity: 1; color: #4a5568; }
 .hero-logo-sep {
     width: 1px;
     height: 20px;
