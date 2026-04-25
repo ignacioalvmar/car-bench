@@ -813,6 +813,7 @@ footer.site-footer a:hover { color: white; text-decoration: underline; }
     align-items: center;
     justify-content: center;
     margin-bottom: 0.3rem;
+    object-fit: cover;
 }
 
 .org-name {
