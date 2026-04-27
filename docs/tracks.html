@@ -66,7 +66,7 @@
                     <tr>
                         <th>Goal</th>
                         <td>Maximize Pass^3 on the hidden test set using any approach</td>
-                        <td>Best use of Cerebras compute headroom for deeper reasoning under a fixed time budget</td>
+                        <td>Cerebras generates ~10x more tokens per second than conventional GPUs. Given a fixed time budget per turn, explore what agents can do with that extra output capacity (e.g., more reasoning steps, self-verification, retries).</td>
                     </tr>
                     <tr>
                         <th>Allowed Models</th>
@@ -148,8 +148,8 @@
             <h2 style="border-bottom-color:var(--color-accent);">Track 2: Cerebras Fast-Reasoning Track</h2>
 
             <h3>Motivation</h3>
-            <p>Cerebras builds the world&rsquo;s fastest AI inference infrastructure, holding independently verified speed records on frontier-scale models. This track explores what becomes possible when inference latency is no longer a bottleneck: can agents use deeper reasoning, self-reflection, or search strategies that would be infeasible under conventional time constraints?</p>
-            <p>While the Open Track rewards raw performance, this track rewards <strong>innovative use of compute headroom</strong>. The question is not just "how well does your agent perform?" but "what does your agent do with the extra inference budget that wouldn&rsquo;t be possible otherwise?"</p>
+            <p>Cerebras builds the world&rsquo;s fastest AI inference infrastructure. Their output speed is ~10x faster than conventional GPU-based inference (e.g., GLM-4.7 on Cerebras: ~1,000 tokens/s vs. Claude Sonnet 4.5 on GPUs: ~97 tokens/s). This means that within the same time budget, a Cerebras-hosted model can generate roughly 10x more tokens per assistant turn.</p>
+            <p>This track explores what agents can do with that extra output capacity. Given a fixed time budget per turn (to be announced), can your agent use the additional tokens for deeper reasoning, self-reflection, verification, or search strategies that would be infeasible at conventional speeds? The question is not just "how well does your agent perform?" but "what does your agent do with 10x more tokens that wouldn&rsquo;t be possible otherwise?"</p>
 
             <h3>What You&rsquo;ll Build</h3>
             <p>Same A2A-compatible agent format as Track 1, but your agent runs on Cerebras inference infrastructure. During development, participants use the Cerebras free tier. For the final submission, dedicated server space is reserved and runs are scheduled to allow fair and comparative evaluation.</p>
