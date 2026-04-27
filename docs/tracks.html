@@ -66,7 +66,7 @@
                     <tr>
                         <th>Goal</th>
                         <td>Maximize Pass^3 on the hidden test set using any approach</td>
-                        <td>Cerebras generates ~10x more tokens per second than conventional GPUs. Given a fixed time budget per turn, explore what agents can do with that extra output capacity (e.g., more reasoning steps, self-verification, retries).</td>
+                        <td>Convert ~10x faster Cerebras inference into higher Pass^3 within the same time budget per turn</td>
                     </tr>
                     <tr>
                         <th>Allowed Models</th>
@@ -149,7 +149,7 @@
 
             <h3>Motivation</h3>
             <p>Cerebras builds the world&rsquo;s fastest AI inference infrastructure. Their output speed is ~10x faster than conventional GPU-based inference (e.g., GLM-4.7 on Cerebras: ~1,000 tokens/s vs. Claude Sonnet 4.5 on GPUs: ~97 tokens/s). This means that within the same time budget, a Cerebras-hosted model can generate roughly 10x more tokens per assistant turn.</p>
-            <p>This track explores what agents can do with that extra output capacity. Given a fixed time budget per turn (to be announced), can your agent use the additional tokens for deeper reasoning, self-reflection, verification, or search strategies that would be infeasible at conventional speeds? The question is not just "how well does your agent perform?" but "what does your agent do with 10x more tokens that wouldn&rsquo;t be possible otherwise?"</p>
+            <p>This track explores how to turn that extra token capacity into higher Pass^3 scores within the same time budget. For example, where a conventional agent gets one reasoning pass per turn, a Cerebras-hosted agent could run multiple passes, verify its own output, retry on failure, or explore alternative tool-call sequences - all before the time budget runs out. The question is: which strategies best convert raw output speed into measurable reliability gains?</p>
 
             <h3>What You&rsquo;ll Build</h3>
             <p>Same A2A-compatible agent format as Track 1, but your agent runs on Cerebras inference infrastructure. During development, participants use the Cerebras free tier. For the final submission, dedicated server space is reserved and runs are scheduled to allow fair and comparative evaluation.</p>
