@@ -18,7 +18,7 @@ function toggleNav() {
     });
 })();
 
-// Countdown to next deadline (May 11, 2026 - competition opens)
+// Countdown to next deadline (May 18, 2026 - competition opens)
 function startCountdown(targetISO, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -85,7 +85,7 @@ function initLeaderboardTabs() {
 
 // Auto-init when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Countdown: next deadline is May 11, 2026 AoE (competition opens)
-    startCountdown('2026-05-11T23:59:59-12:00', 'countdown');
+    // Countdown: next deadline is May 18, 2026 AoE (competition opens)
+    startCountdown('2026-05-18T23:59:59-12:00', 'countdown');
     initLeaderboardTabs();
 });
