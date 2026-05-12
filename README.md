@@ -1,5 +1,7 @@
 # CAR-bench: Evaluating the Consistency and Limit-Awareness of LLM Agents under Real-World Uncertainty
 
+> **Note:** This is not yet the official repository for the IJCAI-ECAI 2026 Competition, which is still being finalized. However, this repo already allows exploring the CAR-bench environment.
+
 <div align="center">
 
 [![Paper](https://img.shields.io/badge/arXiv-2601.22027-b31b1b.svg)](https://arxiv.org/abs/2601.22027)
