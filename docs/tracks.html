@@ -59,19 +59,19 @@
                     <tr>
                         <th>Dimension</th>
                         <th>Track 1: Open Track</th>
-                        <th>Track 2: Cerebras Fast-Reasoning</th>
+                        <th>Track 2: Cerebras Fast-Reasoning with Codex Pro</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th>Goal</th>
                         <td>Maximize Pass^3 on the hidden test set using any approach</td>
-                        <td>Convert ~10x faster Cerebras inference into higher Pass^3 within the same time budget per turn</td>
+                        <td>Use Codex Pro and Cerebras-hosted gpt-5.3-codex-spark to convert fast inference into higher Pass^3 within the official time budget</td>
                     </tr>
                     <tr>
                         <th>Allowed Models</th>
                         <td>Any LLM, any provider (proprietary or open-source)</td>
-                        <td>Models running on Cerebras inference infrastructure</td>
+                        <td>Codex Pro-backed agents, with gpt-5.3-codex-spark as the recommended fast executor</td>
                     </tr>
                     <tr>
                         <th>Evaluation Metric</th>
@@ -86,7 +86,7 @@
                     <tr>
                         <th>Compute</th>
                         <td>Bring your own API keys for development.</td>
-                        <td>Cerebras free tier for development</td>
+                        <td>Sponsored Codex Pro access for selected registered participants during the competition period</td>
                     </tr>
                 </tbody>
             </table>
@@ -141,25 +141,25 @@
 <section id="cerebras">
     <div class="container">
         <div class="rule-section" style="max-width:820px;margin:0 auto;">
-            <h2 style="border-bottom-color:var(--color-accent);">Track 2: Cerebras Fast-Reasoning Track</h2>
+            <h2 style="border-bottom-color:var(--color-accent);">Track 2: Cerebras Fast-Reasoning with Codex Pro</h2>
 
             <h3>Motivation</h3>
-            <p>Cerebras builds the world&rsquo;s fastest AI inference infrastructure. Their output speed is ~10x faster than conventional GPU-based inference (e.g., GLM-4.7 on Cerebras: ~1,000 tokens/s vs. Claude Sonnet 4.5 on GPUs: ~97 tokens/s). This means that within the same time budget, a Cerebras-hosted model can generate roughly 10x more tokens per assistant turn.</p>
-            <p>This track explores how to turn that extra token capacity within the same time budget into higher Pass^3 scores. For example, where a conventional agent gets one reasoning pass per turn, a Cerebras-hosted agent could run multiple passes, verify its own output, or explore alternative tool-call sequences &mdash; all before the time budget runs out. The question is: which strategies best convert raw output speed into measurable reliability gains?</p>
-            <p>The focus is on the scaffolding architecture, not the underlying model. The time budget will be scaled to the models currently available on Cerebras&rsquo;s platform.</p>
+            <p>Track 2 gives participants sponsored Codex Pro access and focuses on Codex agents built around gpt-5.3-codex-spark, a Codex model served on Cerebras infrastructure. Spark&rsquo;s fast inference makes it practical to explore more reasoning, verification, retry, and search work inside a fixed assistant-turn budget.</p>
+            <p>This track explores how to turn that inference speed into higher Pass^3 scores. For example, where a conventional agent gets one reasoning pass per turn, a Track 2 agent could run multiple Spark passes, verify its own output, or explore alternative tool-call sequences &mdash; all before the time budget runs out. The question is: which strategies best convert fast inference into measurable reliability gains?</p>
+            <p>The focus is on the scaffolding architecture, not only the underlying model. Participants may combine Spark with larger Codex models for planner, verifier, or condenser steps, as long as the submitted A2A agent stays within the official time budget. The time budget will be announced soon.</p>
 
             <h3>What You&rsquo;ll Build</h3>
-            <p>Same A2A-compatible agent format as Track 1, but your agent runs on Cerebras inference infrastructure. During development, participants use the Cerebras free tier.</p>
+            <p>The same dockerized A2A-compatible agent format as Track 1. The reference starter kit includes Codex agents that keep a warm codex app-server runtime and use gpt-5.3-codex-spark as the fast executor. Participants may replace the internal harness while preserving the same A2A boundary.</p>
 
             <h3>Allowed Approaches</h3>
             <ul>
                 <li>All approaches from Track 1 are permitted</li>
                 <li><strong>Additionally encouraged:</strong> Multi-pass reasoning, self-reflection loops, best-of-N sampling, search-based planning, verification chains, ensemble approaches</li>
-                <li>Agents must use Cerebras infrastructure</li>
+                <li>Agents must use the Codex Pro / Cerebras Spark setup described in the starter kit</li>
             </ul>
 
             <h3>Evaluation</h3>
-            <p>Ranked primarily by <strong>innovative use of compute headroom</strong> &mdash; how meaningfully the scaffolding leverages fast inference in ways that differ from standard single-pass agent design. Pass^3 is taken into account only as relative improvement over the chosen model as baseline, i.e. the delta the scaffolding produces, not the absolute score. Evaluation is based on the required technical report alongside the measured improvement.</p>
+            <p>Ranked primarily by <strong>innovative use of inference-time compute headroom</strong> &mdash; how meaningfully the scaffolding leverages fast inference in ways that differ from standard single-pass agent design. Pass^3 is taken into account only as relative improvement over the chosen model as baseline, i.e. the delta the scaffolding produces, not the absolute score. Evaluation is based on the required technical report alongside the measured improvement.</p>
 
             <h3>Prizes</h3>
             <ul>
