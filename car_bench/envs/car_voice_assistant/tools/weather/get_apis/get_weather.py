@@ -34,6 +34,11 @@ class GetWeather(Tool):
         response = {}
         fixed_ctx = fixed_context.get()
 
+        month = int(month)
+        day = int(day)
+        time_hour_24hformat = int(time_hour_24hformat)
+        time_minutes = int(time_minutes)
+
         if (
             month != fixed_ctx.current_datetime.month
             or day != fixed_ctx.current_datetime.day
