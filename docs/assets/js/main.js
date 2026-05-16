@@ -66,6 +66,25 @@ function startCountdown(targetISO, containerId) {
     setInterval(tick, 1000);
 }
 
+let countdownPositionQueued = false;
+
+function positionFloatingCountdown() {
+    const topbar = document.querySelector('nav.topbar');
+    const countdown = document.getElementById('countdown');
+    if (!topbar || !countdown) return;
+    const navBottom = Math.max(0, Math.round(topbar.getBoundingClientRect().bottom));
+    document.documentElement.style.setProperty('--countdown-floating-top', `${navBottom}px`);
+}
+
+function scheduleCountdownPosition() {
+    if (countdownPositionQueued) return;
+    countdownPositionQueued = true;
+    requestAnimationFrame(() => {
+        countdownPositionQueued = false;
+        positionFloatingCountdown();
+    });
+}
+
 // Copy BibTeX to clipboard
 function copyCitation(btn) {
     const box = btn.closest('.citation-box');
@@ -105,6 +124,9 @@ function initLeaderboardTabs() {
 document.addEventListener('DOMContentLoaded', () => {
     // Countdown: next deadline is May 18, 2026 AoE (competition opens)
     startCountdown('2026-05-18T23:59:59-12:00', 'countdown');
+    positionFloatingCountdown();
+    window.addEventListener('resize', scheduleCountdownPosition);
+    window.addEventListener('scroll', scheduleCountdownPosition, { passive: true });
     initLeaderboardTabs();
 });
 

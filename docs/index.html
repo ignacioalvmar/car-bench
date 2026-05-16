@@ -57,6 +57,19 @@
     </div>
 </nav>
 
+<!-- Floating countdown -->
+<div class="countdown" id="countdown">
+    <button class="countdown-close" onclick="this.parentElement.style.display='none'" aria-label="Dismiss countdown">&times;</button>
+    <div class="countdown-label">Next Deadline</div>
+    <div class="countdown-event">Competition Opens</div>
+    <div class="countdown-timer">
+        <div class="countdown-unit"><span class="num" data-u="d">--</span><span class="lbl">Days</span></div>
+        <div class="countdown-unit"><span class="num" data-u="h">--</span><span class="lbl">Hrs</span></div>
+        <div class="countdown-unit"><span class="num" data-u="m">--</span><span class="lbl">Min</span></div>
+        <div class="countdown-unit"><span class="num" data-u="s">--</span><span class="lbl">Sec</span></div>
+    </div>
+</div>
+
 <!-- Hero -->
 <section class="hero">
     <div class="container" style="text-align:center;">
@@ -81,19 +94,6 @@
             <a href="data.html" class="btn btn-outline btn-lg">Get Started</a>
         </div>
         <p class="registration-note">Google Form preferred. <a href="registration.html">Use email fallback if the form is inaccessible.</a></p>
-
-        <!-- Countdown -->
-        <div class="countdown" id="countdown">
-            <button class="countdown-close" onclick="this.parentElement.style.display='none'" aria-label="Dismiss countdown">&times;</button>
-            <div class="countdown-label">Next Deadline</div>
-            <div class="countdown-event">Competition Opens</div>
-            <div class="countdown-timer">
-                <div class="countdown-unit"><span class="num" data-u="d">--</span><span class="lbl">Days</span></div>
-                <div class="countdown-unit"><span class="num" data-u="h">--</span><span class="lbl">Hrs</span></div>
-                <div class="countdown-unit"><span class="num" data-u="m">--</span><span class="lbl">Min</span></div>
-                <div class="countdown-unit"><span class="num" data-u="s">--</span><span class="lbl">Sec</span></div>
-            </div>
-        </div>
 
         <!-- Sponsor / partner logo strip -->
         <div class="hero-logos">
