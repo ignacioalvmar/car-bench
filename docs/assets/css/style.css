@@ -433,81 +433,6 @@ nav.topbar {
     .hero-logo-sep { display: none; }
 }
 
-/* Countdown */
-.countdown {
-    display: block;
-    position: fixed;
-    top: calc(var(--countdown-floating-top, 64px) + 0.85rem);
-    right: max(1rem, calc((100vw - 1180px) / 2 + 1rem));
-    z-index: 900;
-    width: 278px;
-    background: white;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 0.8rem 2.4rem 0.8rem 1.1rem;
-    box-shadow: 0 12px 32px rgba(26,54,93,0.14);
-    text-align: center;
-    margin: 0;
-}
-
-.countdown-close {
-    position: absolute;
-    top: 0.35rem;
-    right: 0.45rem;
-    background: none;
-    border: none;
-    font-size: 1.15rem;
-    color: var(--color-text-light);
-    cursor: pointer;
-    line-height: 1;
-    padding: 0.15rem 0.35rem;
-    border-radius: 4px;
-    transition: background 0.15s, color 0.15s;
-}
-.countdown-close:hover { background: var(--color-bg-alt); color: var(--color-text); }
-
-.countdown-label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: var(--color-text-light);
-    font-weight: 600;
-    margin-bottom: 0.2rem;
-}
-.countdown-event {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: 0.35rem;
-}
-.countdown-timer {
-    display: flex;
-    justify-content: center;
-    gap: 0.4rem;
-    font-variant-numeric: tabular-nums;
-}
-.countdown-unit {
-    background: var(--color-bg-alt);
-    border-radius: 6px;
-    padding: 0.25rem 0.45rem;
-    min-width: 38px;
-}
-.countdown-unit .num {
-    display: block;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    line-height: 1;
-}
-.countdown-unit .lbl {
-    display: block;
-    font-size: 0.6rem;
-    color: var(--color-text-light);
-    text-transform: uppercase;
-    margin-top: 2px;
-}
-
-
 /* ===== Sections ===== */
 section { padding: var(--section-padding); }
 
@@ -1351,11 +1276,6 @@ details[open] .faq-q::after { content: '–'; }
     .comparison-table thead th,
     .comparison-table tbody th,
     .comparison-table td { font-size: 0.85rem; padding: 0.7rem 0.8rem; }
-    .countdown {
-        right: 1rem;
-        width: min(260px, calc(100vw - 2rem));
-        padding: 0.7rem 2.2rem 0.7rem 0.9rem;
-    }
 }
 
 @media (max-width: 520px) {
@@ -1364,19 +1284,4 @@ details[open] .faq-q::after { content: '–'; }
     .hero .subtitle { font-size: 1rem; }
     .nav-actions { gap: 0.45rem; }
     .registration-grid { grid-template-columns: 1fr; }
-    .countdown {
-        top: calc(var(--countdown-floating-top, 64px) + 0.55rem);
-        left: 0.75rem;
-        right: 0.75rem;
-        width: auto;
-        padding: 0.55rem 2.1rem 0.55rem 0.75rem;
-    }
-    .countdown-event { display: none; }
-    .countdown-label { margin-bottom: 0.3rem; }
-    .countdown-timer { gap: 0.25rem; }
-    .countdown-unit {
-        flex: 1;
-        min-width: 0;
-        padding: 0.22rem 0.25rem;
-    }
 }

@@ -36,55 +36,6 @@ function toggleRegisterMenu(event) {
     });
 })();
 
-// Countdown to next deadline (May 18, 2026 - competition opens)
-function startCountdown(targetISO, containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const target = new Date(targetISO).getTime();
-    const elD = container.querySelector('[data-u="d"]');
-    const elH = container.querySelector('[data-u="h"]');
-    const elM = container.querySelector('[data-u="m"]');
-    const elS = container.querySelector('[data-u="s"]');
-
-    function tick() {
-        const now = Date.now();
-        const diff = target - now;
-        if (diff <= 0) {
-            container.innerHTML = '<div class="countdown-label">Now Live</div><div class="countdown-event">Evaluation in progress</div>';
-            return;
-        }
-        const d = Math.floor(diff / 86400000);
-        const h = Math.floor((diff % 86400000) / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        if (elD) elD.textContent = d;
-        if (elH) elH.textContent = String(h).padStart(2, '0');
-        if (elM) elM.textContent = String(m).padStart(2, '0');
-        if (elS) elS.textContent = String(s).padStart(2, '0');
-    }
-    tick();
-    setInterval(tick, 1000);
-}
-
-let countdownPositionQueued = false;
-
-function positionFloatingCountdown() {
-    const topbar = document.querySelector('nav.topbar');
-    const countdown = document.getElementById('countdown');
-    if (!topbar || !countdown) return;
-    const navBottom = Math.max(0, Math.round(topbar.getBoundingClientRect().bottom));
-    document.documentElement.style.setProperty('--countdown-floating-top', `${navBottom}px`);
-}
-
-function scheduleCountdownPosition() {
-    if (countdownPositionQueued) return;
-    countdownPositionQueued = true;
-    requestAnimationFrame(() => {
-        countdownPositionQueued = false;
-        positionFloatingCountdown();
-    });
-}
-
 // Copy BibTeX to clipboard
 function copyCitation(btn) {
     const box = btn.closest('.citation-box');
@@ -122,11 +73,6 @@ function initLeaderboardTabs() {
 
 // Auto-init when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Countdown: next deadline is May 18, 2026 AoE (competition opens)
-    startCountdown('2026-05-18T23:59:59-12:00', 'countdown');
-    positionFloatingCountdown();
-    window.addEventListener('resize', scheduleCountdownPosition);
-    window.addEventListener('scroll', scheduleCountdownPosition, { passive: true });
     initLeaderboardTabs();
 });
 
