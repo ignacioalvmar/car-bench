@@ -11,7 +11,7 @@ setup(
         "annotated_types>=0.7.0",
         "datasets>=3.0.0",
         "huggingface_hub>=0.25.0",
-        "litellm>=1.80.16,<1.82.7",
+        "litellm>=1.80.16",
         "networkx>=3.1",
         "numpy>=2.0.0",
         "pandas>=2.2.0",
