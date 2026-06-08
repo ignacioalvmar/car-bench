@@ -81,21 +81,21 @@
             <details class="faq-item">
                 <summary class="faq-q">Is any LLM allowed, or are there restrictions on proprietary vs open-source?</summary>
                 <div class="faq-a">
-                    <p>In the <strong>Open Track</strong>, any LLM is allowed - proprietary, open-source, any size. In the <strong>Cerebras Fast-Reasoning with Codex Pro Track</strong>, agents use Codex Pro-backed inference, with gpt-5.3-codex-spark as the recommended fast executor served on Cerebras infrastructure. Larger Codex models may be used for internal planner, verifier, or condenser steps if the complete agent stays within the official time budget.</p>
+                    <p>In the <strong>Open Track</strong>, any LLM is allowed - proprietary, open-source, any size. In the <strong>Cerebras Fast-Reasoning Track</strong>, submitted agents use direct Cerebras-hosted <code>gpt-oss</code> inference through the starter kit. Larger closed-source models may be used for internal planner, verifier, or condenser steps if the complete agent stays within the official time budget.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">Can I submit to both tracks with the same agent?</summary>
                 <div class="faq-a">
-                    <p>Yes, you can enter both tracks. However, Track 2 requires the Codex Pro / Cerebras Spark setup described in the starter kit, so you may need to adapt your agent. The same team can submit different agents to each track.</p>
+                    <p>Yes, you can enter both tracks. However, Track 2 requires the direct Cerebras <code>gpt-oss</code> inference setup described in the starter kit, so you may need to adapt your agent. The same team can submit different agents to each track.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">Is Track 2 limited?</summary>
                 <div class="faq-a">
-                    <p>Yes. Track 2 is limited to 15 participating teams because sponsored Codex Pro access is limited. Selected registered teams receive Codex Pro access for the competition period.</p>
+                    <p>Yes. Track 2 is limited to 15 participating teams because elevated-rate test windows and development-support plans are limited. Selected teams receive Track 2 support, including Codex Pro plans for harness engineering and development speed. Plans are allocated by June 15.</p>
                 </div>
             </details>
 
@@ -109,7 +109,7 @@
             <details class="faq-item">
                 <summary class="faq-q">Are API credits provided?</summary>
                 <div class="faq-a">
-                    <p>For official evaluation runs, LLM API costs are covered by the organizers as far as possible - no cost to you except special LLM setup or usage scenarios. For development, you normally use your own API keys. Track 2 provides sponsored Codex Pro access to selected registered participants for the competition period.</p>
+                    <p>For official evaluation runs, LLM API costs are covered by the organizers as far as possible - no cost to you except special LLM setup or usage scenarios. For development, you normally use your own API keys. Track 2 development mainly uses the Cerebras public tier, where rate limits can be strict, and organizers provide a few elevated-rate/priority test windows. Codex Pro plans support harness engineering and are allocated by June 15.</p>
                 </div>
             </details>
 
@@ -191,9 +191,9 @@
             </details>
 
             <details class="faq-item">
-                <summary class="faq-q">What is Codex app-server in Track 2?</summary>
+                <summary class="faq-q">How does Track 2 use Cerebras during development?</summary>
                 <div class="faq-a">
-                    <p>The Track 2 reference agents use the Codex CLI in <code>app-server</code> mode as a warm JSON-RPC runtime for subscription-backed Codex inference. The evaluator still sees only normal A2A text responses and tool calls. The app-server is internal to the submitted agent harness; it does not execute CAR-bench tools and should not be used for shell, file, or network side effects during benchmark inference.</p>
+                    <p>The Track 2 reference agents call Cerebras-hosted <code>gpt-oss</code> directly through LiteLLM. During ordinary development, participants should expect strict public-tier rate limits and use task scheduling or waiting between longer runs. Organizers will provide a few elevated-rate/priority test windows for faster validation, and teams may self-host the open-source executor models during development before testing the speed gain on Cerebras.</p>
                 </div>
             </details>
 

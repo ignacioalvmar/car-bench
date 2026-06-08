@@ -82,7 +82,7 @@
             <ul>
                 <li><strong>Evaluator:</strong> a dockerized CAR-bench evaluator that owns the simulated user, tools, environment, trajectories, and scoring.</li>
                 <li><strong>Track 1 starter:</strong> a minimal agent-under-test template for any model, provider, or architecture.</li>
-                <li><strong>Track 2 references:</strong> Codex Pro / Cerebras Spark agents, including direct JSON, planner/executor, and Python-call DSL variants.</li>
+                <li><strong>Track 2 references:</strong> LiteLLM-based Cerebras agents, including a direct executor and a planner/executor template.</li>
                 <li><strong>Scenario configs:</strong> TOML files that define local, Docker, and GHCR validation runs.</li>
                 <li><strong>A2A interface:</strong> the message protocol used between the evaluator and your submitted agent.</li>
             </ul>
@@ -108,7 +108,7 @@
 
             <h3>Participant workflow</h3>
             <ol>
-                <li><strong>Choose a track:</strong> Track 1 is open to any model, framework, or architecture. Track 2 is limited to 15 teams and uses Codex Pro with Cerebras-hosted Spark for fast-reasoning harnesses.</li>
+                <li><strong>Choose a track:</strong> Track 1 is open to any model, framework, or architecture. Track 2 is limited to 15 teams and uses direct Cerebras-hosted <code>gpt-oss</code> inference for fast-reasoning harnesses.</li>
                 <li><strong>Run a scenario config:</strong> start with <code>local_smoke.toml</code>, then move to public validation and Docker scenarios.</li>
                 <li><strong>Prepare submission:</strong> publish a GHCR image and provide scenario/config details with required secret names, not secret values.</li>
             </ol>
@@ -124,7 +124,7 @@ source .venv/bin/activate
 cp .env.example .env</code></pre>
             </div>
 
-            <p>Add the evaluator key to <code>.env</code>. Track 1 participants add whatever model-provider keys their agent needs. Track 2 participants also authenticate Codex CLI; for Docker runs, use a dedicated mounted <code>CODEX_HOME</code>.</p>
+            <p>Add the evaluator key to <code>.env</code>. Track 1 participants add whatever model-provider keys their agent needs. Track 2 participants add <code>CEREBRAS_API_KEY</code> and any planner-provider key required by their LiteLLM route.</p>
 
             <h3>Install by track</h3>
             <div class="table-wrapper">
@@ -142,20 +142,23 @@ cp .env.example .env</code></pre>
                         </tr>
                         <tr>
                             <th>Track 2</th>
-                            <td><code>uv sync --extra car-bench-evaluator</code></td>
+                            <td><code>uv sync --extra track-2-agent --extra car-bench-evaluator</code></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <h3>Track 2 Codex CLI setup</h3>
-            <p>Track 2 reference agents use the Codex CLI in app-server mode for subscription-backed inference. Install Codex CLI with the official <a href="https://developers.openai.com/codex/cli" target="_blank">OpenAI Codex CLI instructions</a>, then authenticate it before local Codex runs:</p>
+            <h3>Track 2 Cerebras setup</h3>
+            <p>Track 2 reference agents call Cerebras-hosted <code>gpt-oss</code> directly through LiteLLM. Configure the Cerebras <code>gpt-oss</code> executor and, for the planner/executor template, the closed-source planner route:</p>
             <div class="callout">
-                <pre style="margin:0;white-space:pre-wrap;"><code>mkdir -p "$HOME/.codex-car-bench"
-CODEX_HOME="$HOME/.codex-car-bench" codex login
-CODEX_HOME="$HOME/.codex-car-bench" codex login status</code></pre>
+                <pre style="margin:0;white-space:pre-wrap;"><code>CEREBRAS_API_KEY=...
+TRACK2_EXECUTOR_MODEL=cerebras/gpt-oss-120b
+TRACK2_PLANNER_MODEL=azure/gpt-5.5   # planner/executor template only
+TRACK2_LLM_REQUESTS_PER_MINUTE=30
+TRACK2_LLM_TOKENS_PER_MINUTE=60000
+TRACK2_LLM_MAX_SCHEDULE_WAIT_SECONDS=60</code></pre>
             </div>
-            <p>Then set <code>CODEX_HOME_HOST</code> in <code>.env</code> to the absolute path of that dedicated Codex home for Docker runs.</p>
+            <p>During ordinary development, the Cerebras public tier has strict request and token rate limits. Use smoke scenarios first, keep completion-token caps tight, and configure <code>TRACK2_LLM_REQUESTS_PER_*</code> and <code>TRACK2_LLM_TOKENS_PER_*</code> pacing for longer runs when needed. Local pacing is ordinary harness scheduling, not quota-wait metadata. Expect a few organizer-provided elevated-rate/priority test windows for faster validation. Participants may self-host the open-source models used by the Cerebras <code>gpt-oss</code> executor during development. Codex Pro plans support harness engineering speed and are allocated by June 15; Codex Pro is not the submitted-agent runtime for these templates.</p>
 
             <h3>Choose your first run</h3>
             <div class="table-wrapper">
@@ -172,16 +175,12 @@ CODEX_HOME="$HOME/.codex-car-bench" codex login status</code></pre>
                             <td><code>uv run car-bench-run scenarios/track_1_agent_under_test/local_smoke.toml --show-logs</code></td>
                         </tr>
                         <tr>
-                            <th>Track 2 Codex JSON</th>
-                            <td><code>uv run car-bench-run scenarios/track_2_agent_under_test_codex/local_smoke.toml --show-logs</code></td>
+                            <th>Track 2 Cerebras</th>
+                            <td><code>uv run car-bench-run scenarios/track_2_agent_under_test_cerebras/local_smoke.toml --show-logs</code></td>
                         </tr>
                         <tr>
                             <th>Track 2 planner/executor</th>
-                            <td><code>uv run car-bench-run scenarios/track_2_agent_under_test_codex_planner/local_smoke.toml --show-logs</code></td>
-                        </tr>
-                        <tr>
-                            <th>Track 2 Python-call DSL</th>
-                            <td><code>uv run car-bench-run scenarios/track_2_agent_under_test_codex_python/local_smoke.toml --show-logs</code></td>
+                            <td><code>uv run car-bench-run scenarios/track_2_agent_under_test_cerebras_planner/local_smoke.toml --show-logs</code></td>
                         </tr>
                     </tbody>
                 </table>
@@ -195,7 +194,7 @@ CODEX_HOME="$HOME/.codex-car-bench" codex login status</code></pre>
                 <li><strong>GHCR validation:</strong> tests the image/config style expected for official submission.</li>
             </ul>
 
-            <p>For full commands, scenario structure, and Track 2 Codex setup details, read the starter repo README after cloning.</p>
+            <p>For full commands, scenario structure, and Track 2 Cerebras setup details, read the starter repo README after cloning.</p>
         </div>
     </div>
 </section>

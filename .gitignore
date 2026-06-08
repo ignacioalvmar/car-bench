@@ -1,6 +1,8 @@
 #Run result artifacts
 # results/**
 
+build/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
