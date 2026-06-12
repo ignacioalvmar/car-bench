@@ -82,7 +82,7 @@
             <ul>
                 <li><strong>Evaluator:</strong> a dockerized CAR-bench evaluator that owns the simulated user, tools, environment, trajectories, and scoring.</li>
                 <li><strong>Track 1 starter:</strong> a minimal agent-under-test template for any model, provider, or architecture.</li>
-                <li><strong>Track 2 references:</strong> LiteLLM-based Cerebras agents, including a direct executor and a planner/executor template.</li>
+                <li><strong>Track 2 references:</strong> Cerebras SDK/direct API agents, including a direct executor and a planner/executor template.</li>
                 <li><strong>Scenario configs:</strong> TOML files that define local, Docker, and GHCR validation runs.</li>
                 <li><strong>A2A interface:</strong> the message protocol used between the evaluator and your submitted agent.</li>
             </ul>
@@ -149,10 +149,10 @@ cp .env.example .env</code></pre>
             </div>
 
             <h3>Track 2 Cerebras setup</h3>
-            <p>Track 2 reference agents call Cerebras-hosted <code>gpt-oss</code> directly through LiteLLM. Configure the Cerebras <code>gpt-oss</code> executor and, for the planner/executor template, the closed-source planner route:</p>
+            <p>Track 2 reference agents call Cerebras-hosted <code>gpt-oss</code> directly through the Cerebras SDK. Configure the Cerebras <code>gpt-oss</code> executor and, for the planner/executor template, the closed-source planner route:</p>
             <div class="callout">
                 <pre style="margin:0;white-space:pre-wrap;"><code>CEREBRAS_API_KEY=...
-TRACK2_EXECUTOR_MODEL=cerebras/gpt-oss-120b
+TRACK2_EXECUTOR_MODEL=gpt-oss-120b
 TRACK2_PLANNER_MODEL=azure/gpt-5.5   # planner/executor template only
 TRACK2_LLM_REQUESTS_PER_MINUTE=30
 TRACK2_LLM_TOKENS_PER_MINUTE=60000
