@@ -25,7 +25,7 @@
             <li><a href="data.html">Data &amp; Starter Kit</a></li>
             <li><a href="leaderboard.html">Leaderboard</a></li>
             <li><a href="rules.html">Rules</a></li>
-
+            <li><a href="submission.html">Submission</a></li>
             <li><a href="benchmark.html">Benchmark</a></li>
             <li><a href="organizers.html">Organizers</a></li>
         </ul>
@@ -165,7 +165,7 @@
             <details class="faq-item">
                 <summary class="faq-q">Will technical reports be published? Where?</summary>
                 <div class="faq-a">
-                    <p>Selected technical reports will be published as <strong>non-archival proceedings</strong> on the competition website. This means they won&rsquo;t preclude later publication at a venue of your choice. Reports are 4 pages in IJCAI format (excluding references).</p>
+                    <p>Selected technical reports will be published as <strong>non-archival proceedings</strong> on the competition website. This means they won&rsquo;t preclude later publication at a venue of your choice. Reports are 4 pages using the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a>, excluding references.</p>
                 </div>
             </details>
 
@@ -186,7 +186,7 @@
             <details class="faq-item">
                 <summary class="faq-q">What exactly do I submit?</summary>
                 <div class="faq-a">
-                    <p>Final details will be announced, but the expected submission is a registered GHCR Docker image plus scenario/config details. Use a digest-pinned image when possible. Include required environment variable or secret names, but never include secret values. Organizers will run the submitted image/config on hidden evaluation infrastructure.</p>
+                    <p>Submit a public digest-pinned GHCR image for your agent under test, a <code>scenario.toml</code> file using the official evaluator and hidden-set config, required and optional environment variable names, track selection, and a 4-page technical report using the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a> and citing CAR-bench. Never submit secret values. Organizers run the submitted agent scenario on hidden evaluation infrastructure. See the <a href="submission.html">submission checklist</a>.</p>
                 </div>
             </details>
 

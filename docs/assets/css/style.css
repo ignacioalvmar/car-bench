@@ -257,6 +257,15 @@ nav.topbar {
 }
 .btn-cta:hover { background: var(--color-cta-hover); color: #1a1a1a; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(246,173,28,0.35); }
 
+.btn.disabled,
+.btn[aria-disabled="true"] {
+    opacity: 0.62;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+
 .btn-primary {
     background: var(--color-primary);
     color: white;

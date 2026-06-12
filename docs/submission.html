@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration - CAR-bench Challenge @ IJCAI-ECAI 2026</title>
-    <meta name="description" content="Register for the CAR-bench Challenge at IJCAI-ECAI 2026. Google Form preferred, email fallback available if Google Forms is inaccessible.">
+    <title>Submission - CAR-bench Challenge @ IJCAI-ECAI 2026</title>
+    <meta name="description" content="Final submission requirements for the CAR-bench Challenge at IJCAI-ECAI 2026.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
             <li><a href="data.html">Data &amp; Starter Kit</a></li>
             <li><a href="leaderboard.html">Leaderboard</a></li>
             <li><a href="rules.html">Rules</a></li>
-            <li><a href="submission.html">Submission</a></li>
+            <li><a href="submission.html" class="active">Submission</a></li>
             <li><a href="benchmark.html">Benchmark</a></li>
             <li><a href="organizers.html">Organizers</a></li>
         </ul>
@@ -55,91 +55,85 @@
 <!-- Page header -->
 <div class="page-header">
     <div class="container">
-        <h1>Competition Registration</h1>
-        <p>Register through the Google Form if possible. If Google Forms is inaccessible from your location, use the email fallback below.</p>
+        <h1>Submission</h1>
+        <p>Prepare the public agent image, scenario config, and technical report organizers need for hidden evaluation.</p>
     </div>
 </div>
 
 <section>
     <div class="container narrow">
         <div class="registration-actions">
-            <a href="https://forms.gle/7Dj2uD1sw6n42d6u5" target="_blank" rel="noopener noreferrer" class="btn btn-cta btn-lg">Register via Google Form</a>
-            <a href="#email-fallback" class="btn btn-outline btn-lg">Email fallback</a>
+            <a class="btn btn-cta btn-lg disabled" href="#" aria-disabled="true">Submission Google Form opens soon</a>
+            <a href="rules.html#submission" class="btn btn-outline btn-lg">Read Submission Rules</a>
         </div>
 
         <div class="callout warning">
-            The Google Form is the preferred registration path because it helps organizers process teams quickly. The email fallback collects the same information and is intended for participants who cannot access Google Forms, including participants in regions where Google services may be unavailable.
-        </div>
-
-        <div class="registration-grid">
-            <div class="registration-card preferred">
-                <span class="register-badge">Preferred</span>
-                <h2>Google Form</h2>
-                <p>Use this path if the form opens for you. It is the fastest way to register and gives organizers a structured response.</p>
-                <a href="https://forms.gle/7Dj2uD1sw6n42d6u5" target="_blank" rel="noopener noreferrer" class="btn btn-cta btn-sm">Open Google Form</a>
-            </div>
-            <div class="registration-card">
-                <h2>Email Fallback</h2>
-                <p>If Google Forms is inaccessible, send the information listed below by email. Please use the subject line <strong>CAR-bench Competition Registration</strong>.</p>
-                <a href="#email-fallback" class="btn btn-outline btn-sm">View email instructions</a>
-            </div>
+            The final submission Google Form is not open yet. The link will be published here and announced on Discord before the first official evaluation round.
         </div>
 
         <div class="rule-section">
-            <h2>Required Information</h2>
+            <h2>Submission Checklist</h2>
             <ul>
-                <li>Team name</li>
-                <li>Institution or organization</li>
-                <li>Country or region</li>
-                <li>Contact person name</li>
-                <li>Contact email</li>
-                <li>Team member names</li>
-                <li>Team member emails, optional</li>
-                <li>Track selection: Track 1 only, Track 2 only, or both</li>
+                <li><strong>Agent Docker image:</strong> a public GHCR image for your agent under test, pinned by digest.</li>
+                <li><strong>Scenario TOML:</strong> a <code>scenario.toml</code> file using the official evaluator image and your agent-under-test image/config.</li>
+                <li><strong>Environment variables:</strong> required and optional env var names only. Never submit secret values.</li>
+                <li><strong>Model configurability:</strong> all LLM model names, provider routes, deployment names, API bases, service tiers, and reasoning-effort selectors must be configurable through env vars.</li>
+                <li><strong>Technical report:</strong> a 4-page IJCAI-format report including the CAR-bench citation. Use the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a>.</li>
+                <li><strong>Track selection:</strong> Track 1, Track 2, or both.</li>
+            </ul>
+            <p>The evaluator image is official and organizer-published. Participants do not submit, modify, or self-host evaluator images for official evaluation.</p>
+        </div>
+
+        <div class="rule-section">
+            <h2>Copy-Paste Scenario TOML</h2>
+            <p>Use this as a starting point and replace the agent image and env vars for your team. The evaluator must stay the official organizer-published evaluator. Choose Track 1, Track 2, or both in the submission form.</p>
+<pre class="registration-template">[evaluator]
+image = "ghcr.io/car-bench/car-bench-evaluator:latest"
+
+[evaluator.env]
+GEMINI_API_KEY = "${GEMINI_API_KEY:?Set GEMINI_API_KEY}"
+LOGURU_LEVEL = "${LOGURU_LEVEL:-INFO}"
+
+[agent_under_test]
+image = "ghcr.io/your-org/your-agent@sha256:replace_with_digest"
+
+[agent_under_test.env]
+AGENT_LLM = "${AGENT_LLM:?Set AGENT_LLM}"
+AGENT_API_BASE = "${AGENT_API_BASE:-}"
+AGENT_API_KEY = "${AGENT_API_KEY:?Set AGENT_API_KEY}"
+AGENT_TEMPERATURE = "${AGENT_TEMPERATURE:-}"
+LOGURU_LEVEL = "${LOGURU_LEVEL:-INFO}"
+
+[config]
+num_trials = 3
+task_split = "hidden"
+tasks_base_num_tasks = -1
+tasks_hallucination_num_tasks = -1
+tasks_disambiguation_num_tasks = -1
+max_steps = 50</pre>
+        </div>
+
+        <div class="rule-section">
+            <h2>Field Meanings</h2>
+            <ul>
+                <li><code>[evaluator]</code>: must use the official evaluator image. Participants do not submit, modify, or self-host evaluator images for official evaluation.</li>
+                <li><code>[evaluator.env]</code>: may reference evaluator env var names, but organizers provide evaluator secrets for official runs.</li>
+                <li><code>[agent_under_test].image</code>: public GHCR image pinned by digest, for example <code>ghcr.io/team/agent@sha256:...</code>.</li>
+                <li><code>[agent_under_test.env]</code>: env vars organizers must set. Use <code>${VAR:?message}</code> for required vars and <code>${VAR:-}</code> or <code>${VAR:-default}</code> for optional vars. Do not include secret values.</li>
+                <li><code>[config]</code>: use <code>task_split = "hidden"</code> and <code>-1</code> for each task-count field so the full hidden set is selected.</li>
+                <li>Name environment variables however you want, but every model/provider choice needed to run the agent must be configurable through env vars.</li>
             </ul>
         </div>
 
         <div class="rule-section">
-            <h2>Track 2 Information</h2>
-            <p>Teams registering for Track 2 must also provide:</p>
-            <ul>
-                <li>One ChatGPT-account-linked email for Codex Pro development support</li>
-                <li>If a private ChatGPT account should not be shared with the team, create a dedicated team account before registering</li>
-                <li>A short, non-binding description of the intended submission or innovation idea</li>
-                <li>Confirmation that Codex Pro is development support, not the submitted-agent runtime</li>
-                <li>Confirmation that teams receiving Track 2 support are strongly expected to actively participate and submit a final entry</li>
-            </ul>
-            <p>Track 2 participation is limited to 15 teams. The short innovation idea may be used to select participating teams if more than 15 teams register. Codex Pro plans are allocated by June 15 for harness engineering and development speed.</p>
-        </div>
-
-        <div class="rule-section" id="email-fallback">
-            <h2>Email Fallback</h2>
-            <p>Send your registration to <a href="mailto:johannes1.kirmayr@uni-a.de">johannes1.kirmayr@uni-a.de</a>. You can use the email button below or copy the template into your email client.</p>
-            <p>
-                <a class="btn btn-primary btn-sm" href="mailto:johannes1.kirmayr@uni-a.de?subject=CAR-bench%20Competition%20Registration&amp;body=Team%20name%3A%0AInstitution%20%2F%20organization%3A%0ACountry%20%2F%20region%3A%0AContact%20person%20name%3A%0AContact%20email%3A%0ATeam%20member%20names%3A%0ATeam%20member%20emails%20%28optional%29%3A%0ATrack%20selection%20%28Track%201%20only%20%2F%20Track%202%20only%20%2F%20both%29%3A%0A%0AFor%20Track%202%20only%3A%0AChatGPT-account-linked%20email%20for%20Codex%20Pro%20development-support%20plan%3A%0AConfirm%20that%20you%20will%20use%20a%20dedicated%20team%20account%20if%20a%20private%20account%20should%20not%20be%20shared%20%28yes%2Fno%29%3A%0AShort%20non-binding%20description%20of%20your%20intended%20submission%20or%20innovation%20idea%3A%0AConfirm%20that%20Codex%20Pro%20is%20development%20support%20and%20not%20the%20submitted-agent%20runtime%20%28yes%2Fno%29%3A%0AConfirm%20that%20teams%20receiving%20Track%202%20support%20are%20strongly%20expected%20to%20actively%20participate%20and%20submit%20a%20final%20entry%20%28yes%2Fno%29%3A">Email Registration</a>
-            </p>
-<pre class="registration-template">Subject: CAR-bench Competition Registration
-
-Team name:
-Institution / organization:
-Country / region:
-Contact person name:
-Contact email:
-Team member names:
-Team member emails (optional):
-Track selection (Track 1 only / Track 2 only / both):
-
-For Track 2 only:
-ChatGPT-account-linked email for Codex Pro development support:
-Confirm that you will use a dedicated team account if a private account should not be shared (yes/no):
-Short non-binding description of your intended submission or innovation idea:
-Confirm that Codex Pro is development support, not the submitted-agent runtime (yes/no):
-Confirm that teams receiving Track 2 support are strongly expected to actively participate and submit a final entry (yes/no):</pre>
+            <h2>Track 2 Notes</h2>
+            <p>Organizers may run the same submitted Track 2 agent against a different hosted model deployment, so do not hard-code model IDs, deployment names, provider routes, API bases, service tiers, or reasoning-effort choices into the image.</p>
         </div>
 
         <div class="rule-section">
-            <h2>After Registration</h2>
-            <p>Organizers will confirm receipt by email. If your team registered for Track 2, organizers will review the Track 2 information and contact you about participation confirmation, test windows, and Codex Pro development support.</p>
+            <h2>Report</h2>
+            <p>The technical report is required for every final submission. Use the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a>, keep the main text to 4 pages, and include the CAR-bench citation. We encourage and endorse arXiv submissions as well, but arXiv is not required.</p>
+            <p>Describe the method, model and harness architecture, validation results, important ablations or lessons learned, and any compute or rate-limit assumptions needed to interpret the submission.</p>
         </div>
     </div>
 </section>
@@ -158,6 +152,7 @@ Confirm that teams receiving Track 2 support are strongly expected to actively p
                     <li><a href="registration.html">Registration</a></li>
                     <li><a href="tracks.html">Tracks</a></li>
                     <li><a href="data.html">Data &amp; Starter Kit</a></li>
+                    <li><a href="submission.html">Submission</a></li>
                     <li><a href="leaderboard.html">Leaderboard</a></li>
                     <li><a href="rules.html">Rules</a></li>
                 </ul>

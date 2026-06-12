@@ -25,7 +25,7 @@
             <li><a href="data.html">Data &amp; Starter Kit</a></li>
             <li><a href="leaderboard.html">Leaderboard</a></li>
             <li><a href="rules.html">Rules</a></li>
-
+            <li><a href="submission.html">Submission</a></li>
             <li><a href="benchmark.html">Benchmark</a></li>
             <li><a href="organizers.html">Organizers</a></li>
         </ul>
@@ -110,11 +110,11 @@
             <ol>
                 <li><strong>Choose a track:</strong> Track 1 is open to any model, framework, or architecture. Track 2 is limited to 15 teams and uses direct Cerebras-hosted <code>gpt-oss</code> inference for fast-reasoning harnesses.</li>
                 <li><strong>Run a scenario config:</strong> start with <code>local_smoke.toml</code>, then move to public validation and Docker scenarios.</li>
-                <li><strong>Prepare submission:</strong> publish a GHCR image and provide scenario/config details with required secret names, not secret values.</li>
+                <li><strong>Prepare submission:</strong> publish a public digest-pinned GHCR agent image, prepare <code>scenario.toml</code> with the official evaluator and hidden-set config, and list required secret names without secret values. See the <a href="submission.html">submission checklist</a>.</li>
             </ol>
 
             <h3>Common setup</h3>
-            <p>For serious participation, fork the starter repository first and clone your fork. Your fork is where your agent code, Dockerfile, scenario configs, and technical-report notes should live. Official submission will still be a GHCR Docker image plus config, not a pull request.</p>
+            <p>Fork the starter repository first and clone your fork. Your fork is where your agent code, Dockerfile, scenario configs, and technical-report notes should live. Official submission will be a public digest-pinned GHCR agent image plus <code>scenario.toml</code>, not a pull request.</p>
             <div class="callout">
                 <pre style="margin:0;white-space:pre-wrap;"><code>git clone https://github.com/YOUR_ORG_OR_USERNAME/car-bench-ijcai.git
 cd car-bench-ijcai
@@ -124,7 +124,7 @@ source .venv/bin/activate
 cp .env.example .env</code></pre>
             </div>
 
-            <p>Add the evaluator key to <code>.env</code>. Track 1 participants add whatever model-provider keys their agent needs. Track 2 participants add <code>CEREBRAS_API_KEY</code> and any planner-provider key required by their LiteLLM route.</p>
+            <p>Add the evaluator key to <code>.env</code>. Track 1 participants add whatever model-provider keys their agent needs. Track 2 participants add <code>CEREBRAS_API_KEY</code> and any model-routing variables used by their planner or executor.</p>
 
             <h3>Install by track</h3>
             <div class="table-wrapper">
@@ -149,16 +149,16 @@ cp .env.example .env</code></pre>
             </div>
 
             <h3>Track 2 Cerebras setup</h3>
-            <p>Track 2 reference agents call Cerebras-hosted <code>gpt-oss</code> directly through the Cerebras SDK. Configure the Cerebras <code>gpt-oss</code> executor and, for the planner/executor template, the closed-source planner route:</p>
+            <p>Track 2 reference agents call Cerebras-hosted <code>gpt-oss</code> directly through the Cerebras SDK. Configure the Cerebras <code>gpt-oss</code> executor and, for the planner/executor template, the planner model through environment variables:</p>
             <div class="callout">
                 <pre style="margin:0;white-space:pre-wrap;"><code>CEREBRAS_API_KEY=...
 TRACK2_EXECUTOR_MODEL=gpt-oss-120b
-TRACK2_PLANNER_MODEL=azure/gpt-5.5   # planner/executor template only
-TRACK2_LLM_REQUESTS_PER_MINUTE=30
-TRACK2_LLM_TOKENS_PER_MINUTE=60000
-TRACK2_LLM_MAX_SCHEDULE_WAIT_SECONDS=60</code></pre>
+TRACK2_EXECUTOR_REASONING_EFFORT=medium
+TRACK2_PLANNER_MODEL=gpt-oss-120b   # planner/executor template only
+TRACK2_PLANNER_REASONING_EFFORT=high
+TRACK2_PLANNER_MAX_COMPLETION_TOKENS=4096</code></pre>
             </div>
-            <p>During ordinary development, the Cerebras public tier has strict request and token rate limits. Use smoke scenarios first, keep completion-token caps tight, and configure <code>TRACK2_LLM_REQUESTS_PER_*</code> and <code>TRACK2_LLM_TOKENS_PER_*</code> pacing for longer runs when needed. Local pacing is ordinary harness scheduling, not quota-wait metadata. Expect a few organizer-provided elevated-rate/priority test windows for faster validation. Participants may self-host the open-source models used by the Cerebras <code>gpt-oss</code> executor during development. Codex Pro plans support harness engineering speed and are allocated by June 15; Codex Pro is not the submitted-agent runtime for these templates.</p>
+            <p>During ordinary development, the Cerebras public tier has strict request and token rate limits. Use smoke scenarios first, keep completion-token caps tight, and schedule longer public-tier validation runs instead of launching many jobs at once. Expect a few organizer-provided elevated-rate/priority test windows for faster validation. Participants may self-host the open-source models used by Cerebras during development. Codex Pro plans support harness engineering speed and are allocated by June 15; Codex Pro is not the submitted-agent runtime for these templates.</p>
 
             <h3>Choose your first run</h3>
             <div class="table-wrapper">
