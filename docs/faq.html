@@ -81,35 +81,35 @@
             <details class="faq-item">
                 <summary class="faq-q">Is any LLM allowed, or are there restrictions on proprietary vs open-source?</summary>
                 <div class="faq-a">
-                    <p>In the <strong>Open Track</strong>, any LLM is allowed - proprietary, open-source, any size. In the <strong>Cerebras Fast-Reasoning Track</strong>, submitted agents use direct Cerebras-hosted <code>gpt-oss</code> inference through the starter kit. Larger closed-source models may be used for internal planner, verifier, or condenser steps if the complete agent stays within the official time budget.</p>
+                    <p>In the <strong>Open Track</strong>, any LLM is allowed - proprietary, open-source, any size. In the <strong>Cerebras Fast-Reasoning Track</strong>, submitted agents use direct Cerebras-hosted <code>gpt-oss</code> inference through the starter kit. Larger closed-source models may be used for internal planner, verifier, or condenser steps if the complete agent stays within the Track 2 inference-compute constraints.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">Can I submit to both tracks with the same agent?</summary>
                 <div class="faq-a">
-                    <p>Yes, you can enter both tracks. However, Track 2 requires the direct Cerebras <code>gpt-oss</code> inference setup described in the starter kit, so you may need to adapt your agent. The same team can submit different agents to each track.</p>
+                    <p>Confirmed Track 2 teams may submit to both tracks. New registrations are Track 1 only because Track 2 registration is closed. Track 2 requires the direct Cerebras <code>gpt-oss</code> inference setup described in the starter kit, so teams usually adapt the agent for that track.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">Is Track 2 limited?</summary>
                 <div class="faq-a">
-                    <p>Yes. Track 2 is limited to 15 participating teams because elevated-rate test windows and development-support plans are limited. Selected teams receive Track 2 support, including Codex Pro plans for harness engineering and development speed. Plans are allocated by June 15.</p>
+                    <p>Yes. Track 2 is limited to 15 participating teams, and registration is now closed. Confirmed Track 2 teams will receive follow-up information about Cerebras access and increased rate limits compared with a free personal account.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">What happens if my agent hangs during evaluation?</summary>
                 <div class="faq-a">
-                    <p>Each task has a time limit. If your agent doesn&rsquo;t respond within the limit, that trial is scored as a failure. The evaluation continues with remaining tasks. The official time budget and any resubmission grace rules will be announced before hidden evaluation.</p>
+                    <p>If your agent does not respond within the evaluator timeout, that trial is scored as a failure and evaluation continues with remaining tasks. Track 2 also has inference-compute constraints: up to 5 sequential LLM calls per baseline LLM step and token usage up to 500k input, reasoning, and output tokens on average per task.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">Are API credits provided?</summary>
                 <div class="faq-a">
-                    <p>For official evaluation runs, LLM API costs are covered by the organizers as far as possible - no cost to you except special LLM setup or usage scenarios. For development, you normally use your own API keys. Track 2 development mainly uses the Cerebras public tier, where rate limits can be strict, and organizers provide a few elevated-rate/priority test windows. Codex Pro plans support harness engineering and are allocated by June 15.</p>
+                    <p>For official evaluation runs, LLM API costs are covered by the organizers as far as possible - no cost to you except special LLM setup or usage scenarios. For development, you normally use your own API keys. Free personal Cerebras accounts can have strict limits; Cerebras will provide increased rate limits for the competition compared with a free personal account, with access details to follow soon.</p>
                 </div>
             </details>
 
@@ -186,14 +186,14 @@
             <details class="faq-item">
                 <summary class="faq-q">What exactly do I submit?</summary>
                 <div class="faq-a">
-                    <p>Submit a public digest-pinned GHCR image for your agent under test, a <code>scenario.toml</code> file using the official evaluator and hidden-set config, required and optional environment variable names, track selection, and a 4-page technical report using the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a> and citing CAR-bench. Never submit secret values. Organizers run the submitted agent scenario on hidden evaluation infrastructure. See the <a href="submission.html">submission checklist</a>.</p>
+                    <p>Submit a public digest-pinned GHCR image for your agent under test, a <code>scenario.toml</code> file using the official evaluator and hidden-set config, required and optional environment variable names, track selection, and a 4-page technical report using the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a> and citing CAR-bench. Track 2 reports should include an architecture diagram for compute-use audit. Never submit secret values. Organizers run the submitted agent scenario on hidden evaluation infrastructure. See the <a href="submission.html">submission checklist</a>.</p>
                 </div>
             </details>
 
             <details class="faq-item">
                 <summary class="faq-q">How does Track 2 use Cerebras during development?</summary>
                 <div class="faq-a">
-                    <p>The Track 2 reference agents call Cerebras-hosted <code>gpt-oss</code> directly through the Cerebras SDK or direct API. During ordinary development, participants should expect strict public-tier rate limits and use task scheduling or waiting between longer runs. Organizers will provide a few elevated-rate/priority test windows for faster validation, and teams may self-host the open-source executor models during development before testing the speed gain on Cerebras.</p>
+                    <p>The Track 2 reference agents call Cerebras-hosted <code>gpt-oss</code> directly through the Cerebras SDK or direct API. During ordinary development, free personal Cerebras accounts can have strict limits, so use task scheduling or waiting between longer runs. Cerebras will provide increased rate limits for the competition compared with a free personal account, and teams may self-host the open-source executor models during development before testing the speed gain on Cerebras.</p>
                 </div>
             </details>
 

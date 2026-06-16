@@ -94,10 +94,10 @@
             <ul>
                 <li>Teams must register before their first submission to the official leaderboard.</li>
                 <li>Registration is preferably submitted through the official Google Form. If Google Forms is inaccessible from a participant&rsquo;s location, teams may register by email using the fallback instructions on the <a href="registration.html">registration page</a>.</li>
-                <li>Registration requires: team name, institution or organization, country or region, contact person name, contact email, team member names, optional team member emails, and track selection (Open, Cerebras Fast-Reasoning, or both).</li>
-                <li>Track 2 registration additionally requires one ChatGPT-account-linked email for Codex Pro development support and a short, non-binding description of the intended submission or innovation idea. Teams that do not want to share a private account should create a dedicated team account before registering.</li>
-                <li>Track 2 participation is limited to 15 teams because elevated-rate test windows and development-support plans are limited.</li>
-                <li>Registration is open from May 25, 2026.</li>
+                <li>Registration requires: team name, institution or organization, country or region, contact person name, contact email, team member names, optional team member emails, and track selection.</li>
+                <li>Track 1 registration remains open.</li>
+                <li>Track 2 registration is closed and remains limited to 15 participating teams.</li>
+                <li>Registration opened on May 25, 2026.</li>
                 <li>Teams may update their team members up to 7 days before the final evaluation deadline.</li>
             </ul>
         </div>
@@ -115,7 +115,7 @@
                 <li>Retrieval-augmented generation (RAG) over environment data</li>
                 <li>External knowledge bases or pre-computed lookup tables (provided they do not encode test set answers)</li>
             </ul>
-            <p><strong>Cerebras Fast-Reasoning Track:</strong> Track 2 submissions must use the direct Cerebras-hosted <code>gpt-oss</code> inference setup described in the starter kit. Agents must expose the same dockerized A2A interface as Track 1. Multi-pass reasoning, private planning, self-verification, retries, and ensembles are allowed, but the agent must respect the official time budget and must not exploit evaluator internals. Public-tier development rate limits can be strict, so task scheduling and waiting time are expected; organizers will provide a few elevated-rate/priority test windows. Participation is limited to 15 teams. The time budget will be announced soon.</p>
+            <p><strong>Cerebras Fast-Reasoning Track:</strong> Track 2 submissions must use the direct Cerebras-hosted <code>gpt-oss</code> inference setup described in the starter kit. Agents must expose the same dockerized A2A interface as Track 1. Multi-pass reasoning, private planning, self-verification, retries, ensembles, and parallel calls are allowed, but the agent must respect Track 2 inference-compute constraints and must not exploit evaluator internals. For each baseline LLM step, participants may use up to 5 sequential LLM calls; parallel calls inside each step do not count toward this sequential limit. Token usage may be up to 500k tokens on average per task, including input, reasoning, and output tokens. Token usage must be tracked through A2A <code>turn_metrics</code> token fields and may be counterchecked. Track 2 reports should include an architecture diagram so the sequential-call constraint can be audited. Cerebras will provide increased rate limits compared with a free personal account; access details will follow soon.</p>
         </div>
 
         <!-- 4. Prohibited behaviors -->
@@ -143,7 +143,7 @@
                 <li>All LLM model names, provider routes, deployment names, API bases, service tiers, and reasoning-effort selectors must be configurable through environment variables.</li>
                 <li><strong>Development validation:</strong> Participants may run public local, Docker, and GHCR scenario configs themselves before submitting.</li>
                 <li><strong>Hidden test set:</strong> Two official evaluation rounds. 1st round (Jul 10): each team gets one submission and receives scores. Final (Jul 19): each team gets one submission. Final rankings are determined from the Jul 19 round.</li>
-                <li><strong>Technical report:</strong> A 4-page technical report using the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a>, excluding references, with a CAR-bench citation is required for every final submission. Deadline: July 26, 2026 (AoE).</li>
+                <li><strong>Technical report:</strong> A 4-page technical report using the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a>, excluding references, with a CAR-bench citation is required for every final submission. Track 2 reports should include an architecture diagram for compute-use audit. Deadline: July 26, 2026 (AoE).</li>
             </ul>
             <div class="callout warning">
                 <strong>Submission form opens soon.</strong> The Google Form link will be published on the <a href="submission.html">submission page</a> and announced on Discord before the first official evaluation round.

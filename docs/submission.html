@@ -78,7 +78,7 @@
                 <li><strong>Scenario TOML:</strong> a <code>scenario.toml</code> file using the official evaluator image and your agent-under-test image/config.</li>
                 <li><strong>Environment variables:</strong> required and optional env var names only. Never submit secret values.</li>
                 <li><strong>Model configurability:</strong> all LLM model names, provider routes, deployment names, API bases, service tiers, and reasoning-effort selectors must be configurable through env vars.</li>
-                <li><strong>Technical report:</strong> a 4-page IJCAI-format report including the CAR-bench citation. Use the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a>.</li>
+                <li><strong>Technical report:</strong> a 4-page IJCAI-format report including the CAR-bench citation. Use the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a>. Track 2 reports should include an architecture diagram for compute-use audit.</li>
                 <li><strong>Track selection:</strong> Track 1, Track 2, or both.</li>
             </ul>
             <p>The evaluator image is official and organizer-published. Participants do not submit, modify, or self-host evaluator images for official evaluation.</p>
@@ -86,7 +86,7 @@
 
         <div class="rule-section">
             <h2>Copy-Paste Scenario TOML</h2>
-            <p>Use this as a starting point and replace the agent image and env vars for your team. The evaluator must stay the official organizer-published evaluator. Choose Track 1, Track 2, or both in the submission form.</p>
+            <p>Use this as a starting point and replace the agent image and env vars for your team. The evaluator must stay the official organizer-published evaluator. Choose your eligible track in the submission form.</p>
 <pre class="registration-template">[evaluator]
 image = "ghcr.io/car-bench/car-bench-evaluator:latest"
 
@@ -128,12 +128,13 @@ max_steps = 50</pre>
         <div class="rule-section">
             <h2>Track 2 Notes</h2>
             <p>Organizers may run the same submitted Track 2 agent against a different hosted model deployment, so do not hard-code model IDs, deployment names, provider routes, API bases, service tiers, or reasoning-effort choices into the image.</p>
+            <p>Track 2 token usage must be reported through existing A2A <code>turn_metrics</code> fields: <code>prompt_tokens</code>, <code>completion_tokens</code>, and <code>thinking_tokens</code>. Do not add a custom sequential-depth metadata field; document the sequential-call structure in the report architecture diagram.</p>
         </div>
 
         <div class="rule-section">
             <h2>Report</h2>
             <p>The technical report is required for every final submission. Use the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a>, keep the main text to 4 pages, and include the CAR-bench citation. We encourage and endorse arXiv submissions as well, but arXiv is not required.</p>
-            <p>Describe the method, model and harness architecture, validation results, important ablations or lessons learned, and any compute or rate-limit assumptions needed to interpret the submission.</p>
+            <p>Describe the method, model and harness architecture, validation results, important ablations or lessons learned, and any compute or rate-limit assumptions needed to interpret the submission. Track 2 reports should include an architecture diagram so the 5-sequential-call-per-baseline-step constraint can be audited.</p>
         </div>
     </div>
 </section>
