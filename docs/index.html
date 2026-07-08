@@ -105,6 +105,9 @@
 <!-- Track 2 update -->
 <section style="padding:1.5rem 0 0;">
     <div class="container">
+        <div class="callout warning" style="max-width:var(--max-width-narrow);margin:1rem auto 0;">
+            <strong>Evaluation update:</strong> The planned Jul 10 hidden-set score-return round will not run. Registrations are higher than expected, so returning scores to all teams before final submission would not be feasible in a useful timeframe, and evaluation budget has to be focused on the final submission. The final submission Google Form opens <strong>Monday, July 13, 2026</strong>. Because there is no test round now, organizers will contact teams if there are issues with their final submission. Hidden tasks use the same format and A2A/scenario contract as the public set, so teams agents running succesfully on the public set, will also on the hidden set.
+        </div>
         <div class="callout warning" style="max-width:var(--max-width-narrow);margin:0 auto;">
             <strong>Track update:</strong> Track 1 registration remains open; Track 2 registration is now closed. Track 2 uses Cerebras-hosted <code>gpt-oss</code> via API, not Codex as the submitted-agent runtime, and Cerebras will provide increased rate limits compared with a free personal account. Access details will follow soon.
         </div>
@@ -124,13 +127,17 @@
                 <span class="announce-date">May&ndash;Jul 2026</span>
                 <span>Open development with live dev-set leaderboard.</span>
             </div>
-            <div class="announce-item">
+            <div class="announce-item cancelled">
                 <span class="announce-date">Jul 10</span>
-                <span>1st evaluation on hidden test set. Scores returned to participants.</span>
+                <span><span class="cancelled-text">1st evaluation on hidden test set. Scores returned to participants.</span><span class="cancel-note">Cancelled</span></span>
+            </div>
+            <div class="announce-item">
+                <span class="announce-date">Jul 13</span>
+                <span>Final submission Google Form opens.</span>
             </div>
             <div class="announce-item">
                 <span class="announce-date">Jul 19</span>
-                <span>Final evaluation on hidden test set (2nd official submission). Rankings determined.</span>
+                <span>Final evaluation on hidden test set. Rankings determined.</span>
             </div>
             <div class="announce-item">
                 <span class="announce-date">Jul 26</span>
@@ -152,7 +159,7 @@
 <section style="padding:0 0 2.5rem;">
     <div class="container">
         <div class="callout" style="max-width:var(--max-width-narrow);margin:0 auto;">
-            <strong>Submission checklist:</strong> Final entries include a public digest-pinned GHCR agent image, a <code>scenario.toml</code> using the official evaluator and hidden-set config, and a 4-page technical report using the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a> and citing CAR-bench. Track 2 reports should include an architecture diagram for compute-use audit. The submission Google Form is not open yet and will be announced on Discord.
+            <strong>Submission checklist:</strong> Final entries include a public digest-pinned GHCR agent image, a <code>scenario.toml</code> using the official evaluator and hidden-set config, and a 4-page technical report using the <a href="https://www.ijcai.org/authors_kit" target="_blank" rel="noopener noreferrer">IJCAI author kit</a> and citing CAR-bench. Track 2 reports should include an architecture diagram for compute-use audit. The final submission Google Form opens Monday, July 13, 2026.
             <div style="margin-top:0.8rem;">
                 <a href="submission.html" class="btn btn-primary btn-sm">View Submission Requirements</a>
             </div>

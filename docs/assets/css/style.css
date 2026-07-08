@@ -508,6 +508,19 @@ section { padding: var(--section-padding); }
     line-height: 1.5;
 }
 .announce-item:first-of-type { border-top: none; padding-top: 0; }
+.announce-item.cancelled {
+    color: var(--color-text-light);
+}
+.announce-item.cancelled .cancelled-text {
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+}
+.announce-item.cancelled .cancel-note {
+    margin-left: 0.4rem;
+    color: var(--color-accent);
+    font-weight: 700;
+    text-decoration: none;
+}
 
 .announce-date {
     flex-shrink: 0;
