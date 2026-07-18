@@ -445,9 +445,23 @@ class InstrumentedOrchestrator(AgentOrchestrator):
 
 _session: Dict[str, Any] = {}
 
+# Live-sim backend (prompt-drive). Set when the app is started with --live-sim /
+# CAR_BENCH_LIVE_SIM; when present, _init_context_state backs the vehicle state
+# with the running simulator over a WebSocket (car-bench-compat-plan.md §4.8).
+_live_client = None
+_live_active_ctx = None
+
 
 def _init_context_state(env, idx):
     """Initialize context vars for a task. Adapted from run.py."""
+    # Live-sim path: back the vehicle state with the running prompt-drive sim.
+    global _live_active_ctx
+    if _live_client is not None:
+        from car_bench.envs.car_voice_assistant.live_sim import init_live_context_state
+        tokens = init_live_context_state(env, idx, _live_client)
+        _live_active_ctx = tokens.get("ctx")
+        return tokens
+
     task = env.tasks[idx]
     default_task_config = TaskConfig()
     token_task_config = task_config.set(default_task_config)
@@ -833,11 +847,41 @@ def main():
     parser.add_argument("--host", type=str, default="0.0.0.0")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--verbose", action="store_true", help="Show all HTTP request logs")
+    parser.add_argument("--live-sim", action="store_true",
+                        help="Back the vehicle state with a running prompt-drive sim over WebSocket")
+    parser.add_argument("--live-sim-port", type=int, default=8765)
+    parser.add_argument("--live-sim-token", type=str, default=None)
     args = parser.parse_args()
 
     # Suppress werkzeug request-level logs unless --verbose
     if not args.verbose and not args.debug:
         logging.getLogger("werkzeug").setLevel(logging.WARNING)
+
+    # Live-sim backend: start the WebSocket server and wait for a sim tab.
+    if args.live_sim or os.environ.get("CAR_BENCH_LIVE_SIM"):
+        global _live_client
+        from car_bench.envs.car_voice_assistant.live_sim import PromptDriveClient
+        port = int(os.environ.get("CAR_BENCH_WS_PORT", args.live_sim_port))
+        token = os.environ.get("CAR_BENCH_WS_TOKEN", args.live_sim_token)
+        _live_client = PromptDriveClient(port=port, token=token).start()
+
+        def _resync(client):
+            # On (re)connect Python is authoritative: re-assert benchmark mode and
+            # push the current dynamic state so the sim mirror is consistent.
+            try:
+                client.benchmark(True)
+                ctx = _live_active_ctx
+                if ctx is not None:
+                    client.vehicle_set(ctx.model_dump(mode="json"))
+            except Exception:
+                pass
+
+        _live_client.on_sim_connected(_resync)
+        launch = f"?ws=ws%3A%2F%2F127.0.0.1%3A{port}&autostart=1&hideMenu=1"
+        if token:
+            launch += f"&wsToken={token}"
+        print(f"Live-sim: WebSocket server on ws://127.0.0.1:{port}; open the sim with")
+        print(f"  <prompt-drive>/index.html{launch}")
 
     print("Pre-loading mock data...")
     try:
